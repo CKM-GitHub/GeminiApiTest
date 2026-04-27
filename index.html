@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Gemini API Test</title>
+  <title>Gemini API Update</title>
 </head>
 <body>
 
 <a href="GroqAPITest.html">
   <h2>Groq API Test</h2>
 </a>
-<h2>Gemini Test</h2>
+<a href="DefaultPlusUserPrompt.html">
+  <h2>Default Prompt + User Pormpt Cusotmization</h2>
+</a>
+
+  
+<h2>Gemini Test Update</h2>
 <textarea id="prompt" rows="4" cols="50">Write a product ad for a red sneaker</textarea>
 <br><br>
 <button onclick="generate()">Generate</button>
@@ -17,7 +22,7 @@
 
 <script>
 async function generate() {
-  const apiKey = "AIzaSyAYBMsufmT5y4k3NfudJqXPGZZ_viHh0Ic";
+  const apiKey = "AIzaSyArevlMKjJTNsYknK0gT9H4eO9_X5mG-bw";
   const prompt = document.getElementById("prompt").value;
 
   const response = await fetch(
