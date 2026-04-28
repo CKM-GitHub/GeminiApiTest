@@ -12,12 +12,12 @@
         * { font-family: 'Inter', sans-serif; }
         body { background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%); }
         .card-hover:hover { transform: translateY(-2px); transition: all 0.2s ease; box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1); }
-        .layout-details { background: #f1f5f9; border-left: 4px solid #8b5cf6; }
         .response-area { max-height: 500px; overflow-y: auto; font-size: 0.85rem; }
         select, input, textarea { transition: all 0.2s; }
         select:focus, input:focus, textarea:focus { border-color: #8b5cf6; outline: none; ring: 2px solid #c4b5fd; }
         .step-badge { background: #8b5cf6; color: white; border-radius: 30px; padding: 2px 12px; font-size: 0.7rem; font-weight: 600; }
         .camera-instruction { background: #eef2ff; border-left: 3px solid #6366f1; padding: 8px 12px; border-radius: 12px; font-size: 0.75rem; }
+        .warning-note { background: #fef9e3; border-left: 3px solid #f59e0b; padding: 8px 12px; border-radius: 12px; font-size: 0.7rem; color: #92400e; }
     </style>
 </head>
 <body class="p-4 md:p-6">
@@ -32,7 +32,6 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <!-- LEFT COLUMN: TRAINED SYSTEM INFO + USER FORM -->
         <div class="space-y-6">
-            <!-- Card: System Training (read-only summary) -->
             <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-5 border border-purple-100 card-hover">
                 <div class="flex items-center gap-2 mb-3">
                     <span class="step-badge">STEP 1 — TRAINED AI</span>
@@ -44,7 +43,7 @@
                     <li>Model placement, framing based on product category, lighting, camera</li>
                     <li><span class="font-semibold">3 Header Modes:</span> Reference Frame / Manual Build / Hybrid</li>
                     <li>Margin system, canvas constraints, no cropping, clean backgrounds</li>
-                    <li>Dynamic camera instruction for model shots (waist-down, feet-level, etc.)</li>
+                    <li>Every product category is separate (1 by 1) – no combined options</li>
                 </ul>
                 <div class="mt-3 text-[11px] text-gray-400 bg-gray-50 p-2 rounded-lg">🔧 The trained rules + your category selection will generate a detailed prompt.</div>
             </div>
@@ -57,40 +56,48 @@
                 </div>
 
                 <form id="promptForm" class="space-y-5">
-                    <!-- Product Type - Select Box (Main product category) -->
+                    <!-- Product Type - EVERY CATEGORY SEPARATE (1 by 1) -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">📦 Product Type</label>
                         <select id="productTypeSelect" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white focus:ring-2 focus:ring-purple-400">
-                            <option value="Shoes / Socks">👟 Shoes / Socks</option>
-                            <option value="Shorts / Pants">👖 Shorts / Pants</option>
-                            <option value="T-Shirts / Vests">👕 T-Shirts / Vests</option>
+                            <option value="Shoes">👟 Shoes</option>
+                            <option value="Socks">🧦 Socks</option>
+                            <option value="Shorts">🩳 Shorts</option>
+                            <option value="Pants">👖 Pants</option>
+                            <option value="T-Shirts">👕 T-Shirts</option>
+                            <option value="Vests">🦺 Vests</option>
                             <option value="Full Outfits">🧥 Full Outfits</option>
-                            <option value="Hats / Eyewear">🧢 Hats / Eyewear</option>
-                            <option value="Hats/Caps">🧢 Hats / Caps</option>
+                            <option value="Hats">🧢 Hats</option>
+                            <option value="Eyewear">👓 Eyewear</option>
+                            <option value="Caps">🧢 Caps</option>
                         </select>
+                        <div class="warning-note mt-2 text-xs">
+                            ⚠️ <strong>Brand consistency:</strong> Select only one product type. Mixing different categories can cause brand conflict.
+                        </div>
                     </div>
 
-                    <!-- Model / Person condition (radio + dynamic category select) -->
+                    <!-- Model / Person condition -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">🧑‍🤝‍🧑 Model / Person</label>
                         <div class="flex flex-wrap gap-4 mb-3">
                             <label class="inline-flex items-center gap-2"><input type="radio" name="modelOption" value="none" checked> <span>No Model</span></label>
                             <label class="inline-flex items-center gap-2"><input type="radio" name="modelOption" value="withModel"> <span>With Model</span></label>
                         </div>
-                        <!-- Dynamic product category select (only visible if With Model) -->
                         <div id="productCategoryContainer" class="hidden mt-2">
                             <label class="block text-sm font-medium text-gray-700 mb-1">📌 Product Category for Framing</label>
                             <select id="productCategorySelect" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white">
-                                <option value="Shorts / Pants">Shorts / Pants — Waist-down crop</option>
-                                <option value="Shoes / Socks">Shoes / Socks — Feet-level perspective</option>
-                                <option value="T-Shirts / Vests">T-Shirts / Vests — Upper-body focus</option>
+                                <option value="Shoes">Shoes — Feet-level perspective</option>
+                                <option value="Socks">Socks — Feet-level close crop</option>
+                                <option value="Shorts">Shorts — Waist-down crop</option>
+                                <option value="Pants">Pants — Waist-down crop</option>
+                                <option value="T-Shirts">T-Shirts — Upper-body focus</option>
+                                <option value="Vests">Vests — Upper-body focus</option>
                                 <option value="Full Outfits">Full Outfits — Full-length portrait</option>
-                                <option value="Hats / Eyewear">Hats / Eyewear — Head-and-shoulders</option>
-                                <option value="Hats/Caps">Hats/Caps — Head-and-shoulders crop</option>
+                                <option value="Hats">Hats — Head-and-shoulders</option>
+                                <option value="Eyewear">Eyewear — Head-and-shoulders close-up</option>
+                                <option value="Caps">Caps — Head-and-shoulders crop</option>
                             </select>
-                            <div id="cameraInstructionPanel" class="camera-instruction mt-2 text-xs">
-                                <!-- live instruction will appear here -->
-                            </div>
+                            <div id="cameraInstructionPanel" class="camera-instruction mt-2 text-xs"></div>
                         </div>
                     </div>
 
@@ -114,7 +121,7 @@
                         <input type="text" id="heroColor" class="w-full border border-gray-300 rounded-xl px-4 py-2.5" value="Red" placeholder="Red, Blue, Black...">
                     </div>
 
-                    <!-- Layout Selector (with hidden details) -->
+                    <!-- Layout Selector -->
                     <div>
                         <label class="block text-sm font-semibold text-gray-800 mb-1">📐 Layout Style</label>
                         <select id="layoutSelect" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 bg-white">
@@ -137,6 +144,19 @@
                                 <option value="Top-Left Detail + Bottom-Right Hero|Diagonal split|Main product 60–65% bottom-right; secondary outsole 30–35% top-left; diagonal; spacing 6–10%">Top-Left Detail + Bottom-Right Hero</option>
                                 <option value="Stacked Perspective Pair|Stacked perspective|Main product 65–70% front-right; secondary product 55–60% behind offset left; layered overlap 10–15%">Stacked Perspective Pair</option>
                             </optgroup>
+                            <optgroup label="👜 BAG layouts">
+    <option value="Front Hero + Size Contrast Pair|Front Hero + Size Contrast Pair|Main product (~60–65%) positioned front-right as dominant hero; secondary product (~25–30%) placed front-left, slightly lower to emphasize size difference; no overlap or minimal (~0–5%); both facing forward with slight inward angle; moderate spacing (~8–12%); clean, balanced composition highlighting scale contrast and color variation">
+        Front Hero + Size Contrast Pair (2 variations)
+    </option>
+
+    <option value="Front Hero + Elevated Secondary|Front Hero + Elevated Secondary|Main product (~65–70%) positioned front-left as dominant hero; secondary product (~25–30%) placed top-right, elevated and slightly smaller; no overlap or minimal (~0–5%); both facing forward with slight inward orientation; generous spacing (~10–15%); diagonal balance creating a top-right to bottom-left visual flow; clear hierarchy emphasizing primary product with supportive variant above">
+        Front Hero + Elevated Secondary (2 variations)
+    </option>
+
+    <option value="Left Hero + Right Vertical Variants|Left Hero + Right Vertical Variants|Main product (~60–65%) left-center; three secondary products (~30–35%) stacked vertically on right side; no overlap; even vertical spacing (~6–10%); aligned layout; clear visual hierarchy">
+        Left Hero + Right Vertical Variants (3-4 variations)
+    </option>
+</optgroup>
                         </select>
                         <div id="layoutDetailsDisplay" class="mt-2 p-3 bg-purple-50 rounded-xl text-xs text-gray-700 border border-purple-200">
                             📌 <span id="selectedLayoutKeyword">The Fanned Stack</span><br>
@@ -201,19 +221,19 @@
 
 Your job is to convert user description into a detailed AI image-generation prompt using product reference images.
 
-## Supported Product Types
-household, food, shoes, clothing (shorts, pants, shirts, jackets), accessories, sportswear, full outfits.
+## Supported Product Types (all separate, 1 by 1)
+Shoes, Socks, Shorts, Pants, T-Shirts, Vests, Full Outfits, Hats, Eyewear, Caps, plus household, food, accessories, sportswear.
 
 ## Rules
 - Always assume reference image(s) provided.
 - If ONE product: "Use the attached product image as reference."
 - If MULTIPLE products: "Use the attached product images as references."
 - Preserve product design exactly: shape, color, logo, texture, branding.
-- For model framing: Use the exact framing keyword and camera instruction provided by user (waist-down, feet-level, upper-body, full-length, head-and-shoulders).
+- For model framing: Use the exact framing keyword and camera instruction provided by user.
 - Expand scene with environment, composition, lighting, camera angle.
 - Apply layout strictly if provided.
 - Apply margin & canvas rules.
-- Header & Logo System: Use selected mode (Reference Frame / Manual Build / Hybrid) as described.
+- Header & Logo System: Use selected mode (Reference Frame / Manual Build / Hybrid).
 
 ## Header Modes
 - **reference_frame**: Use attached design reference, preserve structure, colors, logo position.
@@ -227,20 +247,24 @@ Then:
 ### Composition Layout
 ### Product Placement
 ### Lighting
-### Camera Angle & Framing (incorporate the given camera instruction)
+### Camera Angle & Framing
 ### Style
-### Branding & UI Elements (according to header mode)
+### Branding & UI Elements
 
 Important: No cropping, keep background clean, follow spacing, margins, ensure products fully inside canvas.`;
 
-    // Mapping for camera instruction based on product category
+    // Camera instructions for each separate product category
     const cameraInstructions = {
-        "Shorts / Pants": "Frame from mid-torso to just below the sneakers. (Waist-down crop)",
-        "Shoes / Socks": "Focus from the mid-shin down to the floor. (Feet-level perspective)",
-        "T-Shirts / Vests": "Frame from the waist up to the head. (Upper-body focus)",
+        "Shoes": "Focus from the mid-shin down to the floor. (Feet-level perspective)",
+        "Socks": "Focus from the mid-calf down to the floor, highlighting sock texture and fit. (Feet-level close crop)",
+        "Shorts": "Frame from mid-torso to just below the knees. (Waist-down crop)",
+        "Pants": "Frame from mid-torso to just below the sneakers. (Waist-down crop)",
+        "T-Shirts": "Frame from the waist up to the head. (Upper-body focus)",
+        "Vests": "Frame from the waist up to the head. (Upper-body focus)",
         "Full Outfits": "Entire body visible from head to toe. (Full-length portrait)",
-        "Hats / Eyewear": "Close-up on the head, neck, and upper chest. (Head-and-shoulders)",
-        "Hats/Caps": "Close-up focus on the head and face area. (Head-and-shoulders crop)"
+        "Hats": "Close-up on the head, neck, and upper chest. (Head-and-shoulders)",
+        "Eyewear": "Close-up on the face, focusing on eyes and glasses. (Head-and-shoulders close-up)",
+        "Caps": "Close-up focus on the head and face area. (Head-and-shoulders crop)"
     };
 
     // DOM elements
@@ -249,16 +273,14 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
     const productCategoryContainer = $('#productCategoryContainer');
     const productCategorySelect = $('#productCategorySelect');
     const cameraInstructionPanel = $('#cameraInstructionPanel');
-    const productTypeSelect = $('#productTypeSelect');  // main product type select
+    const productTypeSelect = $('#productTypeSelect');
 
-    // Update camera instruction display
     function updateCameraInstruction() {
         const selectedCat = productCategorySelect.val();
         const instruction = cameraInstructions[selectedCat] || "Standard framing according to product category.";
         cameraInstructionPanel.html(`📸 <strong>AI Camera Instruction:</strong> ${instruction}`);
     }
 
-    // Toggle visibility of product category block based on model selection
     function toggleModelFields() {
         if (modelRadioWith.is(':checked')) {
             productCategoryContainer.removeClass('hidden');
@@ -268,10 +290,8 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
         }
     }
 
-    // Sync product type select value with category select default
     function syncProductCategory() {
         const mainProduct = productTypeSelect.val();
-        // If the main product type exists in cameraInstructions, set it as default for category select
         if (cameraInstructions[mainProduct]) {
             productCategorySelect.val(mainProduct);
             updateCameraInstruction();
@@ -279,22 +299,17 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
     }
 
     productTypeSelect.on('change', function() {
-        if (modelRadioWith.is(':checked')) {
-            syncProductCategory();
-        }
+        if (modelRadioWith.is(':checked')) syncProductCategory();
     });
 
     productCategorySelect.on('change', updateCameraInstruction);
     modelRadioNone.on('change', toggleModelFields);
     modelRadioWith.on('change', function() {
         toggleModelFields();
-        if (modelRadioWith.is(':checked')) {
-            syncProductCategory();
-        }
+        if (modelRadioWith.is(':checked')) syncProductCategory();
     });
-    toggleModelFields(); // initial state
+    toggleModelFields();
 
-    // Layout details display
     function updateLayoutDetails() {
         const selectedVal = $('#layoutSelect').val();
         if (selectedVal) {
@@ -311,7 +326,6 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
     $('#layoutSelect').on('change', updateLayoutDetails);
     updateLayoutDetails();
 
-    // Build user request
     function buildUserRequest() {
         const product = productTypeSelect.val();
         const modelOption = $('input[name="modelOption"]:checked').val();
@@ -346,9 +360,7 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
         
         let requestText = `Product: ${product}\n`;
         requestText += `Model / Person: ${modelText}\n`;
-        if (modelOption === "withModel") {
-            requestText += `Camera Framing Instruction: ${framingInstruction}\n`;
-        }
+        if (modelOption === "withModel") requestText += `Camera Framing Instruction: ${framingInstruction}\n`;
         requestText += `Header Mode: ${headerModeDisplay}\n`;
         requestText += `Header Instruction: ${headerInstructionText}\n`;
         requestText += `Hero Product Color: ${heroColor}\n`;
@@ -361,51 +373,30 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
         return requestText;
     }
 
-    // Groq API call
     async function callGroq(systemMsg, userMsg) {
         const response = await fetch(GROQ_ENDPOINT, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${GROQ_API_KEY}`
-            },
-            body: JSON.stringify({
-                model: MODEL_NAME,
-                messages: [
-                    { role: "system", content: systemMsg },
-                    { role: "user", content: userMsg }
-                ],
-                temperature: 0.7,
-                max_tokens: 2000
-            })
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
+            body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemMsg }, { role: "user", content: userMsg }], temperature: 0.7, max_tokens: 2000 })
         });
         if (!response.ok) {
             let errDetail = `HTTP ${response.status}`;
-            try {
-                const errData = await response.json();
-                errDetail = errData.error?.message || JSON.stringify(errData);
-            } catch(e) {}
+            try { const errData = await response.json(); errDetail = errData.error?.message || JSON.stringify(errData); } catch(e) {}
             throw new Error(`Groq API Error: ${errDetail}`);
         }
         const data = await response.json();
-        if (data.choices && data.choices[0] && data.choices[0].message) {
-            return data.choices[0].message.content;
-        } else {
-            throw new Error("Unexpected response from Groq");
-        }
+        if (data.choices && data.choices[0] && data.choices[0].message) return data.choices[0].message.content;
+        else throw new Error("Unexpected response from Groq");
     }
 
-    // Submit handler
     $('#promptForm').on('submit', async function(e) {
         e.preventDefault();
         const generateBtn = $('#generateBtn');
         const loadingDiv = $('#loadingSpinner');
         const responseDiv = $('#responseArea');
-        
         generateBtn.prop('disabled', true).html('⏳ Generating...');
         loadingDiv.removeClass('hidden');
         responseDiv.html('⏳ Combining trained system with your format selections...');
-        
         try {
             const userRequest = buildUserRequest();
             const finalPrompt = await callGroq(TRAINED_SYSTEM_PROMPT, userRequest);
@@ -418,15 +409,11 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
         }
     });
 
-    // Copy to clipboard
     $('#copyBtn').on('click', function() {
         const responseText = $('#responseArea').text();
-        if (!responseText || responseText.includes('Click "Generate"')) {
-            alert('Nothing to copy yet.');
-            return;
-        }
+        if (!responseText || responseText.includes('Click "Generate"')) { alert('Nothing to copy yet.'); return; }
         navigator.clipboard.writeText(responseText).then(() => alert('✅ Prompt copied!')).catch(() => alert('Manual copy failed'));
     });
 </script>
 </body>
-</html>
+</html> //latest codes
