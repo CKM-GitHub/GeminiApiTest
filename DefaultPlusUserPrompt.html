@@ -103,18 +103,27 @@
                     </div>
 
                     <!-- Header Mode (3 modes) -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">📌 Header Mode (Logo + Text)</label>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="reference_frame" checked> <span class="text-sm">🎨 Use Reference Frame</span></label>
-                            <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="manual_build"> <span class="text-sm">✍️ Manual Build (table)</span></label>
-                            <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="hybrid"> <span class="text-sm">🔄 Hybrid: Frame + Text Override</span></label>
-                        </div>
-                        <div id="headerTextArea" class="mt-3">
-                            <label class="block text-xs font-medium text-gray-600">Header Instruction / Override Text</label>
-                            <textarea id="headerInstruction" rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-2 mt-1" placeholder='e.g., "Follow exact colors, font, and layout from attached image" or custom header text'>Follow exact colors, font, and layout from the attached image.</textarea>
-                        </div>
-                    </div>
+                   <div>
+    <label class="block text-sm font-semibold text-gray-800 mb-2">📌 Header Mode (Logo + Text)</label>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="reference_frame" checked> <span class="text-sm">🎨 Use Reference Frame</span></label>
+        <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="manual_build"> <span class="text-sm">✍️ Manual Build (table)</span></label>
+        <label class="flex items-start gap-2 p-2 border rounded-xl cursor-pointer hover:bg-purple-50"><input type="radio" name="headerMode" value="hybrid"> <span class="text-sm">🔄 Hybrid: Frame + Text Override</span></label>
+    </div>
+    
+    <!-- Header Text Section -->
+    <div id="headerTextArea" class="mt-3">
+        <label class="block text-xs font-medium text-gray-600">📝 Header Text</label>
+        <textarea id="headerInstruction" rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-2 mt-1" placeholder='e.g., "ニスセっクス" or custom header text'>Follow exact colors, font, and layout from the attached image.</textarea>
+    </div>
+    
+    <!-- Footer / Brand Logo Section (Separated) -->
+    <div id="footerLogoArea" class="mt-3">
+        <label class="block text-xs font-medium text-gray-600">🏷️ Footer / Brand Logo</label>
+        <input type="text" id="footerLogo" class="w-full border border-gray-300 rounded-xl px-4 py-2 mt-1" placeholder="e.g., Setinn, Nike, Adidas" value="Setinn">
+        <p class="text-xs text-gray-400 mt-1">Logo position: bottom-right corner with proper margin spacing</p>
+    </div>
+</div>
 
                     <!-- Hero Product Color -->
                     <div>
@@ -211,7 +220,7 @@
     // ==========================
     //  GROQ API CONFIGURATION
     // ==========================
-    const GROQ_API_KEY = "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";
+    const GROQ_API_KEY = "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";
     const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
     const MODEL_NAME = "llama-3.1-8b-instant";
 
@@ -327,54 +336,69 @@ Important: No cropping, keep background clean, follow spacing, margins, ensure p
     $('#layoutSelect').on('change', updateLayoutDetails);
     updateLayoutDetails();
 
-    function buildUserRequest() {
-        const product = productTypeSelect.val();
-        const modelOption = $('input[name="modelOption"]:checked').val();
-        let modelText = "None";
-        let framingInstruction = "";
-        if (modelOption === "withModel") {
-            const category = productCategorySelect.val();
-            const framing = cameraInstructions[category] || "Standard framing";
-            framingInstruction = framing;
-            modelText = `Model present. Product category: ${category}. Framing: ${framing}`;
-        } else {
-            modelText = "No model / person";
-        }
-
-        const headerModeRaw = $('input[name="headerMode"]:checked').val();
-        let headerModeDisplay = "";
-        if (headerModeRaw === "reference_frame") headerModeDisplay = "Use Reference Frame";
-        else if (headerModeRaw === "manual_build") headerModeDisplay = "Manual Build";
-        else headerModeDisplay = "Reference Frame + Text Override";
-        
-        const headerInstructionText = $('#headerInstruction').val().trim() || "Follow exact colors, font, and layout from attached image.";
-        const heroColor = $('#heroColor').val().trim() || "Red";
-        const layoutSelected = $('#layoutSelect option:selected').text();
-        const layoutFullDesc = $('#selectedLayoutDesc').text();
-        const canvas = $('#canvasSize').val();
-        const topMargin = $('#topMargin').val();
-        const leftMargin = $('#leftMargin').val();
-        const rightMargin = $('#rightMargin').val();
-        const bottomMargin = $('#bottomMargin').val();
-        const gutter = $('#internalGutter').val();
-        const notes = $('#extraNotes').val();
-        
-        let requestText = `Product: ${product}\n`;
-        requestText += `Model / Person: ${modelText}\n`;
-        if (modelOption === "withModel") requestText += `Camera Framing Instruction: ${framingInstruction}\n`;
-        requestText += `Header Mode: ${headerModeDisplay}\n`;
-        requestText += `Header Instruction: ${headerInstructionText}\n`;
-        requestText += `Hero Product Color: ${heroColor}\n`;
-        requestText += `Layout: ${layoutSelected}\n`;
-        requestText += `Layout Structure: ${layoutFullDesc}\n`;
-        requestText += `Specification:\n${canvas}\n`;
-        requestText += `Margin Instructions:\nTop Margin: ${topMargin}\nLeft Margin: ${leftMargin}\nRight Margin: ${rightMargin}\nBottom Margin: ${bottomMargin}\nInternal Gutter: ${gutter}\n`;
-        requestText += `Note:\n${notes}\n`;
-        requestText += `IMPORTANT: Keep product design identical to reference image. Ensure both views fully inside canvas. No cropping. Remove shadows & borders. Maintain minimum 10px safe padding.`;
-        return requestText;
+   function buildUserRequest() {
+    const product = productTypeSelect.val();
+    const modelOption = $('input[name="modelOption"]:checked').val();
+    let modelText = "None";
+    let framingInstruction = "";
+    if (modelOption === "withModel") {
+        const category = productCategorySelect.val();
+        const framing = cameraInstructions[category] || "Standard framing";
+        framingInstruction = framing;
+        modelText = `Model present. Product category: ${category}. Framing: ${framing}`;
+    } else {
+        modelText = "No model / person";
     }
 
+    const headerModeRaw = $('input[name="headerMode"]:checked').val();
+    let headerModeDisplay = "";
+    if (headerModeRaw === "reference_frame") headerModeDisplay = "Use Reference Frame";
+    else if (headerModeRaw === "manual_build") headerModeDisplay = "Manual Build";
+    else headerModeDisplay = "Reference Frame + Text Override";
+    
+    const headerInstructionText = $('#headerInstruction').val().trim() || "Follow exact colors, font, and layout from attached image.";
+    const footerLogoText = $('#footerLogo').val().trim() || "Setinn";  // NEW: Get footer logo
+    const heroColor = $('#heroColor').val().trim() || "Red";
+    const layoutSelected = $('#layoutSelect option:selected').text();
+    const layoutFullDesc = $('#selectedLayoutDesc').text();
+    const canvas = $('#canvasSize').val();
+    const topMargin = $('#topMargin').val();
+    const leftMargin = $('#leftMargin').val();
+    const rightMargin = $('#rightMargin').val();
+    const bottomMargin = $('#bottomMargin').val();
+    const gutter = $('#internalGutter').val();
+    const notes = $('#extraNotes').val();
+    
+    let requestText = `Product: ${product}\n`;
+    requestText += `Model / Person: ${modelText}\n`;
+    if (modelOption === "withModel") requestText += `Camera Framing Instruction: ${framingInstruction}\n`;
+    requestText += `Header Mode: ${headerModeDisplay}\n`;
+    requestText += `Header Text: ${headerInstructionText}\n`;
+    requestText += `Footer / Brand Logo: ${footerLogoText}\n`;  // NEW: Add footer logo to request
+    requestText += `Hero Product Color: ${heroColor}\n`;
+    requestText += `Class Name: \n`;  // Placeholder for class name field
+    requestText += `Layout: ${layoutSelected}\n`;
+    requestText += `Layout Structure: ${layoutFullDesc}\n`;
+    requestText += `Specification:\n${canvas}\n`;
+    requestText += `Margin Instructions:\nTop Margin: ${topMargin}\nLeft Margin: ${leftMargin}\nRight Margin: ${rightMargin}\nBottom Margin: ${bottomMargin}\nInternal Gutter: ${gutter}\n`;
+    requestText += `Note:\n${notes}\n`;
+    requestText += `IMPORTANT: Keep product design identical to reference image. Ensure both views fully inside canvas. No cropping. Remove shadows & borders. Maintain minimum 10px safe padding.`;
+    return requestText;
+}
+
     async function callGroq(systemMsg, userMsg) {
+
+         const requestBody = {
+        model: MODEL_NAME,
+        messages: [{ role: "system", content: systemMsg }, { role: "user", content: userMsg }],  // ✅ "messages" NOT "message"
+        temperature: 0.7,
+        max_tokens: 2000
+    };
+    
+    // ✅ Add this line to log the request payload
+    console.log("📤 Request to Groq API:", JSON.stringify(requestBody, null, 2));
+    
+
         const response = await fetch(GROQ_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${GROQ_API_KEY}` },
