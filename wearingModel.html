@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>AI Fashion Prompt Studio | Multi-Product Generator</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'dark-bg': '#0A0A0C',
+            'card-bg': '#14151A',
+            'border-dim': '#2A2D35',
+            'accent-green': '#1F7A4C',
+            'accent-gold': '#F59E0B',
+          },
+          fontFamily: {
+            'sans': ['Inter', 'system-ui', 'Poppins', 'sans-serif'],
+          },
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1E1F24; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #3A3F4B; border-radius: 10px; }
+    body { background: #0A0A0C; }
+    select, option { background-color: #14151A; color: #F3F4F6; }
+    .select-wrapper select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3E%3Cpath stroke='%239CA3AF' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      background-size: 1.25rem;
+    }
+    .copy-btn:active { transform: scale(0.96); }
+    .prompt-box { transition: all 0.2s ease; white-space: pre-wrap; word-break: break-word; }
+    .prompt-box:focus-within { border-color: #1F7A4C; box-shadow: 0 0 0 2px rgba(31,122,76,0.3); }
+    .loading-spinner {
+      border: 2px solid rgba(255,255,255,0.2);
+      border-top: 2px solid #1F7A4C;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      animation: spin 0.7s linear infinite;
+      display: inline-block;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body class="font-sans antialiased">
+
+  <main class="min-h-screen w-full px-4 py-6 md:py-8 lg:py-10">
+    <div class="max-w-7xl mx-auto">
+      <!-- Header -->
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1F7A4C] to-[#289C60] flex items-center justify-center shadow-lg">
+            <span class="text-white font-bold text-xl">EM</span>
+          </div>
+          <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">AI Fashion <span class="text-[#1F7A4C]">Prompt Studio</span></h1>
+        </div>
+        <div class="text-xs text-gray-400 bg-[#14151A] px-3 py-1.5 rounded-full border border-[#2A2D35]">Multi-Product · E-commerce · Midjourney v6</div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        
+        <!-- LEFT: Multi-Product Configuration Panel -->
+        <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl overflow-hidden">
+          <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217]">
+            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#1F7A4C]"></span>Product Configurator</h2>
+            <p class="text-gray-400 text-xs mt-1">Select T-shirt, Pants, Shoes — each with independent color options</p>
+          </div>
+          
+          <div class="p-5 md:p-6 space-y-6">
+            <!-- ========== T-SHIRT SECTION ========== -->
+            <div class="border-b border-[#2A2D35] pb-4">
+              <div class="flex items-center gap-2 mb-3">
+                <i class="fas fa-tshirt text-[#1F7A4C]"></i>
+                <h3 class="text-md font-semibold text-white">T-Shirt / Top</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">T-Shirt Style</label>
+                  <div class="select-wrapper">
+                    <select id="topOption" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Crew Neck Short Sleeve T-shirt" selected>Crew Neck Short Sleeve T-shirt</option>
+                      <option value="Oversized Boxy T-shirt">Oversized Boxy T-shirt</option>
+                      <option value="Premium Heavyweight Hoodie">Premium Heavyweight Hoodie</option>
+                      <option value="Classic Slim-fit Polo">Classic Slim-fit Polo</option>
+                      <option value="V-neck Soft Cotton Tee">V-neck Soft Cotton Tee</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">T-Shirt Color</label>
+                  <div class="select-wrapper">
+                    <select id="topColor" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Classic Black">⚫ Classic Black</option>
+                      <option value="Pure White">⚪ Pure White</option>
+                      <option value="Navy Blue">🔵 Navy Blue</option>
+                      <option value="Forest Green">🌲 Forest Green</option>
+                      <option value="Burgundy Red">🍷 Burgundy Red</option>
+                      <option value="Heather Gray">🩶 Heather Gray</option>
+                      <option value="Sage Green">🌿 Sage Green</option>
+                      <option value="Terracotta">🧡 Terracotta</option>
+                      <option value="Cream Beige">🤎 Cream Beige</option>
+                      <option value="Charcoal">🖤 Charcoal</option>
+                      <option value="Royal Blue">💙 Royal Blue</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ========== PANTS SECTION ========== -->
+            <div class="border-b border-[#2A2D35] pb-4">
+              <div class="flex items-center gap-2 mb-3">
+                <i class="fas fa-shopping-cart text-[#1F7A4C]"></i>
+                <h3 class="text-md font-semibold text-white">Pants / Bottoms</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Pants Style</label>
+                  <div class="select-wrapper">
+                    <select id="pantsOption" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Multi-pocket Cargo Pants">Multi-pocket Cargo Pants</option>
+                      <option value="Tailored Chinos">Tailored Chinos</option>
+                      <option value="Baggy Denim Jeans">Baggy Denim Jeans</option>
+                      <option value="Fleece Joggers">Fleece Joggers</option>
+                      <option value="Slim Fit Trousers">Slim Fit Trousers</option>
+                      <option value="Relaxed Linen Pants">Relaxed Linen Pants</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Pants Color</label>
+                  <div class="select-wrapper">
+                    <select id="pantsColor" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Matte Black">🖤 Matte Black</option>
+                      <option value="Khaki Tan">🤎 Khaki Tan</option>
+                      <option value="Light Wash Blue">💙 Light Wash Blue</option>
+                      <option value="Charcoal Gray">🩶 Charcoal Gray</option>
+                      <option value="Stone Gray">🪨 Stone Gray</option>
+                      <option value="Olive Green">🫒 Olive Green</option>
+                      <option value="Beige">🤍 Beige</option>
+                      <option value="Dark Navy">⚓ Dark Navy</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ========== SHOES SECTION ========== -->
+            <div>
+              <div class="flex items-center gap-2 mb-3">
+                <i class="fas fa-shoe-prints text-[#1F7A4C]"></i>
+                <h3 class="text-md font-semibold text-white">Shoes / Footwear</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Shoes Style</label>
+                  <div class="select-wrapper">
+                    <select id="shoesOption" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Retro Chunky Sneakers">Retro Chunky Sneakers</option>
+                      <option value="Premium Leather Loafers">Premium Leather Loafers</option>
+                      <option value="Athletic Running Trainers">Athletic Running Trainers</option>
+                      <option value="Combat Boots">Combat Boots</option>
+                      <option value="Minimalist Sneakers">Minimalist Sneakers</option>
+                      <option value="High-top Skate Shoes">High-top Skate Shoes</option>
+                    </select>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-300 mb-2">Shoes Color</label>
+                  <div class="select-wrapper">
+                    <select id="shoesColor" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                      <option value="None">None</option>
+                      <option value="Triple Black">🖤 Triple Black</option>
+                      <option value="Crisp White">🤍 Crisp White</option>
+                      <option value="Sail Cream">🥛 Sail Cream</option>
+                      <option value="Tan Suede">🟤 Tan Suede</option>
+                      <option value="Red Accents">🔴 Red Accents</option>
+                      <option value="Silver Gray">✨ Silver Gray</option>
+                      <option value="Olive Green">🌿 Olive Green</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Background Location & Model Type -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">📍 Background Location</label>
+                <div class="select-wrapper">
+                  <select id="backgroundLocation" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                    <option value="minimalist concrete photography studio with soft diffused lighting">🏢 Minimalist Concrete Studio</option>
+                    <option value="bright modern art gallery with white walls and natural daylight">🖼️ Bright Art Gallery</option>
+                    <option value="urban rooftop overlooking city skyline at golden hour">🌆 Urban Rooftop (Golden Hour)</option>
+                    <option value="cozy Scandinavian-inspired living room with neutral tones">🛋️ Scandinavian Living Room</option>
+                    <option value="clean white cyclorama photography studio" selected>📸 White Cyclorama Studio</option>
+                    <option value="luxury marble loft with floor-to-ceiling windows">✨ Luxury Marble Loft</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-300 mb-2">🧥 Model Type</label>
+                <div class="select-wrapper">
+                  <select id="modelType" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
+                    <option value="attractive young adult male model">Young Adult Male</option>
+                    <option value="attractive young adult female model">Young Adult Female</option>
+                    <option value="athletic male model with defined physique">Athletic Male</option>
+                    <option value="tall slender female model with elegant posture">Elegant Female</option>
+                    <option value="casual relaxed-fit male model">Casual Male</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="pt-4 flex flex-col sm:flex-row gap-4">
+              <button id="generatePromptBtn" class="flex-1 bg-gradient-to-r from-[#1F7A4C] to-[#289C60] hover:from-[#166a41] hover:to-[#1f8a54] text-white font-bold py-3 px-5 rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2">
+                <i class="fas fa-wand-magic"></i> Generate Fashion Prompt
+              </button>
+              <button id="copyBothBtn" class="flex-1 bg-[#2A2D35] border border-[#3E424F] hover:bg-[#363A46] text-white font-bold py-3 px-5 rounded-xl transition-all duration-200 flex items-center justify-center gap-2">
+                <i class="fas fa-copy"></i> Copy All Prompts
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Output Panel -->
+        <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl flex flex-col">
+          <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217] flex justify-between items-center flex-wrap gap-3">
+            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>Generated AI Prompts</h2>
+            <div class="flex gap-2">
+              <button id="copyMainOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> Copy Main</button>
+              <button id="copyNegOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> Copy Negative</button>
+            </div>
+          </div>
+          <div class="flex-1 p-5 md:p-6 space-y-5">
+            <!-- Selected Items Summary -->
+            <div class="bg-[#0E0F13] rounded-xl p-3 border border-[#2A2D35]">
+              <div class="grid grid-cols-3 gap-2 text-xs">
+                <div><span class="text-gray-400">👕 Top:</span> <span id="summaryTop" class="text-[#1F7A4C] font-mono text-xs">—</span></div>
+                <div><span class="text-gray-400">👖 Pants:</span> <span id="summaryPants" class="text-[#F59E0B] font-mono text-xs">—</span></div>
+                <div><span class="text-gray-400">👟 Shoes:</span> <span id="summaryShoes" class="text-gray-300 font-mono text-xs">—</span></div>
+              </div>
+            </div>
+            
+            <!-- Main Prompt Box -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-medium text-gray-300">✨ MASTER PROMPT (E-commerce)</label>
+                <span class="text-[10px] text-gray-500">85mm · f/1.8 · 8k</span>
+              </div>
+              <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[300px] text-gray-200 text-sm leading-relaxed overflow-y-auto font-mono">
+                <span id="mainPromptText">Select T-shirt, Pants, and Shoes with their colors, then click "Generate Fashion Prompt".</span>
+              </div>
+            </div>
+            
+            <!-- Negative Prompt Box (Fixed Professional) -->
+            <div>
+              <div class="flex justify-between items-center mb-2">
+                <label class="text-sm font-medium text-gray-300">⚠️ NEGATIVE PROMPT</label>
+              </div>
+              <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[120px] text-gray-300 text-xs leading-relaxed overflow-y-auto">
+                <span id="negativePromptText">deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong shirt color, oversized collar, stretched sleeves, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts, duplicated clothing, malformed shoulders, unrealistic proportions, warped fabric, inaccurate stitching, fake patterns, glossy fabric, floating shoes, motion blur, low detail, compression artifacts</span>
+              </div>
+            </div>
+            
+            <div id="generationStatus" class="hidden flex items-center justify-center gap-3 bg-[#1E1F24] rounded-xl py-2">
+              <div class="loading-spinner"></div>
+              <span class="text-xs text-[#1F7A4C]">Generating professional fashion prompt...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <script>
+    (function() {
+      // DOM Elements - T-Shirt
+      const topOption = document.getElementById('topOption');
+      const topColor = document.getElementById('topColor');
+      // Pants
+      const pantsOption = document.getElementById('pantsOption');
+      const pantsColor = document.getElementById('pantsColor');
+      // Shoes
+      const shoesOption = document.getElementById('shoesOption');
+      const shoesColor = document.getElementById('shoesColor');
+      // Environment
+      const backgroundLocation = document.getElementById('backgroundLocation');
+      const modelType = document.getElementById('modelType');
+      
+      // Buttons & Output
+      const generateBtn = document.getElementById('generatePromptBtn');
+      const copyBothBtn = document.getElementById('copyBothBtn');
+      const copyMainOnly = document.getElementById('copyMainOnly');
+      const copyNegOnly = document.getElementById('copyNegOnly');
+      const mainPromptSpan = document.getElementById('mainPromptText');
+      const negativePromptSpan = document.getElementById('negativePromptText');
+      const generationStatus = document.getElementById('generationStatus');
+      
+      // Summary spans
+      const summaryTop = document.getElementById('summaryTop');
+      const summaryPants = document.getElementById('summaryPants');
+      const summaryShoes = document.getElementById('summaryShoes');
+
+      // Helper: Update summary display
+      function updateSummary() {
+        const topText = topOption.value !== 'None' ? `${topColor.value} ${topOption.value}` : 'None';
+        const pantsText = pantsOption.value !== 'None' ? `${pantsColor.value} ${pantsOption.value}` : 'None';
+        const shoesText = shoesOption.value !== 'None' ? `${shoesColor.value} ${shoesOption.value}` : 'None';
+        summaryTop.innerText = topOption.value !== 'None' ? topColor.value : '—';
+        summaryPants.innerText = pantsOption.value !== 'None' ? pantsColor.value : '—';
+        summaryShoes.innerText = shoesOption.value !== 'None' ? shoesColor.value : '—';
+      }
+
+      // Determine which items are selected
+      function getSelectedItems() {
+        return {
+          hasTop: topOption.value !== 'None',
+          hasPants: pantsOption.value !== 'None',
+          hasShoes: shoesOption.value !== 'None'
+        };
+      }
+
+      // Build outfit description string
+      function buildOutfitDescription() {
+        const parts = [];
+        if (topOption.value !== 'None') {
+          parts.push(`${topColor.value} ${topOption.value}`);
+        }
+        if (pantsOption.value !== 'None') {
+          parts.push(`${pantsColor.value} ${pantsOption.value}`);
+        }
+        if (shoesOption.value !== 'None') {
+          parts.push(`${shoesColor.value} ${shoesOption.value}`);
+        }
+        return parts.length ? parts.join(', ') : 'minimalist outfit';
+      }
+
+      // Dynamic Layout & Pose based on selection
+      function getDynamicLayoutAndPose() {
+        const { hasTop, hasPants, hasShoes } = getSelectedItems();
+        const onlyTop = hasTop && !hasPants && !hasShoes;
+        const onlyPants = !hasTop && hasPants && !hasShoes;
+        const onlyShoes = !hasTop && !hasPants && hasShoes;
+        const combo = (hasTop && hasPants) || (hasTop && hasShoes) || (hasPants && hasShoes) || (hasTop && hasPants && hasShoes);
+        
+        if (onlyTop) {
+          return { layout: "Medium upper-body portrait shot", pose: "Looking confidently into the camera, showcasing fabric drape and texture" };
+        }
+        if (onlyPants) {
+          return { layout: "Waist-down low-angle fashion shot", pose: "Standing with relaxed weight shift, highlighting pocket details and fit" };
+        }
+        if (onlyShoes) {
+          return { layout: "Macro footwear close-up shot", pose: "Sleek foot placement on textured surface, showcasing sole details" };
+        }
+        if (combo) {
+          return { layout: "Full-body commercial lookbook shot", pose: "Dynamic walking forward pose or cool streetwear stance, capturing the entire outfit cohesion" };
+        }
+        return { layout: "Standard fashion portrait", pose: "Natural confident stance" };
+      }
+
+      // Get dominant color tone from selected garments
+      function getDominantColorTone() {
+        let colorValue = null;
+        if (topOption.value !== 'None') colorValue = topColor.value;
+        else if (pantsOption.value !== 'None') colorValue = pantsColor.value;
+        else if (shoesOption.value !== 'None') colorValue = shoesColor.value;
+        if (!colorValue) return 'Light';
+        const lower = colorValue.toLowerCase();
+        const darkKeywords = ['black', 'charcoal', 'navy', 'olive', 'dark', 'matte black', 'charcoal gray', 'triple black', 'burgundy', 'navy blue'];
+        const isDark = darkKeywords.some(kw => lower.includes(kw));
+        return isDark ? 'Dark' : 'Light';
+      }
+
+      // Get background based on style and dominant tone
+      function getEnhancedBackground() {
+        const tone = getDominantColorTone();
+        if (tone === 'Dark') {
+          return "A moody, sophisticated photography studio with dramatic shadows and warm rim lighting";
+        } else {
+          return backgroundLocation.value;
+        }
+      }
+
+      // Generate the master prompt with all selections
+      function generateMasterPrompt() {
+        const { hasTop, hasPants, hasShoes } = getSelectedItems();
+        const { layout, pose } = getDynamicLayoutAndPose();
+        const outfitDesc = buildOutfitDescription();
+        const bgDesc = getEnhancedBackground();
+        const modelDesc = modelType.value;
+        const topColorValue = topOption.value !== 'None' ? topColor.value : '';
+        const topStyle = topOption.value !== 'None' ? topOption.value : 't-shirt';
+        
+        // Photography quality injections
+        const photographyTerms = "Shot on 85mm lens, f/1.8 aperture, shallow depth of field. Sharp focus on fabric texture and stitching details. Professional studio lighting setup, highly detailed skin texture, realistic fabric drape, commercial fashion lookbook quality, photorealistic, 8k resolution, rich color grading.";
+        
+        let prompt = `Ultra realistic ecommerce fashion photography of a fully AI-generated ${modelDesc} wearing `;
+        
+        // Build clothing description with colors
+        if (hasTop && hasPants && hasShoes) {
+          prompt += `a complete outfit consisting of ${outfitDesc}. `;
+        } else if (hasTop && hasPants) {
+          prompt += `${outfitDesc}. `;
+        } else if (hasTop) {
+          prompt += `a ${topColorValue} ${topStyle} with minimalist centered "Admiral" chest logo placement, exact typography, sleeve length, stitching, smooth athletic fabric texture, relaxed regular fit silhouette, collar structure, and authentic proportions without redesigning any part of the shirt. `;
+        } else if (hasPants) {
+          prompt += `${outfitDesc}. `;
+        } else if (hasShoes) {
+          prompt += `${outfitDesc}. `;
+        } else {
+          prompt += `a minimalist clean outfit. `;
+        }
+        
+        prompt += `${layout}. Pose: ${pose}. Model standing in a ${bgDesc} with soft neutral background, subtle luxury fashion editorial atmosphere, natural confident pose, realistic anatomy, realistic skin texture, natural arms and hands visibility, cinematic studio lighting, soft shadows, premium fashion campaign look, ultra detailed textile rendering, realistic folds around shoulders, chest and waist, accurate fabric tension, clean styling, modern casual aesthetic, ${photographyTerms} centered composition, ultra sharp focus on clothing, realistic color accuracy, professional ecommerce catalog quality, natural body proportions, luxury commercial photography.`;
+        
+        return prompt.trim();
+      }
+
+      // Update output
+      function updateOutput() {
+        generationStatus.classList.remove('hidden');
+        
+        setTimeout(() => {
+          const finalPrompt = generateMasterPrompt();
+          mainPromptSpan.innerText = finalPrompt;
+          updateSummary();
+          generationStatus.classList.add('hidden');
+        }, 100);
+      }
+
+      // Copy functions
+      async function copyToClipboard(text, label) {
+        try {
+          await navigator.clipboard.writeText(text);
+          alert(`✅ ${label} copied to clipboard!`);
+        } catch (err) {
+          alert(`❌ Unable to copy: ${err.message}`);
+        }
+      }
+
+      copyMainOnly.addEventListener('click', () => {
+        const mainText = mainPromptSpan.innerText;
+        if (mainText && !mainText.includes('Select T-shirt')) {
+          copyToClipboard(mainText, 'Main prompt');
+        } else {
+          alert('Please generate a prompt first.');
+        }
+      });
+      
+      copyNegOnly.addEventListener('click', () => {
+        copyToClipboard(negativePromptSpan.innerText, 'Negative prompt');
+      });
+      
+      copyBothBtn.addEventListener('click', () => {
+        const mainText = mainPromptSpan.innerText;
+        if (mainText && !mainText.includes('Select T-shirt')) {
+          const combined = `[MAIN PROMPT]\n${mainText}\n\n[NEGATIVE PROMPT]\n${negativePromptSpan.innerText}`;
+          copyToClipboard(combined, 'Both prompts');
+        } else {
+          alert('Please generate a prompt first.');
+        }
+      });
+      
+      generateBtn.addEventListener('click', () => {
+        updateOutput();
+      });
+      
+      // Auto-update summary on any change
+      const allSelects = [topOption, topColor, pantsOption, pantsColor, shoesOption, shoesColor, backgroundLocation, modelType];
+      allSelects.forEach(select => {
+        select.addEventListener('change', () => {
+          updateSummary();
+        });
+      });
+      
+      // Initial load
+      setTimeout(() => {
+        updateSummary();
+        updateOutput();
+      }, 200);
+    })();
+  </script>
+</body>
+</html>
