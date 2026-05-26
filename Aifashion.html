@@ -76,7 +76,7 @@
           </div>
           <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">CKM AI Fashion <span class="text-[#1F7A4C]">Prompt Generator</span></h1>
         </div>
-        <div class="text-xs text-gray-400 bg-[#14151A] px-3 py-1.5 rounded-full border border-[#2A2D35]">Image-Based Selection · Dual Mode</div>
+        <div class="text-xs text-gray-400 bg-[#14151A] px-3 py-1.5 rounded-full border border-[#2A2D35]">Image-Based Selection · Copy Both Prompts</div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
@@ -192,7 +192,7 @@
               </div>
             </div>
 
-            <!-- Dual Action Buttons -->
+            <!-- Action Buttons -->
             <div class="pt-4 flex flex-col sm:flex-row gap-4">
               <button id="systemGenerateBtn" class="flex-1 bg-gradient-to-r from-[#1F7A4C] to-[#289C60] hover:from-[#166a41] hover:to-[#1f8a54] text-white font-bold py-3 px-5 rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2">
                 <i class="fas fa-magic text-sm"></i> Generate Prompt
@@ -205,9 +205,11 @@
         <!-- RIGHT: Output Panel -->
         <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl flex flex-col">
           <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217] flex justify-between items-center flex-wrap gap-3">
-            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>Generated Prompt</h2>
+            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>Generated Prompts</h2>
             <div class="flex gap-2">
-              <button id="copyMainOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> Copy Prompt</button>
+              <button id="copyMainOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> Copy Main</button>
+              <button id="copyNegOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> Copy Negative</button>
+              <button id="copyBothBtn" class="copy-btn text-xs bg-[#1F7A4C] hover:bg-[#166a41] text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-copy"></i> Copy Both</button>
             </div>
           </div>
           <div class="flex-1 p-5 md:p-6 space-y-5">
@@ -264,6 +266,8 @@
       
       const generateBtn = document.getElementById('systemGenerateBtn');
       const copyMainOnly = document.getElementById('copyMainOnly');
+      const copyNegOnly = document.getElementById('copyNegOnly');
+      const copyBothBtn = document.getElementById('copyBothBtn');
       const mainPromptSpan = document.getElementById('mainPromptText');
       const negativePromptSpan = document.getElementById('negativePromptText');
       const generationStatus = document.getElementById('generationStatus');
@@ -410,8 +414,6 @@
       async function runGeneration() {
         if (isProcessing) return;
         
-        const selectedCount = [hasTopCheckbox.checked, hasPantsCheckbox.checked, hasShoesCheckbox.checked, hasWristbandCheckbox.checked].filter(Boolean).length;
-        
         isProcessing = true;
         generationStatus.classList.remove('hidden');
         generateBtn.disabled = true;
@@ -428,22 +430,41 @@
         updateSummary();
       }
 
-      // Copy function
-      async function copyToClipboard(text, label) {
+      // Copy function with visual feedback
+      async function copyToClipboard(text, buttonElement, successMessage) {
         try {
           await navigator.clipboard.writeText(text);
-          const originalHtml = copyMainOnly.innerHTML;
-          copyMainOnly.innerHTML = '<i class="fas fa-check"></i> Copied!';
-          setTimeout(() => { copyMainOnly.innerHTML = originalHtml; }, 1500);
+          const originalHtml = buttonElement.innerHTML;
+          buttonElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          setTimeout(() => { buttonElement.innerHTML = originalHtml; }, 1500);
         } catch (err) {
           alert('❌ Copy failed');
         }
       }
       
+      // Copy Main Prompt Only
       copyMainOnly.addEventListener('click', () => {
         const txt = mainPromptSpan.innerText;
         if (txt && !txt.includes('Select the products')) {
-          copyToClipboard(txt, 'Main prompt');
+          copyToClipboard(txt, copyMainOnly, 'Main prompt');
+        } else {
+          alert('Generate a prompt first.');
+        }
+      });
+      
+      // Copy Negative Prompt Only
+      copyNegOnly.addEventListener('click', () => {
+        const txt = negativePromptSpan.innerText;
+        copyToClipboard(txt, copyNegOnly, 'Negative prompt');
+      });
+      
+      // Copy Both Prompts (Main + Negative)
+      copyBothBtn.addEventListener('click', () => {
+        const mainTxt = mainPromptSpan.innerText;
+        if (mainTxt && !mainTxt.includes('Select the products')) {
+          const negativeTxt = negativePromptSpan.innerText;
+          const bothPrompts = `[MASTER PROMPT]\n${mainTxt}\n\n[NEGATIVE PROMPT]\n${negativeTxt}`;
+          copyToClipboard(bothPrompts, copyBothBtn, 'Both prompts');
         } else {
           alert('Generate a prompt first.');
         }
