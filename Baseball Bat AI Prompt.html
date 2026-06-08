@@ -262,6 +262,7 @@
 
       let prompt = "";
 
+      let negativePrompt = "black underlines, text underlining, thick black divider lines, borders separating images, frames, dark horizontal lines beneath typography, grids with black borders, handwritten text, low quality, distorted layout, blurry textures.";
       if (frame === 'Frame 1') {
         // ========== FRAME 1 RULES (E-COMMERCE PROMPT STYLE) ==========
         // 1 color = 56 degrees, 2 or more colors = 62 degrees
@@ -317,6 +318,7 @@
         // --- BRANDING LOGO & STYLE NOTES ---
         prompt += `In the lower-right corner, just above the horizontal footer bats, the clean red dynamic graphic logo of the manufacturer 'ZETT' is sharply displayed. `;
         prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures and technical labels.`;
+     prompt += negativePrompt;
       }
       else if (frame === 'Frame 2') {
         // ========== FRAME 2 RULES (E-COMMERCE PROMPT STYLE) ==========
@@ -357,6 +359,7 @@
       }
 
         prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution.`;
+        prompt += negativePrompt;
       }
 
       return prompt;
