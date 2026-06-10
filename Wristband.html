@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>FILA Studio | Dynamic Prompt Engine + Gemini Guide</title>
+  <!-- Tailwind CSS + Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: #f6f8fc;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+    }
+    .card-hover {
+      transition: all 0.2s ease;
+    }
+    .card-hover:focus-within, .card-hover:hover {
+      border-color: #3b82f6;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    }
+    textarea {
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .transition-fade {
+      transition: opacity 0.2s ease, visibility 0.2s;
+    }
+    .guide-card {
+      background: linear-gradient(135deg, #fef9e3 0%, #fff4e0 100%);
+      border-left: 4px solid #fbbf24;
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased">
+
+  <main class="max-w-5xl mx-auto px-4 py-8 md:py-12">
+    <!-- header branding -->
+    <div class="mb-8 text-center md:text-left md:flex md:items-end md:justify-between border-b border-gray-200 pb-5">
+      <div>
+        <h1 class="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-[#1e2a47] to-[#2d3e6e] bg-clip-text text-transparent">Prompt Forge<span class="text-sm font-normal text-gray-500 align-middle ml-2">⚡︎ e‑commerce</span></h1>
+        <p class="text-gray-500 mt-1 text-sm max-w-xl">Dynamic prompt constructor · Fila wristband catalog · UI state machine ready</p>
+      </div>
+      <div class="mt-3 md:mt-0 text-xs text-gray-400 bg-white/60 rounded-full px-3 py-1 inline-block">Japanese sportswear logic</div>
+    </div>
+
+    <!-- Instruction Guide (Gemini) -->
+    <div class="guide-card rounded-xl p-4 mb-6 shadow-sm flex flex-wrap items-start justify-between gap-3 border border-amber-200">
+      <div class="flex-1">
+        <div class="flex items-center gap-2">
+          <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span class="font-semibold text-gray-800">📸 How to generate images with Google Gemini</span>
+        </div>
+        <p class="text-sm text-gray-700 mt-1 ml-6">1️⃣ Click <strong>“Generate compiled prompt”</strong> below → 2️⃣ Copy the prompt (📋 button) → 3️⃣ Open <a href="https://gemini.google.com/app" target="_blank" class="text-blue-600 underline font-medium">gemini.google.com/app</a> → 4️⃣ Choose <strong>“Create image”</strong> (or Imagen feature) → 5️⃣ Upload your product photo (wristband) → 6️⃣ Paste the prompt → 7️⃣ Generate & download your catalog image.</p>
+        <p class="text-xs text-amber-700 mt-1 ml-6">💡 Tip: For “3 product layout” manual mode, customize header/footer text below. For “Wearing to model”, pick model type & background.</p>
+      </div>
+      <a href="https://gemini.google.com/app" target="_blank" class="inline-flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-sm font-medium transition shrink-0">Open Gemini →</a>
+    </div>
+
+    <!-- Main card: configuration panel -->
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden card-hover">
+      <div class="p-6 space-y-7">
+        <!-- primary generation type -->
+        <div>
+          <label class="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
+            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> 
+            Generation strategy
+          </label>
+          <select id="generationType" class="w-full md:w-2/3 border border-gray-300 rounded-xl px-4 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition outline-none text-gray-800 shadow-sm">
+            <option value="3 product layout">📦 3 product layout (multi‑product frame)</option>
+            <option value="Wearing to model">🧥 Wearing to model · lifestyle</option>
+            <option value="600px size">🖼️ 600px size · 1:1 catalog + JP label</option>
+          </select>
+        </div>
+
+        <!-- CONDITIONAL UI ZONES -->
+        <!-- Zone A: Frame Selection + dynamic header/footer text inputs (manual mode) -->
+        <div id="frameSelectionWrapper" class="transition-fade bg-gray-50/50 rounded-xl p-4 border border-gray-200/80 hidden">
+          <label class="block text-sm font-medium text-gray-800 mb-2">🖌️ Frame Selection <span class="text-xs text-gray-400">(layout composition)</span></label>
+          <select id="frameSelection" class="w-full md:w-2/3 border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400">
+            <option value="manual">📄 Manual mode — full layout (headers + footers + banners)</option>
+            <option value="with frame">🗂️ With frame — isolated product asset pack (no UI chrome)</option>
+          </select>
+          <p class="text-xs text-gray-400 mt-1">manual = customizable header banner + footer brand text | with frame = product cluster only</p>
+          
+          <!-- Dynamic header & footer text fields (only visible when manual mode selected) -->
+          <div id="headerFooterCustomFields" class="mt-4 space-y-3 pl-1 border-l-2 border-blue-200 hidden transition-fade">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">🏷️ Header banner text (Japanese / any)</label>
+              <input type="text" id="headerTextInput" value="ユニセックス" class="mt-1 w-full md:w-2/3 border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300">
+              <p class="text-xs text-gray-400 mt-0.5">Appears in top-left purple banner</p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700">🏷️ Footer brand logo text</label>
+              <input type="text" id="footerTextInput" value="FILA" class="mt-1 w-full md:w-2/3 border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300">
+              <p class="text-xs text-gray-400 mt-0.5">Displayed in bottom right corner (brand signature)</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Zone B: Model Type & Background Location (visible for "Wearing to model") -->
+        <div id="modelBackgroundWrapper" class="transition-fade grid grid-cols-1 md:grid-cols-2 gap-5 bg-gray-50/50 rounded-xl p-4 border border-gray-200/80 hidden">
+          <div>
+            <label class="block text-sm font-medium text-gray-800 mb-1.5">🧑‍🎨 Model Type</label>
+            <select id="modelType" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white focus:ring-2 focus:ring-blue-400/30">
+              <option value="a professional athletic male model with toned arms">Male athletic model (toned)</option>
+              <option value="a dynamic female fitness model with natural stance">Female fitness model</option>
+              <option value="a Japanese streetwear model with minimalist posture">Japanese streetwear model</option>
+              <option value="a muscular sporty senior model showcasing endurance gear">Senior athletic model</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-800 mb-1.5">🌆 Background Location</label>
+            <select id="backgroundLocation" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white focus:ring-2 focus:ring-blue-400/30">
+              <option value="a minimalist Tokyo studio with soft diffused window light">Minimalist Tokyo studio — soft window light</option>
+              <option value="a rainy Shibuya street at golden hour with bokeh city lights">Shibuya street · golden hour</option>
+              <option value="a clean cyclorama with subtle warm gradients">Clean cyclorama · warm gradient</option>
+              <option value="an urban rooftop overlooking neon signs, dusk atmosphere">Rooftop · neon dusk atmosphere</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- action buttons & copy helper -->
+        <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-gray-100 mt-2">
+          <button id="generateBtn" class="inline-flex items-center gap-2 bg-[#1e2f4b] hover:bg-[#142236] text-white font-medium px-6 py-2.5 rounded-xl transition shadow-md hover:shadow-lg focus:ring-2 focus:ring-blue-400/60">
+            ✨ Generate compiled prompt
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+          </button>
+          <button id="copyBtn" class="text-gray-500 hover:text-gray-800 text-sm bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition flex items-center gap-1.5">
+            📋 Copy prompt
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Output card: final prompt display -->
+    <div class="mt-8 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="border-b border-gray-100 px-6 py-3 bg-gray-50/40 flex flex-wrap justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="font-mono text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">PROMPT OUTPUT</span>
+          <span class="text-xs text-gray-500">ready-to-use · main + negative prompt</span>
+        </div>
+        <div class="text-xs text-gray-400 hidden sm:block">🔁 dynamic variables replaced</div>
+      </div>
+      <div class="p-5">
+        <textarea id="promptOutput" rows="16" class="w-full border border-gray-200 rounded-xl p-4 bg-gray-50 text-gray-800 resize-y focus:ring-1 focus:ring-blue-300 outline-none" placeholder="Select generation type and click 'Generate compiled prompt'... The full prompt with negative section will appear here. Then copy & paste into Gemini." readonly></textarea>
+        <div class="text-right text-[11px] text-gray-400 mt-2">✓ Manual mode: header + footer custom text | Wearing mode: dynamic model & background | 600px: standardized 1:1</div>
+      </div>
+    </div>
+
+    <div class="text-center text-xs text-gray-400 mt-8 border-t border-gray-200 pt-6">
+      <span>⚙️ UI state machine · conditional fields follow generation type · custom header/footer only in manual mode</span>
+    </div>
+  </main>
+
+  <script>
+    // ----------------------------------------------
+    // 1. PROMPT DATA PACKAGES (raw template strings)
+    // ----------------------------------------------
+    const PROMPT_LIBRARY = {
+      // Type 1 - 3 product layout -> two variants
+      threeProduct: {
+        // Option A: manual (full layout + headers/footers) with placeholders for header & footer text
+        manual: {
+          main: `[MAIN PROMPT]
+Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure white background (#FFFFFF) in a clean Japanese ecommerce layout. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. In the top left corner, a clean purple rectangular banner header contains the white Japanese text "{{headerText}}" in a bold sans-serif font. In the bottom right corner footer area, the official "{{footerText}}" brand text logo is crisply displayed in its signature navy and red typography. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
+          negative: `[NEGATIVE PROMPT]
+deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, shadows beneath products, non-white background, warped product shapes, altered typography, duplicate branding, gradient background`
+        },
+        // Option B: with frame (isolated product asset only) - no header/footer customization needed
+        withFrame: {
+          main: `[MAIN PROMPT]
+Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands isolated on a clean, seamless pure white background (#FFFFFF). The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. No headers, no footers, no external text banners, and no graphical frames included—purely focusing on the product cluster layout. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
+          negative: `[NEGATIVE PROMPT]
+text banners, graphic frames, headers, footers, brand logos, words, decorative borders, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, messy layout, shadows beneath products, non-white background, warped product shapes`
+        }
+      },
+      
+      // Type 2: Wearing to model (dynamic placeholders {{modelType}} & {{backgroundLocation}})
+      wearingModelTemplate: {
+        main: `[MAIN PROMPT]
+A detailed, close-up lifestyle fashion advertisement photograph showcasing a {{modelType}} wearing the exact uploaded athletic terrycloth wristband naturally on their wrist. The original properties of the product are strictly maintained: the authentic navy blue color, the dense looped terrycloth fabric texture, tight structural stitching, and the crisp centered embroidery of the square logo with its distinct red, white, and navy components. The wristband realistically wraps around the arm, showing natural fabric tension and subtle physical folds matching the model's stance. Set against a {{backgroundLocation}} that provides a sophisticated, high-end atmosphere. High fashion editorial lighting, crisp shadows, shallow depth of field with sharp focus on the wristband and textile texture, ultra-realistic skin tones, premium sports apparel campaign aesthetic, 8k resolution.`,
+        negative: `[NEGATIVE PROMPT]
+deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong color, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts`
+      },
+      
+      // Type 3: 600px size (static)
+      size600: {
+        main: `[MAIN PROMPT]
+Transform the uploaded product image into a Japanese e-commerce catalog style product photo. Keep the wristband product completely unchanged: Preserve the exact shape, proportions, color, texture, embroidery, logo placement, stitching, and fabric details. Do not alter the product design. Do not add or remove any product elements. Adjust the layout to match a Japanese catalog image: Re-center the wristband on a square 1:1 canvas. Increase whitespace around the product so it occupies approximately 70–75% of the canvas height. Use a clean light gray background (#EEEEEE). Add balanced margins on all sides. Maintain a straight front-facing product orientation. At the bottom center, add a small Japanese product color label: "(NV0) フィラネイビー" in a small catalog caption size, dark gray text, clean Japanese sans-serif font, center aligned, and positioned close to the bottom edge with professional catalog spacing. Image style: Japanese sporting goods catalog, e-commerce product listing, product cutout presentation, neutral studio lighting, sharp focus, accurate colors, no shadows beyond the original product, high-resolution commercial product photography, clean, minimal, print-ready catalog layout. Output: square catalog image identical in style to official Japanese sports brand product listings.`,
+        negative: `[NEGATIVE PROMPT]
+crooked placement, off-center alignment, dark shadows, complex backgrounds, human skin, human hands, colorful background gradients, cut off edges, low resolution, blurred typography, incorrect Japanese characters, massive font sizes, stylized frames, borders, low fidelity rendering, deformed logos, modified product text`
+      }
+    };
+    
+    // ------------------------------
+    // DOM elements
+    // ------------------------------
+    const generationTypeSelect = document.getElementById('generationType');
+    const frameSelectionWrapper = document.getElementById('frameSelectionWrapper');
+    const modelBackgroundWrapper = document.getElementById('modelBackgroundWrapper');
+    const frameSelection = document.getElementById('frameSelection');
+    const headerFooterCustomFields = document.getElementById('headerFooterCustomFields');
+    const headerTextInput = document.getElementById('headerTextInput');
+    const footerTextInput = document.getElementById('footerTextInput');
+    const modelTypeSelect = document.getElementById('modelType');
+    const backgroundLocationSelect = document.getElementById('backgroundLocation');
+    const generateBtn = document.getElementById('generateBtn');
+    const promptOutput = document.getElementById('promptOutput');
+    const copyBtn = document.getElementById('copyBtn');
+    
+    // Helper: show/hide header/footer custom fields based on frameSelection value & only when visible
+    function toggleHeaderFooterFields() {
+      // Only relevant if frameSelectionWrapper is not hidden (i.e., 3 product layout selected)
+      const isFrameVisible = !frameSelectionWrapper.classList.contains('hidden');
+      if (!isFrameVisible) {
+        headerFooterCustomFields.classList.add('hidden');
+        return;
+      }
+      const selectedFrame = frameSelection.value;
+      if (selectedFrame === 'manual') {
+        headerFooterCustomFields.classList.remove('hidden');
+      } else {
+        headerFooterCustomFields.classList.add('hidden');
+      }
+    }
+    
+    // Visibility based on generation type
+    function updateConditionalVisibility() {
+      const selectedVal = generationTypeSelect.value;
+      
+      frameSelectionWrapper.classList.add('hidden');
+      modelBackgroundWrapper.classList.add('hidden');
+      headerFooterCustomFields.classList.add('hidden'); // ensure hidden until needed
+      
+      if (selectedVal === '3 product layout') {
+        frameSelectionWrapper.classList.remove('hidden');
+        // after showing, check manual mode
+        toggleHeaderFooterFields();
+      } 
+      else if (selectedVal === 'Wearing to model') {
+        modelBackgroundWrapper.classList.remove('hidden');
+      }
+      else if (selectedVal === '600px size') {
+        // nothing extra
+      }
+    }
+    
+    // dynamic string interpolation
+    function interpolatePrompt(templateStr, replacements) {
+      let result = templateStr;
+      for (const [key, value] of Object.entries(replacements)) {
+        const placeholder = new RegExp(`{{${key}}}`, 'g');
+        result = result.replace(placeholder, value);
+      }
+      return result;
+    }
+    
+    // main prompt builder
+    function buildFinalPrompt() {
+      const genType = generationTypeSelect.value;
+      
+      // Case 1: 3 product layout
+      if (genType === '3 product layout') {
+        const frameMode = frameSelection.value;
+        if (frameMode === 'manual') {
+          let promptData = PROMPT_LIBRARY.threeProduct.manual;
+          const headerCustom = headerTextInput.value.trim() || "ユニセックス";
+          const footerCustom = footerTextInput.value.trim() || "FILA";
+          const finalMain = interpolatePrompt(promptData.main, { headerText: headerCustom, footerText: footerCustom });
+          return `${finalMain}\n\n${promptData.negative}`;
+        } else { // with frame
+          let promptData = PROMPT_LIBRARY.threeProduct.withFrame;
+          return `${promptData.main}\n\n${promptData.negative}`;
+        }
+      }
+      
+      // Case 2: Wearing to model
+      else if (genType === 'Wearing to model') {
+        const modelValue = modelTypeSelect.value;
+        const bgValue = backgroundLocationSelect.value;
+        const rawMain = PROMPT_LIBRARY.wearingModelTemplate.main;
+        const rawNegative = PROMPT_LIBRARY.wearingModelTemplate.negative;
+        const replacements = {
+          modelType: modelValue,
+          backgroundLocation: bgValue
+        };
+        const finalMain = interpolatePrompt(rawMain, replacements);
+        return `${finalMain}\n\n${rawNegative}`;
+      }
+      
+      // Case 3: 600px size
+      else if (genType === '600px size') {
+        const sizeData = PROMPT_LIBRARY.size600;
+        return `${sizeData.main}\n\n${sizeData.negative}`;
+      }
+      
+      return '⚠️ Invalid generation type selected.';
+    }
+    
+    function generateAndDisplay() {
+      const finalPrompt = buildFinalPrompt();
+      promptOutput.value = finalPrompt;
+    }
+    
+    async function copyPromptToClipboard() {
+      if (!promptOutput.value.trim()) {
+        const tempMsg = document.createElement('div');
+        tempMsg.innerText = '⚠️ Generate a prompt first.';
+        tempMsg.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
+        document.body.appendChild(tempMsg);
+        setTimeout(() => tempMsg.remove(), 1800);
+        return;
+      }
+      try {
+        await navigator.clipboard.writeText(promptOutput.value);
+        const successMsg = document.createElement('div');
+        successMsg.innerText = '✅ Prompt copied! Paste into Gemini → Create image.';
+        successMsg.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-700 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
+        document.body.appendChild(successMsg);
+        setTimeout(() => successMsg.remove(), 1800);
+      } catch (err) {
+        alert('Manual copy: select all text and press Ctrl+C');
+      }
+    }
+    
+    // Event listeners
+    function initEventListeners() {
+      generationTypeSelect.addEventListener('change', () => {
+        updateConditionalVisibility();
+        promptOutput.value = '// Configuration changed — click "Generate compiled prompt" //';
+      });
+      
+      frameSelection.addEventListener('change', () => {
+        toggleHeaderFooterFields();
+        // optional: clear output hint
+        promptOutput.value = '// Frame mode changed, regenerate prompt to apply header/footer text //';
+      });
+      
+      generateBtn.addEventListener('click', generateAndDisplay);
+      copyBtn.addEventListener('click', copyPromptToClipboard);
+    }
+    
+    function setDefaultVisibilityAndValues() {
+      updateConditionalVisibility();
+      if (!headerTextInput.value) headerTextInput.value = "ユニセックス";
+      if (!footerTextInput.value) footerTextInput.value = "FILA";
+      if (!modelTypeSelect.value) modelTypeSelect.value = "a professional athletic male model with toned arms";
+      if (!backgroundLocationSelect.value) backgroundLocationSelect.value = "a minimalist Tokyo studio with soft diffused window light";
+      promptOutput.value = '✨ Ready. Choose strategy, customize text (manual mode), then click Generate. Follow Gemini guide above.';
+    }
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      initEventListeners();
+      setDefaultVisibilityAndValues();
+      console.log('✅ UI with custom header/footer for manual mode + Gemini instructions ready');
+    });
+  </script>
+  <script src="script.js"></script>
+</body>
+</html>
