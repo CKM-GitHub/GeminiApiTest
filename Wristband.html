@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>FILA Studio | Dynamic Prompt Engine + Gemini Guide</title>
+  <title>FILA Studio | Prompt  + Image Resizer (600x600)</title>
   <!-- Tailwind CSS + Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -32,6 +32,12 @@
       background: linear-gradient(135deg, #fef9e3 0%, #fff4e0 100%);
       border-left: 4px solid #fbbf24;
     }
+    canvas {
+      display: block;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      margin: 0 auto;
+    }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
 </head>
@@ -54,7 +60,7 @@
           <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
           <span class="font-semibold text-gray-800">📸 How to generate images with Google Gemini</span>
         </div>
-        <p class="text-sm text-gray-700 mt-1 ml-6">1️⃣ Click <strong>“Generate compiled prompt”</strong> below → 2️⃣ Copy the prompt (📋 button) → 3️⃣ Open <a href="https://gemini.google.com/app" target="_blank" class="text-blue-600 underline font-medium">gemini.google.com/app</a> → 4️⃣ Choose <strong>“Create image”</strong> (or Imagen feature) → 5️⃣ Upload your product photo (wristband) → 6️⃣ Paste the prompt → 7️⃣ Generate & download your catalog image.</p>
+        <p class="text-sm text-gray-700 mt-1 ml-6">1️⃣ Click <strong>“Generate compiled prompt”</strong> below → 2️⃣ Copy the prompt (📋 button) → 3️⃣ Open <a href="https://gemini.google.com/app" target="_blank" class="text-blue-600 underline font-medium">gemini.google.com/app</a> → 4️⃣ Choose <strong>“Create image”</strong> (or Imagen feature) → 5️⃣ Upload your product photo (wristband) → 6️⃣ Paste the prompt → 7️⃣ Generate & download your catalog image (1024x1024).</p>
         <p class="text-xs text-amber-700 mt-1 ml-6">💡 Tip: For “3 product layout” manual mode, customize header/footer text below. For “Wearing to model”, pick model type & background.</p>
       </div>
       <a href="https://gemini.google.com/app" target="_blank" class="inline-flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-sm font-medium transition shrink-0">Open Gemini →</a>
@@ -151,8 +157,37 @@
       </div>
     </div>
 
+    <!-- NEW SECTION: Image Post-Processing (Resize 1024x1024 → 600x600) -->
+    <div class="mt-10 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="border-b border-gray-100 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          <span class="text-xl">🖼️</span> Image Post-Processing
+        </h2>
+        <p class="text-xs text-gray-500 mt-0.5">Gemini generates 1024x1024 — resize to perfect 600x600 for catalogs (high quality)</p>
+      </div>
+      <div class="p-6 space-y-5">
+        <!-- File input with Burmese/Myanmar hint -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">📷 Step 2: Upload the image from Gemini here</label>
+          <input type="file" id="imageUploader" accept="image/png, image/jpeg, image/jpg, image/webp" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
+          <p class="text-xs text-gray-400 mt-1.5">Supported: PNG, JPG, WEBP (recommended 1024x1024 from Gemini)</p>
+        </div>
+
+        <!-- Hidden preview area (canvas + download button) - shown after image load -->
+        <div id="previewArea" class="hidden transition-all duration-200 border-t border-gray-100 pt-5 mt-2">
+          <div class="flex flex-col items-center gap-4">
+            <canvas id="resizeCanvas" width="600" height="600" class="rounded-xl border border-gray-200 shadow-md" style="width: 300px; height: 300px; max-width: 100%; height: auto;"></canvas>
+            <button id="downloadBtn" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition shadow-md">
+              📥 Download 600x600 Image (PNG)
+            </button>
+            <p class="text-xs text-gray-400 text-center">✓ Image resized to exactly 600x600 pixels with high-quality smoothing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="text-center text-xs text-gray-400 mt-8 border-t border-gray-200 pt-6">
-      <span>⚙️ UI state machine · conditional fields follow generation type · custom header/footer only in manual mode</span>
+      <span>⚙️ UI state machine · conditional fields follow generation type · custom header/footer only in manual mode · Image resizer uses canvas high-quality bicubic scaling</span>
     </div>
   </main>
 
@@ -161,16 +196,13 @@
     // 1. PROMPT DATA PACKAGES (raw template strings)
     // ----------------------------------------------
     const PROMPT_LIBRARY = {
-      // Type 1 - 3 product layout -> two variants
       threeProduct: {
-        // Option A: manual (full layout + headers/footers) with placeholders for header & footer text
         manual: {
           main: `[MAIN PROMPT]
 Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure white background (#FFFFFF) in a clean Japanese ecommerce layout. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. In the top left corner, a clean purple rectangular banner header contains the white Japanese text "{{headerText}}" in a bold sans-serif font. In the bottom right corner footer area, the official "{{footerText}}" brand text logo is crisply displayed in its signature navy and red typography. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
           negative: `[NEGATIVE PROMPT]
 deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, shadows beneath products, non-white background, warped product shapes, altered typography, duplicate branding, gradient background`
         },
-        // Option B: with frame (isolated product asset only) - no header/footer customization needed
         withFrame: {
           main: `[MAIN PROMPT]
 Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands isolated on a clean, seamless pure white background (#FFFFFF). The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. No headers, no footers, no external text banners, and no graphical frames included—purely focusing on the product cluster layout. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
@@ -179,7 +211,6 @@ text banners, graphic frames, headers, footers, brand logos, words, decorative b
         }
       },
       
-      // Type 2: Wearing to model (dynamic placeholders {{modelType}} & {{backgroundLocation}})
       wearingModelTemplate: {
         main: `[MAIN PROMPT]
 A detailed, close-up lifestyle fashion advertisement photograph showcasing a {{modelType}} wearing the exact uploaded athletic terrycloth wristband naturally on their wrist. The original properties of the product are strictly maintained: the authentic navy blue color, the dense looped terrycloth fabric texture, tight structural stitching, and the crisp centered embroidery of the square logo with its distinct red, white, and navy components. The wristband realistically wraps around the arm, showing natural fabric tension and subtle physical folds matching the model's stance. Set against a {{backgroundLocation}} that provides a sophisticated, high-end atmosphere. High fashion editorial lighting, crisp shadows, shallow depth of field with sharp focus on the wristband and textile texture, ultra-realistic skin tones, premium sports apparel campaign aesthetic, 8k resolution.`,
@@ -187,7 +218,6 @@ A detailed, close-up lifestyle fashion advertisement photograph showcasing a {{m
 deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong color, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts`
       },
       
-      // Type 3: 600px size (static)
       size600: {
         main: `[MAIN PROMPT]
 Transform the uploaded product image into a Japanese e-commerce catalog style product photo. Keep the wristband product completely unchanged: Preserve the exact shape, proportions, color, texture, embroidery, logo placement, stitching, and fabric details. Do not alter the product design. Do not add or remove any product elements. Adjust the layout to match a Japanese catalog image: Re-center the wristband on a square 1:1 canvas. Increase whitespace around the product so it occupies approximately 70–75% of the canvas height. Use a clean light gray background (#EEEEEE). Add balanced margins on all sides. Maintain a straight front-facing product orientation. At the bottom center, add a small Japanese product color label: "(NV0) フィラネイビー" in a small catalog caption size, dark gray text, clean Japanese sans-serif font, center aligned, and positioned close to the bottom edge with professional catalog spacing. Image style: Japanese sporting goods catalog, e-commerce product listing, product cutout presentation, neutral studio lighting, sharp focus, accurate colors, no shadows beyond the original product, high-resolution commercial product photography, clean, minimal, print-ready catalog layout. Output: square catalog image identical in style to official Japanese sports brand product listings.`,
@@ -197,7 +227,7 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
     };
     
     // ------------------------------
-    // DOM elements
+    // DOM elements (Prompt Section)
     // ------------------------------
     const generationTypeSelect = document.getElementById('generationType');
     const frameSelectionWrapper = document.getElementById('frameSelectionWrapper');
@@ -212,9 +242,18 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
     const promptOutput = document.getElementById('promptOutput');
     const copyBtn = document.getElementById('copyBtn');
     
-    // Helper: show/hide header/footer custom fields based on frameSelection value & only when visible
+    // ------------------------------
+    // NEW: Image resize elements
+    // ------------------------------
+    const imageUploader = document.getElementById('imageUploader');
+    const previewArea = document.getElementById('previewArea');
+    const resizeCanvas = document.getElementById('resizeCanvas');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    let currentResizedDataURL = null; // store for download
+
+    // Helper: show/hide header/footer custom fields based on frameSelection value
     function toggleHeaderFooterFields() {
-      // Only relevant if frameSelectionWrapper is not hidden (i.e., 3 product layout selected)
       const isFrameVisible = !frameSelectionWrapper.classList.contains('hidden');
       if (!isFrameVisible) {
         headerFooterCustomFields.classList.add('hidden');
@@ -228,28 +267,24 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
       }
     }
     
-    // Visibility based on generation type
     function updateConditionalVisibility() {
       const selectedVal = generationTypeSelect.value;
-      
       frameSelectionWrapper.classList.add('hidden');
       modelBackgroundWrapper.classList.add('hidden');
-      headerFooterCustomFields.classList.add('hidden'); // ensure hidden until needed
+      headerFooterCustomFields.classList.add('hidden');
       
       if (selectedVal === '3 product layout') {
         frameSelectionWrapper.classList.remove('hidden');
-        // after showing, check manual mode
         toggleHeaderFooterFields();
       } 
       else if (selectedVal === 'Wearing to model') {
         modelBackgroundWrapper.classList.remove('hidden');
       }
       else if (selectedVal === '600px size') {
-        // nothing extra
+        // nothing
       }
     }
     
-    // dynamic string interpolation
     function interpolatePrompt(templateStr, replacements) {
       let result = templateStr;
       for (const [key, value] of Object.entries(replacements)) {
@@ -259,11 +294,8 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
       return result;
     }
     
-    // main prompt builder
     function buildFinalPrompt() {
       const genType = generationTypeSelect.value;
-      
-      // Case 1: 3 product layout
       if (genType === '3 product layout') {
         const frameMode = frameSelection.value;
         if (frameMode === 'manual') {
@@ -272,32 +304,24 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
           const footerCustom = footerTextInput.value.trim() || "FILA";
           const finalMain = interpolatePrompt(promptData.main, { headerText: headerCustom, footerText: footerCustom });
           return `${finalMain}\n\n${promptData.negative}`;
-        } else { // with frame
+        } else {
           let promptData = PROMPT_LIBRARY.threeProduct.withFrame;
           return `${promptData.main}\n\n${promptData.negative}`;
         }
       }
-      
-      // Case 2: Wearing to model
       else if (genType === 'Wearing to model') {
         const modelValue = modelTypeSelect.value;
         const bgValue = backgroundLocationSelect.value;
         const rawMain = PROMPT_LIBRARY.wearingModelTemplate.main;
         const rawNegative = PROMPT_LIBRARY.wearingModelTemplate.negative;
-        const replacements = {
-          modelType: modelValue,
-          backgroundLocation: bgValue
-        };
+        const replacements = { modelType: modelValue, backgroundLocation: bgValue };
         const finalMain = interpolatePrompt(rawMain, replacements);
         return `${finalMain}\n\n${rawNegative}`;
       }
-      
-      // Case 3: 600px size
       else if (genType === '600px size') {
         const sizeData = PROMPT_LIBRARY.size600;
         return `${sizeData.main}\n\n${sizeData.negative}`;
       }
-      
       return '⚠️ Invalid generation type selected.';
     }
     
@@ -327,21 +351,96 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
       }
     }
     
-    // Event listeners
+    // ----------------------------------------------
+    // NEW: Image Resizing Logic (Canvas High Quality)
+    // ----------------------------------------------
+    function resizeImageTo600(imgElement) {
+      // Create canvas with exact 600x600 dimensions
+      const canvas = resizeCanvas;
+      canvas.width = 600;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+      // Enable high-quality image smoothing
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high'; // 'high' ensures crisp scaling
+      // Draw image scaled to fit canvas (source is expected 1024x1024, we fill the 600x600 area)
+      ctx.drawImage(imgElement, 0, 0, 600, 600);
+      // Convert to PNG data URL
+      const dataURL = canvas.toDataURL('image/png');
+      currentResizedDataURL = dataURL;
+      return dataURL;
+    }
+    
+    function handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (!file) {
+        previewArea.classList.add('hidden');
+        return;
+      }
+      
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file (PNG, JPG, WEBP).');
+        imageUploader.value = '';
+        previewArea.classList.add('hidden');
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          // Optional: log original dimensions for debugging
+          console.log(`Original image dimensions: ${img.width}x${img.height}`);
+          // Perform high-quality resize to 600x600
+          resizeImageTo600(img);
+          // Show preview area
+          previewArea.classList.remove('hidden');
+        };
+        img.onerror = function() {
+          alert('Failed to load image. Please try another file.');
+          previewArea.classList.add('hidden');
+          imageUploader.value = '';
+        };
+        img.src = e.target.result;
+      };
+      reader.onerror = function() {
+        alert('Error reading file.');
+        previewArea.classList.add('hidden');
+        imageUploader.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+    
+    function downloadResizedImage() {
+      if (!currentResizedDataURL) {
+        alert('No resized image available. Please upload an image first.');
+        return;
+      }
+      const link = document.createElement('a');
+      link.download = 'product_600x600.png';
+      link.href = currentResizedDataURL;
+      link.click();
+    }
+    
+    // ----------------------------------------------
+    // Event Listeners Initialization
+    // ----------------------------------------------
     function initEventListeners() {
       generationTypeSelect.addEventListener('change', () => {
         updateConditionalVisibility();
         promptOutput.value = '// Configuration changed — click "Generate compiled prompt" //';
       });
-      
       frameSelection.addEventListener('change', () => {
         toggleHeaderFooterFields();
-        // optional: clear output hint
         promptOutput.value = '// Frame mode changed, regenerate prompt to apply header/footer text //';
       });
-      
       generateBtn.addEventListener('click', generateAndDisplay);
       copyBtn.addEventListener('click', copyPromptToClipboard);
+      
+      // New image processor events
+      imageUploader.addEventListener('change', handleImageUpload);
+      downloadBtn.addEventListener('click', downloadResizedImage);
     }
     
     function setDefaultVisibilityAndValues() {
@@ -350,13 +449,15 @@ crooked placement, off-center alignment, dark shadows, complex backgrounds, huma
       if (!footerTextInput.value) footerTextInput.value = "FILA";
       if (!modelTypeSelect.value) modelTypeSelect.value = "a professional athletic male model with toned arms";
       if (!backgroundLocationSelect.value) backgroundLocationSelect.value = "a minimalist Tokyo studio with soft diffused window light";
-      promptOutput.value = '✨ Ready. Choose strategy, customize text (manual mode), then click Generate. Follow Gemini guide above.';
+      promptOutput.value = '✨ Ready. Choose strategy, customize text (manual mode), then click Generate. Follow Gemini guide above.\n\nAfter generating image in Gemini (1024x1024), use the section below to resize to 600x600.';
+      // initially hide preview area
+      previewArea.classList.add('hidden');
     }
     
     document.addEventListener('DOMContentLoaded', () => {
       initEventListeners();
       setDefaultVisibilityAndValues();
-      console.log('✅ UI with custom header/footer for manual mode + Gemini instructions ready');
+      console.log('✅ Full system ready: Prompt builder + high-quality 600x600 image resizer (canvas with imageSmoothingQuality=high)');
     });
   </script>
   <script src="script.js"></script>
