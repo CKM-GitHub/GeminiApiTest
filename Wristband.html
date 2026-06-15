@@ -196,20 +196,27 @@
     // 1. PROMPT DATA PACKAGES (raw template strings)
     // ----------------------------------------------
     const PROMPT_LIBRARY = {
-      threeProduct: {
-        manual: {
-          main: `[MAIN PROMPT]
-Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure white background (#FFFFFF) in a clean Japanese ecommerce layout. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. In the top left corner, a clean purple rectangular banner header contains the white Japanese text "{{headerText}}" in a bold sans-serif font. In the bottom right corner footer area, the official "{{footerText}}" brand text logo is crisply displayed in its signature navy and red typography. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
-          negative: `[NEGATIVE PROMPT]
-deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, shadows beneath products, non-white background, warped product shapes, altered typography, duplicate branding, gradient background`
-        },
-        withFrame: {
-          main: `[MAIN PROMPT]
+  threeProduct: {
+    manual: {
+      main: `[MAIN PROMPT]
+Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure white background (#FFFFFF) in a clean Japanese ecommerce layout. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. 
+
+--- LAYOUT MARGIN & PADDING RULES (INCREASED GAP) ---
+In the top-left quadrant, positioned with a generous 11% safety margin padding away from both the absolute top and left canvas edges to create an intentional, wide white breathing room, a sharp purple rectangular banner header contains the white Japanese text "{{headerText}}" in a bold sans-serif font. 
+In the bottom-right quadrant, safely padded with a generous 11% distance margin away from both the absolute bottom and right canvas borders, the official "{{footerText}}" brand text logo is crisply displayed in its signature navy and red typography, ensuring a distinct clear gap from the frame boundaries and never touching the outer edges.
+
+Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
+      
+      negative: `[NEGATIVE PROMPT]
+elements touching the canvas edges, tight margins, narrow padding, clipped headers, cut-off logos, zero-margin placement, text hugging the frame border, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, shadows beneath products, non-white background, warped product shapes, altered typography, duplicate branding, gradient background`
+    },
+    withFrame: {
+      main: `[MAIN PROMPT]
 Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands isolated on a clean, seamless pure white background (#FFFFFF). The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. No headers, no footers, no external text banners, and no graphical frames included—purely focusing on the product cluster layout. Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
-          negative: `[NEGATIVE PROMPT]
+      negative: `[NEGATIVE PROMPT]
 text banners, graphic frames, headers, footers, brand logos, words, decorative borders, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, messy layout, shadows beneath products, non-white background, warped product shapes`
-        }
-      },
+    }
+  },
       
       wearingModelTemplate: {
         main: `[MAIN PROMPT]
