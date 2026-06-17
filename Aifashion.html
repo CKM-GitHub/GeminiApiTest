@@ -147,6 +147,20 @@
                   </div>
                 </label>
               </div>
+              <!-- NEW: Dress Card -->
+  <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+    <label class="flex items-start gap-4 cursor-pointer">
+      <input type="checkbox" id="hasDress" class="mt-1">
+      <div class="flex-1">
+        <div class="flex items-center gap-2 mb-1">
+          <i class="fas fa-female text-[#1F7A4C] text-xl"></i>
+          <!-- or use fa-dress if you have FontAwesome 6 -->
+          <h3 class="font-semibold text-white">Dress</h3>
+        </div>
+        <p class="text-xs text-gray-400">Attach your dress image → AI generates full‑body elegant shot</p>
+      </div>
+    </label>
+  </div>
             </div>
 
             <!-- Dynamic Layout Info -->
@@ -263,7 +277,8 @@
       const hasPantsCheckbox = document.getElementById('hasPants');
       const hasShoesCheckbox = document.getElementById('hasShoes');
       const hasWristbandCheckbox = document.getElementById('hasWristband');
-      
+        const hasDressCheckbox = document.getElementById('hasDress'); // NEW
+
       const backgroundLocation = document.getElementById('backgroundLocation');
       const modelType = document.getElementById('modelType');
       
@@ -283,6 +298,8 @@
         if (hasPantsCheckbox.checked) products.push('👖 Pants');
         if (hasShoesCheckbox.checked) products.push('👟 Shoes');
         if (hasWristbandCheckbox.checked) products.push('🎾 Wristband');
+            if (hasDressCheckbox.checked) products.push('👗 Dress'); // NEW
+
         return products;
       }
 
@@ -300,7 +317,9 @@
           hasTop: hasTopCheckbox.checked,
           hasPants: hasPantsCheckbox.checked,
           hasShoes: hasShoesCheckbox.checked,
-          hasWristband: hasWristbandCheckbox.checked
+          hasWristband: hasWristbandCheckbox.checked,
+                hasDress: hasDressCheckbox.checked // NEW
+
         };
       }
 
@@ -310,31 +329,37 @@
         const selectedCount = [hasTop, hasPants, hasShoes, hasWristband].filter(Boolean).length;
         
         // Single product scenarios
-        if (hasTop && !hasPants && !hasShoes && !hasWristband) {
+        if (hasTop && !hasPants && !hasShoes && !hasWristband && !hasDress)  {
           return { 
             layout: "Medium upper-body portrait shot", 
             pose: "Looking confidently into the camera, showcasing the attached shirt's fabric drape, collar structure, and fit" 
           };
         }
-        if (!hasTop && hasPants && !hasShoes && !hasWristband) {
+        if (!hasTop && hasPants && !hasShoes && !hasWristband  && !hasDress) {
           return { 
             layout: "Waist-down low-angle fashion shot", 
             pose: "Standing with relaxed weight shift, highlighting the attached pants' pocket details, waistband, and leg fit" 
           };
         }
-        if (!hasTop && !hasPants && hasShoes && !hasWristband) {
+        if (!hasTop && !hasPants && hasShoes && !hasWristband && !hasDress) {
           return { 
             layout: "Macro footwear close-up shot", 
             pose: "Sleek foot placement on textured surface, showcasing the attached shoes' sole details, material texture, and silhouette" 
           };
         }
-        if (!hasTop && !hasPants && !hasShoes && hasWristband) {
+        if (!hasTop && !hasPants && !hasShoes && hasWristband && !hasDress) {
           return { 
             layout: "Close-up hand and wrist detail shot", 
             pose: "Natural relaxed wrist-forward pose, highlighting the attached wristband's texture, fit, and sporty aesthetic" 
           };
         }
         
+         if (!hasTop && !hasPants && !hasShoes && !hasWristband && hasDress) {
+      return { 
+        layout: "Full-length elegant fashion portrait", 
+        pose: "Graceful standing pose, slightly turned, showcasing the attached dress's silhouette, fabric flow, and hemline details" 
+      };
+    }
         // Multiple items selected - full body showcase
         if (selectedCount >= 2) {
           return { 
@@ -356,7 +381,8 @@
         if (hasPants) parts.push("the attached pants image");
         if (hasShoes) parts.push("the attached shoes image");
         if (hasWristband) parts.push("the attached wristband image");
-        
+            if (hasDress) parts.push("the attached dress image"); // NEW
+
         if (parts.length === 0) return "no specific product images attached";
         if (parts.length === 1) return parts[0];
         if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
@@ -397,6 +423,9 @@ let prompt = `Ultra realistic ecommerce fashion photography of a fully AI-genera
         if (hasWristband) {
           prompt += `The attached wristband must be accurately placed on the wrist with correct thickness, color, and fabric texture matching reference. `;
         }
+         if (hasDress) { // NEW
+      prompt += `The attached dress must be accurately rendered with original neckline, sleeve style, waistline, fabric pattern, hemline, and overall silhouette exactly matching the reference image. `;
+    }
         
         // Cinematic and technical finishing
         prompt += `Cinematic studio lighting, soft shadows, premium fashion campaign look, ultra detailed rendering, realistic folds and tension, clean styling, modern aesthetic, ${photographyTerms} centered composition, ultra sharp focus on products, realistic color accuracy, professional ecommerce catalog quality, natural body proportions.`;
