@@ -325,8 +325,8 @@
 
       // Dynamic Layout & Pose based ONLY on which checkboxes are checked
       function getDynamicLayoutAndPose() {
-        const { hasTop, hasPants, hasShoes, hasWristband } = getSelectedItems();
-        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband].filter(Boolean).length;
+        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
+        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband,hasDress].filter(Boolean).length;
         
         // Single product scenarios
         if (hasTop && !hasPants && !hasShoes && !hasWristband && !hasDress)  {
@@ -374,7 +374,7 @@
 
       // Build product description based on attached images
       function buildProductDescription() {
-        const { hasTop, hasPants, hasShoes, hasWristband } = getSelectedItems();
+        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
         const parts = [];
         
         if (hasTop) parts.push("the attached T-shirt image");
@@ -393,8 +393,8 @@
 
       // Generate the master prompt (clean, no detailed product specs)
       function generateMasterPrompt() {
-        const { hasTop, hasPants, hasShoes, hasWristband } = getSelectedItems();
-        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband].filter(Boolean).length;
+        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
+        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband,hasDress].filter(Boolean).length;
         const { layout, pose } = getDynamicLayoutAndPose();
         const productDesc = buildProductDescription();
         const bgDesc = backgroundLocation.value;
