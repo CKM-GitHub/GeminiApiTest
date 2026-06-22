@@ -20,6 +20,8 @@ const menuHtml = `
             <a href="DefaultPlusUserPrompt.html" class="menu-link">📝 Default Prompt</a>
             <a href="BaseballBatAIPrompt.html" class="menu-link">⚾ Baseball Bat AI Prompt</a>
             <a href="Aifashion.html" class="menu-link">🎨 AI Fashion</a>
+                        <a href="Tshirt.html" class="menu-link">Tshirt</a>
+
         </div>
     </nav>
 `;
