@@ -307,7 +307,7 @@
                     <button id="generateBtn" class="btn-primary">⚡ Generate</button>
                     <button id="copyBtn" class="btn-secondary">📋 Copy</button>
                 </div>
-                <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span>
+                <!-- <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span> -->
             </div>
 
             <!-- Prompt Outputs -->
@@ -471,7 +471,7 @@
             positiveOutput.textContent = result.positive;
             negativeOutput.textContent = result.negative;
             const total = result.positive.length + result.negative.length;
-            charCount.textContent = `${total} chars total`;
+            // charCount.textContent = `${total} chars total`;
         }
 
         function autoGenerate() {
