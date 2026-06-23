@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tennis Racket — Prompt Studio</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <style>
+        /* ── minimal light theme ── */
+        body {
+            background: #f0f2f5;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            color: #1a1a2e;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .field {
+            background: #fafbfc;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            padding: 0.6rem 1rem;
+            width: 100%;
+            color: #0f172a;
+            transition: border-color 0.2s;
+            font-size: 0.9rem;
+        }
+        .field:focus {
+            border-color: #2563eb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+        }
+        .field::placeholder {
+            color: #94a3b8;
+        }
+
+        select.field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2364748b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        select.field option {
+            background: #ffffff;
+            color: #0f172a;
+        }
+
+        .btn-primary {
+            background: #1e293b;
+            color: white;
+            font-weight: 600;
+            padding: 0.6rem 1.8rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 0.9rem;
+        }
+        .btn-primary:hover {
+            background: #0f172a;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #1e293b;
+            font-weight: 500;
+            padding: 0.6rem 1.8rem;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 0.9rem;
+        }
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .prompt-box {
+            background: #fafbfc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            min-height: 160px;
+            max-height: 240px;
+            overflow-y: auto;
+            font-size: 0.88rem;
+            line-height: 1.7;
+            color: #0f172a;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .prompt-box.negative {
+            border-color: #f1d4e0;
+            background: #fdf6f9;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            padding: 0.15rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .badge-accent {
+            background: #dbeafe;
+            border-color: #bfdbfe;
+            color: #1e40af;
+        }
+        .badge-purple {
+            background: #f3e8ff;
+            border-color: #e9d5ff;
+            color: #6b21a8;
+        }
+
+        .mode-pill {
+            display: inline-flex;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 0.2rem;
+        }
+        .mode-pill button {
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            border: none;
+            background: transparent;
+            color: #64748b;
+            font-weight: 500;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .mode-pill button.active {
+            background: #1e293b;
+            color: white;
+            box-shadow: 0 2px 8px rgba(30, 41, 59, 0.15);
+        }
+        .mode-pill button:hover:not(.active) {
+            color: #0f172a;
+        }
+
+        .badge-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 0.2rem 0.9rem;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #475569;
+        }
+        .badge-pill.accent {
+            background: #dbeafe;
+            border-color: #bfdbfe;
+            color: #1e40af;
+        }
+        .badge-pill.purple {
+            background: #f3e8ff;
+            border-color: #e9d5ff;
+            color: #6b21a8;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .hint {
+            color: #64748b;
+            font-size: 0.7rem;
+        }
+
+        .toast-copy {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 0.6rem 2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            pointer-events: none;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+        }
+        .toast-copy.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .label-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #64748b;
+        }
+
+        .conditional-fields {
+            transition: max-height 0.25s ease, opacity 0.2s ease, margin 0.2s ease;
+            overflow: hidden;
+        }
+
+        @media (max-width: 640px) {
+            .prompt-box {
+                min-height: 100px;
+                max-height: 150px;
+                font-size: 0.8rem;
+                padding: 0.8rem;
+            }
+            .mode-pill button {
+                padding: 0.3rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            .btn-primary,
+            .btn-secondary {
+                padding: 0.5rem 1.2rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-5xl mx-auto px-4 py-8 md:py-12">
+
+        <!-- ─── HEADER ─── -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">🎾 Racket Prompt Studio</h1>
+                <p class="text-sm text-slate-500 mt-0.5">Tennis e‑commerce · fixed product reference</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="badge-pill accent">v1.1</span>
+                <span class="badge-pill">⚡ 1:1 square</span>
+                <span class="badge-pill">📷 image_bab467.png</span>
+            </div>
+        </header>
+
+        <!-- ─── MAIN CARD ─── -->
+        <div class="card p-6 md:p-8">
+
+            <!-- ─── ROW 1: Layout Selection ─── -->
+            <div class="mb-6">
+                <label class="label-text block mb-1.5">📐 Layout</label>
+                <select id="layoutSelect" class="field">
+                    <option value="layout1">Layout 1: Split Detail View</option>
+                    <option value="layout2">Layout 2: Multi-Product Lineup</option>
+                </select>
+                <p class="hint mt-1.5">
+                    <span class="font-medium text-slate-600">Split Detail</span> → macro crops of one racket &nbsp;·&nbsp;
+                    <span class="font-medium text-slate-600">Multi-Product</span> → cropped head + full upright racket
+                </p>
+            </div>
+
+            <hr class="divider my-6" />
+
+            <!-- ─── ROW 2: Header & Logo Control ─── -->
+            <div class="mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="label-text">🏷️ Header &amp; Logo</span>
+                    <span class="text-xs text-slate-400">—</span>
+                    <span class="text-xs text-slate-400">manual text or reference overlay</span>
+                </div>
+
+                <div class="mode-pill w-full flex" id="modeToggle">
+                    <button data-mode="manual" class="active flex-1 text-center">✏️ Manual</button>
+                    <button data-mode="reference" class="flex-1 text-center">🖼️ Reference</button>
+                </div>
+
+                <!-- Conditional: Manual fields -->
+                <div id="manualFields" class="conditional-fields grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4" style="max-height: 280px; opacity: 1;">
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">Header Main Text</label>
+                        <input type="text" id="headerMainInput" value="硬式テニス" placeholder="e.g. 硬式テニス" class="field" />
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">Header Sub‑Text</label>
+                        <input type="text" id="headerSubInput" value="Vコア95" placeholder="e.g. Vコア95" class="field" />
+                    </div>
+                    <div>
+                        <label class="text-xs font-medium text-slate-600 block mb-1">Logo Text</label>
+                        <input type="text" id="logoInput" value="YONEX" placeholder="e.g. YONEX" class="field" />
+                    </div>
+                    <p class="hint col-span-1 sm:col-span-3 -mt-1">Dark charcoal banner + text in upper‑left · 10px margin buffer · Logo in bottom‑right</p>
+                </div>
+            </div>
+
+            <hr class="divider my-6" />
+
+            <!-- ─── ROW 3: Badge Sticker Overlay ─── -->
+            <div class="mb-6">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="label-text">⭕ Badge Sticker</span>
+                    <span class="text-xs text-slate-400">—</span>
+                    <span class="text-xs text-slate-400">circle overlay</span>
+                </div>
+
+                <select id="badgeSelect" class="field max-w-xs">
+                    <option value="none">None</option>
+                    <option value="enabled">Enable Badge</option>
+                </select>
+
+                <!-- Conditional: Badge text input -->
+                <div id="badgeFields" class="conditional-fields mt-3" style="max-height: 80px; opacity: 1;">
+                    <label class="text-xs font-medium text-slate-600 block mb-1">Badge Text</label>
+                    <input type="text" id="badgeInput" value="フレームのみ" placeholder="e.g. フレームのみ" class="field max-w-xs" />
+                    <p class="hint mt-1.5">Rendered in a charcoal circle badge · lower‑central void</p>
+                </div>
+            </div>
+
+            <hr class="divider my-6" />
+
+            <!-- ─── ACTIONS ─── -->
+            <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
+                <div class="flex flex-wrap items-center gap-3">
+                    <button id="generateBtn" class="btn-primary">⚡ Generate Prompt</button>
+                    <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+                </div>
+                <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span>
+            </div>
+
+            <!-- ─── PROMPT OUTPUTS ─── -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+                <!-- Positive -->
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="label-text">Positive</span>
+                        <span class="badge-pill accent text-[10px]">main prompt</span>
+                    </div>
+                    <div class="prompt-box" id="positiveOutput" readonly contenteditable="false">
+                        Click <span class="text-blue-600 font-medium">Generate</span> to build your prompt…
+                    </div>
+                </div>
+
+                <!-- Negative -->
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="label-text">Negative</span>
+                        <span class="badge-pill purple text-[10px]">exclude</span>
+                    </div>
+                    <div class="prompt-box negative" id="negativeOutput" readonly contenteditable="false">
+                        Click <span class="text-purple-600 font-medium">Generate</span> to build your negative prompt…
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ─── FOOTER HINT ─── -->
+            <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                <span>Reference product: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">image_bab467.png</code></span>
+                <span class="w-px h-4 bg-slate-200"></span>
+                <span>85mm · f/4 · 8k · studio lighting</span>
+                <span class="w-px h-4 bg-slate-200"></span>
+                <span>#262626 · #1A66FF · YONEX</span>
+            </div>
+
+        </div>
+
+        <!-- ─── FOOTER ─── -->
+        <div class="text-center text-xs text-slate-400 font-medium tracking-wider mt-6 uppercase">
+            Prompt structured for tennis e‑commerce · all layout refs match image_d5f6a8.png &amp; image_d5f6ca.png
+        </div>
+    </div>
+
+    <!-- ─── TOAST ─── -->
+    <div id="toast" class="toast-copy">✅ Copied to clipboard!</div>
+
+    <script>
+        // ──────────────────────────────────────────────────────────────
+        // DOM refs
+        // ──────────────────────────────────────────────────────────────
+        const layoutSelect = document.getElementById('layoutSelect');
+        const modeToggle = document.getElementById('modeToggle');
+        const modeButtons = modeToggle.querySelectorAll('button');
+        const manualFields = document.getElementById('manualFields');
+        const headerMainInput = document.getElementById('headerMainInput');
+        const headerSubInput = document.getElementById('headerSubInput');
+        const logoInput = document.getElementById('logoInput');
+        const badgeSelect = document.getElementById('badgeSelect');
+        const badgeFields = document.getElementById('badgeFields');
+        const badgeInput = document.getElementById('badgeInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const positiveOutput = document.getElementById('positiveOutput');
+        const negativeOutput = document.getElementById('negativeOutput');
+        const charCount = document.getElementById('charCount');
+        const toast = document.getElementById('toast');
+
+        let currentMode = 'manual';
+
+        // ──────────────────────────────────────────────────────────────
+        // 1. Mode toggle (Manual / Reference)
+        // ──────────────────────────────────────────────────────────────
+        function setMode(mode) {
+            currentMode = mode;
+            modeButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.mode === mode);
+            });
+
+            const isManual = mode === 'manual';
+            manualFields.style.maxHeight = isManual ? '280px' : '0';
+            manualFields.style.opacity = isManual ? '1' : '0';
+            manualFields.style.pointerEvents = isManual ? 'auto' : 'none';
+            manualFields.style.marginTop = isManual ? '1rem' : '0';
+            headerMainInput.disabled = !isManual;
+            headerSubInput.disabled = !isManual;
+            logoInput.disabled = !isManual;
+
+            autoGenerate();
+        }
+
+        modeButtons.forEach(btn => {
+            btn.addEventListener('click', () => setMode(btn.dataset.mode));
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 2. Badge toggle (Enable / None)
+        // ──────────────────────────────────────────────────────────────
+        function toggleBadge() {
+            const enabled = badgeSelect.value === 'enabled';
+            badgeFields.style.maxHeight = enabled ? '120px' : '0';
+            badgeFields.style.opacity = enabled ? '1' : '0';
+            badgeFields.style.pointerEvents = enabled ? 'auto' : 'none';
+            badgeInput.disabled = !enabled;
+            autoGenerate();
+        }
+
+        badgeSelect.addEventListener('change', toggleBadge);
+
+        // ──────────────────────────────────────────────────────────────
+        // 3. Logo input: only letters allowed
+        // ──────────────────────────────────────────────────────────────
+        logoInput.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-z]/g, '');
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 4. buildPrompt() — updated with logo input
+        // ──────────────────────────────────────────────────────────────
+        function buildPrompt() {
+    const layout = layoutSelect.value;
+    const mode = currentMode;
+    const badgeStatus = badgeSelect.value;
+
+    const photographyTerms =
+        "Shot on professional macro lens, studio strobe lighting, f/4 aperture for total clarity across all text and product details, ultra-sharp focus on frame textures, 8k resolution, exact color matching.";
+
+    // Part A: Base Frame Setup (Unstrung / No Strings Focus & Pure Background Base)
+    let prompt =
+        `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a flat, solid, uniform pristine plain white background (#FFFFFF) with subtle, high-end studio floor shadows directly under the frames. The rendering must maintain absolute fidelity to the attached reference image: preserving the dark metallic red frame color, the subtle teal accent inserts on the inner throat-joint, the crisp white grip wrap texture, and the precise oval geometry of the racket head. Crucially, the tennis rackets must be completely unstrung with no strings inside the frame hoop; the inner frame area must be totally empty, hollow, and transparent, showing only the plain white background through the open racket head. `;
+
+    // Part B: Header & Logo Overlays (With Heavy Inset Margin/Padding Buffer to prevent edge-hugging)
+    if (mode === 'manual') {
+        const mainText = headerMainInput.value.trim() || '硬式テニス';
+        const subText = headerSubInput.value.trim() || 'Vコア95';
+        const logoText = logoInput.value.trim() || 'YONEX';
+
+        // Header Margin Adjustment
+        prompt +=
+            `Graphic UI Overlays with distinct inset margins: In the upper-left area, generate a solid dark charcoal banner (Hex color code: #262626) with crisp white text reading "${mainText}". Directly beneath this banner, render sharp, clean charcoal text (Hex color code: #262626) reading "${subText}". These top-left text and banner elements must NOT touch or be close to the outer borders; they must be pushed significantly inward away from the top and left edges, creating a generous, clear 10-pixel proportional negative space margin/buffer. `;
+
+        // Logo Margin Adjustment — now using the dynamic logo text
+        prompt +=
+            `In the bottom-right area, position the iconic blue and green brand logo box containing the text "${logoText}". This logo must be strictly pushed inward, away from the extreme bottom and right edges of the canvas, enforcing a substantial 10-pixel proportional breathing room margin layout buffer to ensure no clipping or frame-hugging occurs. `;
+    }
+
+    // Part C: Layout Dynamic Rules (Precision Separation)
+    if (layout === 'layout1') {
+        prompt +=
+            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a massive cropped close-up of only the upper half of the unstrung racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint, gold branding text, and the full white handle grip wrap extending downward. The two close-up segments must stand vertically parallel to each other, balanced cleanly across the white canvas. `;
+    } else {
+        prompt +=
+            `Composition Layout (Layout 2 - Cropped Frame and Full Racket Combo): The composition combines a macro detail and a full view. On the left side, feature a prominent, massive cropped close-up of only the upper unstrung racket head frame. On the right side, contrast this by displaying one complete, uncropped, full-length tennis racket standing perfectly upright from head to grip. This right-side full racket must be significantly downscaled and smaller in size, creating a spacious and neat double-product arrangement. `;
+    }
+
+    // Part D: Circle Badge Logic
+    if (badgeStatus === 'enabled') {
+        const badgeText = badgeInput.value.trim() || 'フレームのみ';
+        prompt +=
+            `Sticker Badge Graphic: Positioned in the lower-central void between the product views, render a clean, solid dark charcoal circular badge (Hex color code: #262626) featuring crisp, perfectly centered white text reading "${badgeText}". The circle must have sharp, vector-quality borders with a distinct negative space margin around it so it does not touch or smudge into the rackets. `;
+    }
+
+    // Part E: Closing & Negative Assembly
+    prompt +=
+        `Final Polish: Premium athletic equipment campaign aesthetic, centered composition balance, clean studio lighting, ${photographyTerms}`;
+
+    // Part F: Strong Negative Prompt (Strings Block, Margin Rules, and Strict Background Color Guardrails)
+    const negativePrompt =
+        "racket strings, tennis strings, string pattern, netting, grid lines inside racket, strung racket, realistic string textures, off-white background, grey background, multi-tone background, background color bleeding, color gradients on background, shadows stretching across corners, dark backdrops, text touching image edges, text clipped at borders, cropped header banner, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, distorted circles, blurred badge borders, text overlapping product lines, smudging across white backgrounds, incorrect color hue, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, moving product placement, layout variation from reference.";
+
+    return { positive: prompt.trim(), negative: negativePrompt };
+}
+
+        // ──────────────────────────────────────────────────────────────
+        // 5. Generate & display
+        // ──────────────────────────────────────────────────────────────
+        function generateAndDisplay() {
+            const result = buildPrompt();
+            positiveOutput.textContent = result.positive;
+            negativeOutput.textContent = result.negative;
+            const total = result.positive.length + result.negative.length;
+            charCount.textContent = `${total} characters total`;
+        }
+
+        function autoGenerate() {
+            clearTimeout(window._genTimer);
+            window._genTimer = setTimeout(generateAndDisplay, 180);
+        }
+
+        generateBtn.addEventListener('click', generateAndDisplay);
+
+        // ──────────────────────────────────────────────────────────────
+        // 6. Copy (both prompts)
+        // ──────────────────────────────────────────────────────────────
+        copyBtn.addEventListener('click', async function() {
+            const pos = positiveOutput.textContent.trim();
+            const neg = negativeOutput.textContent.trim();
+            if (!pos || pos === "Click Generate to build your prompt…") {
+                showToast('⚠️ Generate a prompt first.');
+                return;
+            }
+            const full = `--- POSITIVE PROMPT ---\n${pos}\n\n--- NEGATIVE PROMPT ---\n${neg}`;
+            try {
+                await navigator.clipboard.writeText(full);
+                showToast('✅ Both prompts copied!');
+            } catch (_) {
+                const ta = document.createElement('textarea');
+                ta.value = full;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+                showToast('✅ Copied!');
+            }
+        });
+
+        // ──────────────────────────────────────────────────────────────
+        // 7. Toast
+        // ──────────────────────────────────────────────────────────────
+        let toastTimeout;
+
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => toast.classList.remove('show'), 2400);
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 8. Init
+        // ──────────────────────────────────────────────────────────────
+        // Set initial states
+        setMode('manual');
+        toggleBadge();
+        generateAndDisplay();
+
+        // Auto-generate on all input changes
+        layoutSelect.addEventListener('change', autoGenerate);
+        headerMainInput.addEventListener('input', autoGenerate);
+        headerSubInput.addEventListener('input', autoGenerate);
+        logoInput.addEventListener('input', autoGenerate);
+        badgeInput.addEventListener('input', autoGenerate);
+    </script>
+
+</body>
+</html>
