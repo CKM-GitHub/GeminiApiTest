@@ -238,30 +238,42 @@
                 <p class="text-sm text-slate-500 mt-0.5">Commercial product advertisement · fixed model pose</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="badge badge-accent">v2.0</span>
+                <span class="badge badge-accent">v2.1</span>
                 <span class="badge">⚡ 1:1 square</span>
             </div>
         </header>
 
         <!-- Main Card -->
-        <div class="card p-6 md:p-5">
+        <div class="card p-6 md:p-8">
 
-            <!-- Row: Mode + Quantity -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Row: Model Presence + Mode + Quantity -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+                <!-- Model Presence -->
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Model</span>
+                    </div>
+                    <select id="modelPresence" class="field">
+                        <option value="with">With Model</option>
+                        <option value="without">Without Model</option>
+                    </select>
+                    <p class="hint mt-1.5">Include or remove the male model from the composition.</p>
+                </div>
 
                 <!-- Mode -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Mode</span>
                         <span class="text-xs text-slate-400">—</span>
-                        <span class="text-xs text-slate-400">header &amp; logo control</span>
+                        <span class="text-xs text-slate-400">header &amp; logo</span>
                     </div>
                     <div class="mode-pill w-full flex" id="modeToggle">
                         <button data-mode="manual" class="active flex-1 text-center">✏️ Manual</button>
                         <button data-mode="reference" class="flex-1 text-center">🖼️ Reference</button>
                     </div>
-                    <p class="hint mt-2">
-                        <span class="font-medium text-slate-600">Manual</span> → custom header &amp; logo text &nbsp;·&nbsp;
+                    <p class="hint mt-1.5">
+                        <span class="font-medium text-slate-600">Manual</span> → custom text &nbsp;·&nbsp;
                         <span class="font-medium text-slate-600">Reference</span> → skip overlays
                     </p>
                 </div>
@@ -270,17 +282,16 @@
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Products</span>
-                        <!-- <span class="qty-ring" id="qtyBadge">2</span> -->
                     </div>
                     <div class="flex items-center gap-3">
-                        <input type="number" id="productQty" 
+                        <input type="number" id="productQty" value="2" min="2" max="10" step="1"
                         class="field w-28 text-center font-medium" />
                         <span class="text-sm text-slate-500">(2 – 10)</span>
                     </div>
-                    <p class="hint mt-2">
-                        <span class="font-medium text-slate-600">2</span> diagonal overlap &nbsp;·&nbsp;
+                    <p class="hint mt-1.5">
+                        <span class="font-medium text-slate-600">2</span> diagonal &nbsp;·&nbsp;
                         <span class="font-medium text-slate-600">3–5</span> staggered grid &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">6–10</span> compact multi‑row
+                        <span class="font-medium text-slate-600">6–10</span> compact grid
                     </p>
                 </div>
             </div>
@@ -307,7 +318,7 @@
                     <button id="generateBtn" class="btn-primary">⚡ Generate</button>
                     <button id="copyBtn" class="btn-secondary">📋 Copy</button>
                 </div>
-                <!-- <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span> -->
+                <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span>
             </div>
 
             <!-- Prompt Outputs -->
@@ -338,12 +349,19 @@
             </div>
 
             <!-- Footer hint -->
-         
+            <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
+                <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                <span>Reference image: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">attached</code></span>
+                <span class="w-px h-4 bg-slate-200"></span>
+                <span>85mm · f/2.8 · 8k · studio lighting</span>
+            </div>
 
         </div>
 
         <!-- Footer -->
-       
+        <div class="text-center text-xs text-slate-400 font-medium tracking-wider mt-6 uppercase">
+            Prompt structured for commercial e‑commerce generation
+        </div>
     </div>
 
     <!-- Toast -->
@@ -353,13 +371,13 @@
         // ──────────────────────────────────────────────────────────────
         // DOM refs
         // ──────────────────────────────────────────────────────────────
+        const modelPresence = document.getElementById('modelPresence');
         const modeToggle = document.getElementById('modeToggle');
         const modeButtons = modeToggle.querySelectorAll('button');
         const manualFields = document.getElementById('manualFields');
         const headerInput = document.getElementById('headerInput');
         const logoInput = document.getElementById('logoInput');
         const productQty = document.getElementById('productQty');
-        const qtyBadge = document.getElementById('qtyBadge');
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const positiveOutput = document.getElementById('positiveOutput');
@@ -403,65 +421,105 @@
         // ──────────────────────────────────────────────────────────────
         // Quantity: allow typing freely, clamp on blur/input
         // ──────────────────────────────────────────────────────────────
-       
+        productQty.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+            }
+        });
+
+        function clampQty() {
+            let val = parseInt(this.value, 10);
+            if (isNaN(val) || val < 2) val = 2;
+            if (val > 10) val = 10;
+            this.value = val;
+            autoGenerate();
+        }
+
+        productQty.addEventListener('input', clampQty);
+        productQty.addEventListener('blur', clampQty);
 
         // ──────────────────────────────────────────────────────────────
-        // buildPrompt() – unchanged from user spec
+        // buildPrompt() – updated with model presence
         // ──────────────────────────────────────────────────────────────
         function buildPrompt() {
-    const mode = currentMode;
-    const qty = parseInt(productQty.value, 10) || 2;
+            const mode = currentMode;
+            const qty = parseInt(productQty.value, 10) || 2;
+            const hasModel = modelPresence.value === 'with';
 
-    // ----- Technical & Cinematic Finishing (Photography Context) -----
-    const photographyTerms =
-        "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers, clean commercial studio lighting setup with soft key light and subtle fill. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
+            // ----- Technical & Cinematic Finishing -----
+            const photographyTerms =
+                "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers, clean commercial studio lighting setup with soft key light and subtle fill. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
 
-    // ----- Part A: Base Setup & Fixed Model Composition -----
-    let prompt =
-        `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a clean, solid, pristine plain white background with studio-grade soft shadows. On the left side of the frame, there is a fixed male model wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
+            // ----- Part A: Base Setup & Model (conditional) -----
+            let prompt =
+                `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a clean, solid, pristine plain white background with studio-grade soft shadows. `;
 
-    // ----- Part B: Header & Logo Overlays with 10px Margin Buffer (Conditional) -----
-    if (mode === 'manual') {
-        const header = headerInput.value.trim() || 'MENS';
-        const logo = logoInput.value.trim() || 'FILA';
-        prompt +=
-            `Graphic UI Elements: A solid vibrant blue rectangular banner (Hex color code: #1A66FF) featuring crisp, perfectly rendered white text (Hex color code: #FFFFFF) reading "${header}" is cleanly generated near the top-left corner of the frame; it must be shifted slightly inward to maintain a clean, intentional 10-pixel proportional margin/padding buffer away from both the absolute top and left edges of the canvas. In the bottom-right area, the sharp brand logo text reading "${logo}" is seamlessly placed, also shifted slightly inward to maintain an exact 10-pixel proportional margin/padding buffer from both the absolute bottom and right edges of the canvas. Both graphic elements must perfectly mirror the font scaling and structural layout seen in the attached reference image but with this neat negative space padding to ensure no text or banner elements touch the extreme outer frame borders, keeping clear boundaries and no color bleeding. `;
-    }
+            if (hasModel) {
+                prompt +=
+                    `On the left side of the frame, there is a fixed male model wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
+            } else {
+                prompt +=
+                    `No human model is present. The entire canvas is dedicated to the product display, with the products centered and scaled to fill the available space elegantly. `;
+            }
 
-    // ----- Part C: Multi-Product Dynamic Arrangement & Physics -----
-    if (qty === 2) {
-        prompt +=
-            `Composition Layout (Exactly 2 Products): On the right side of the model, display exactly 2 variant floating products arranged in a clean, cascading diagonal line. One product is positioned in the front-center foreground (subtly overlapping the model's profile edge), while the second product is scaled slightly larger and placed directly behind it toward the top-right quadrant. This arrangement must capture a distinct layered depth effect, realistic overlapping perspective, and identical proportions to the layout in the attached reference image. `;
-    } else if (qty >= 3 && qty <= 5) {
-        if (qty === 3) {
+            // ----- Part B: Header & Logo Overlays with 10px Margin Buffer (Conditional) -----
+            if (mode === 'manual') {
+                const header = headerInput.value.trim() || 'MENS';
+                const logo = logoInput.value.trim() || 'FILA';
+                prompt +=
+                    `Graphic UI Elements: A solid vibrant blue rectangular banner (Hex color code: #1A66FF) featuring crisp, perfectly rendered white text (Hex color code: #FFFFFF) reading "${header}" is cleanly generated near the top-left corner of the frame; it must be shifted slightly inward to maintain a clean, intentional 10-pixel proportional margin/padding buffer away from both the absolute top and left edges of the canvas. In the bottom-right area, the sharp brand logo text reading "${logo}" is seamlessly placed, also shifted slightly inward to maintain an exact 10-pixel proportional margin/padding buffer from both the absolute bottom and right edges of the canvas. Both graphic elements must perfectly mirror the font scaling and structural layout seen in the attached reference image but with this neat negative space padding to ensure no text or banner elements touch the extreme outer frame borders, keeping clear boundaries and no color bleeding. `;
+            }
+
+            // ----- Part C: Multi-Product Dynamic Arrangement (adapt to model presence) -----
+            if (qty === 2) {
+                if (hasModel) {
+                    prompt +=
+                        `Composition Layout (Exactly 2 Products): On the right side of the model, display exactly 2 variant floating products arranged in a clean, cascading diagonal line. One product is positioned in the front-center foreground (subtly overlapping the model's profile edge), while the second product is scaled slightly larger and placed directly behind it toward the top-right quadrant. This arrangement must capture a distinct layered depth effect, realistic overlapping perspective, and identical proportions to the layout in the attached reference image. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (Exactly 2 Products): Center the two variant products side by side in a balanced, symmetrical arrangement. Both products should be similarly scaled, with a slight overlap or depth layering to create visual interest. Ensure they occupy the central area of the canvas without touching the edges. `;
+                }
+            } else if (qty >= 3 && qty <= 5) {
+                if (hasModel) {
+                    if (qty === 3) {
+                        prompt +=
+                            `Composition Layout (3 Products): On the right side of the model, cleanly organize 3 variant products in a compact, staggered multi-layered composition. Each product's scale is downsized dynamically compared to the attached reference image to comfortably populate the negative whitespace on the right without crowding or clipping into the main model's boundary. `;
+                    } else {
+                        prompt +=
+                            `Composition Layout (${qty} Products): On the right side of the model, cleanly arrange the ${qty} variant products in a structured 2-row staggered grid layout. Each individual product must automatically downscale in size compared to the attached reference image, optimizing the right-side whitespace distribution while keeping clean separation between the items and zero interference with the fixed model. `;
+                    }
+                } else {
+                    prompt +=
+                        `Composition Layout (${qty} Products): Arrange the ${qty} variant products in a well-balanced 2-row staggered grid centered on the canvas. Each product should be evenly spaced, with consistent sizing, filling the available space without crowding. The layout should be neat and organized. `;
+                }
+            } else if (qty >= 6 && qty <= 10) {
+                if (hasModel) {
+                    prompt +=
+                        `Composition Layout (${qty} Products - Compact Grid): On the right side of the model, arrange the ${qty} variant products in a highly organized, dense, and uniform grid system consisting of neat, semi-overlapping layered rows. The scale and dimensions of each product are significantly reduced to fit perfectly and seamlessly within the available right-side workspace canvas. The arrangement must look meticulously balanced, keeping a clear visual buffer away from the fixed model on the left. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (${qty} Products - Compact Grid): Arrange the ${qty} variant products in a dense, multi-row grid that fills the entire canvas uniformly. Each product is scaled appropriately to fit within the frame, with slight overlaps to create depth, ensuring a clean and professional product showcase. `;
+                }
+            } else {
+                // fallback
+                prompt +=
+                    `Composition Layout (${qty} Products): Display the ${qty} variant products in a clean, organized layout that makes efficient use of the available space. `;
+            }
+
+            // ----- Part D: Product Material & Fidelity Instructions -----
             prompt +=
-                `Composition Layout (3 Products): On the right side of the model, cleanly organize 3 variant products in a compact, staggered multi-layered composition. Each product's scale is downsized dynamically compared to the attached reference image to comfortably populate the negative whitespace on the right without crowding or clipping into the main model's boundary. `;
-        } else {
+                `Product Render Fidelity: Every standalone product layout must be rendered with absolute structural accuracy and individual color integrity. The apparel items must perfectly preserve their distinct original color profiles, embossed front-panel branding structures, clean hoodie drawstring finishes, fabric knit details, realistic tension folds, and sleeve cuff stitchings exactly like the reference garments in the attached reference image. All items must work together harmoniously as a unified product line display. `;
+
+            // ----- Part E: Final Cinematic Polish Assembly -----
             prompt +=
-                `Composition Layout (${qty} Products): On the right side of the model, cleanly arrange the ${qty} variant products in a structured 2-row staggered grid layout. Each individual product must automatically downscale in size compared to the attached reference image, optimizing the right-side whitespace distribution while keeping clean separation between the items and zero interference with the fixed model. `;
+                `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, natural shadows underneath the garments, premium clothing campaign vibe, ${photographyTerms}`;
+
+            // ----- Part F: Negative Prompt -----
+            const negativePrompt =
+                "unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures.";
+
+            return { positive: prompt.trim(), negative: negativePrompt };
         }
-    } else if (qty >= 6 && qty <= 10) {
-        prompt +=
-            `Composition Layout (${qty} Products - Compact Grid): On the right side of the model, arrange the ${qty} variant products in a highly organized, dense, and uniform grid system consisting of neat, semi-overlapping layered rows. The scale and dimensions of each product are significantly reduced to fit perfectly and seamlessly within the available right-side workspace canvas. The arrangement must look meticulously balanced, keeping a clear visual buffer away from the fixed model on the left. `;
-    } else {
-        prompt +=
-            `Composition Layout (${qty} Products): On the right side of the model, cleanly arrange the ${qty} variant products in a proportional grid system utilizing the available right-side whitespace symmetrically. `;
-    }
-
-    // ----- Part D: Product Material & Fidelity Instructions -----
-    prompt +=
-        `Product Render Fidelity: Every standalone product layout on the right must be rendered with absolute structural accuracy and individual color integrity. The apparel items must perfectly preserve their distinct original color profiles, embossed front-panel branding structures, clean hoodie drawstring finishes, fabric knit details, realistic tension folds, and sleeve cuff stitchings exactly like the reference garments in the attached reference image. All items must work together harmoniously as a unified product line display. `;
-
-    // ----- Part E: Final Cinematic Polish Assembly -----
-    prompt +=
-        `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, natural shadows underneath the garments, premium clothing campaign vibe, ${photographyTerms}`;
-
-    // ----- Part F: Negative Prompt -----
-    const negativePrompt =
-        "unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures.";
-
-    return { positive: prompt.trim(), negative: negativePrompt };
-}
 
         // ──────────────────────────────────────────────────────────────
         // Generate & display
@@ -471,7 +529,7 @@
             positiveOutput.textContent = result.positive;
             negativeOutput.textContent = result.negative;
             const total = result.positive.length + result.negative.length;
-            // charCount.textContent = `${total} chars total`;
+            charCount.textContent = `${total} characters total`;
         }
 
         function autoGenerate() {
@@ -531,12 +589,12 @@
         setMode('manual');
         generateAndDisplay();
 
-        // Auto-generate on text input changes
+        // Auto-generate on all input changes
+        modelPresence.addEventListener('change', autoGenerate);
         headerInput.addEventListener('input', autoGenerate);
         logoInput.addEventListener('input', autoGenerate);
+        productQty.addEventListener('input', autoGenerate);
     </script>
-        <script src="script.js"></script>
-
-
+<script src="script.js"></script>
 </body>
 </html>

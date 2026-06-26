@@ -167,7 +167,7 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const layoutOutput = document.getElementById('layoutOutput');
 
-    // Helper: Dynamic additional color inputs (for colors beyond main)
+    // Helper: Dynamic additional color inputs
     function updateAdditionalColors() {
       const total = parseInt(totalColorsSelect.value, 10);
       const additionalCount = Math.max(0, total - 1);
@@ -183,14 +183,12 @@
       }
     }
 
-    // Get all color names (main + additional)
     function getAllColors() {
       const colors = [];
       const main = activeColorInput.value.trim();
       if (main) colors.push(main);
-      const additionalInputs = document.querySelectorAll('.additional-color');
-      additionalInputs.forEach(input => {
-        if (input.value.trim()) colors.push(input.value.trim());
+      document.querySelectorAll('.additional-color').forEach(inp => {
+        if (inp.value.trim()) colors.push(inp.value.trim());
       });
       return colors;
     }
@@ -221,150 +219,146 @@
       updateSpecsRemoveButtons();
     }
 
-//     function getSpecs() {
-//   const specs = [];
-//   const rows = document.querySelectorAll('.spec-row');
-//   rows.forEach(row => {
-//     let length = row.querySelector('.spec-length')?.value.trim() || '';
-//     let weight = row.querySelector('.spec-weight')?.value.trim() || '';
-//     // Remove any non-numeric characters (keep decimal points)
-//     // length = length.replace(/[^0-9.]/g, '');
-//     // weight = weight.replace(/[^0-9.]/g, '');
-//     if (length || weight) specs.push({ length, weight });
-//   });
-//   return specs;
-// }
-
-function getSpecs() {
-  const specs = [];
-  const rows = document.querySelectorAll('.spec-row');
-  rows.forEach(row => {
-    let length = row.querySelector('.spec-length')?.value.trim() || '';
-    let weight = row.querySelector('.spec-weight')?.value.trim() || '';
-    // Remove everything except digits and decimal points
-    length = length.replace(/[^0-9.]/g, '');
-    weight = weight.replace(/[^0-9.]/g, '');
-    if (length || weight) specs.push({ length, weight });
-  });
-  return specs;
-}
+    function getSpecs() {
+      const specs = [];
+      document.querySelectorAll('.spec-row').forEach(row => {
+        let length = row.querySelector('.spec-length')?.value.trim() || '';
+        let weight = row.querySelector('.spec-weight')?.value.trim() || '';
+        // Strip all non-numeric characters (keep decimal point)
+        length = length.replace(/[^0-9.]/g, '');
+        weight = weight.replace(/[^0-9.]/g, '');
+        if (length || weight) specs.push({ length, weight });
+      });
+      return specs;
+    }
 
     // ======================== LAYOUT GENERATION LOGIC ========================
-// ======================== LAYOUT GENERATION LOGIC ========================
-  
-// ======================== LAYOUT GENERATION LOGIC ========================
-  function generateLayoutDesign() {
-  const category = categorySelect.value;
-  const target = targetSelect.value;
-  const frame = frameSelect.value;
-  const balance = balanceSelect.value;
-  const totalColors = parseInt(totalColorsSelect.value, 10);
-  const colors = getAllColors();
-  const activeColor = colors[0] || 'Main Color';
-  const otherColors = colors.slice(1);
-  const specs = getSpecs();
-  const specCount = specs.length;
-  const isJunior = target === 'Junior';
-  const hasBalance = balance !== 'None';
+    function generateLayoutDesign() {
+      const category = categorySelect.value;
+      const target = targetSelect.value;
+      const frame = frameSelect.value;
+      const balance = balanceSelect.value;
+      const totalColors = parseInt(totalColorsSelect.value, 10);
+      const colors = getAllColors();
+      const activeColor = colors[0] || 'Main Color';
+      const otherColors = colors.slice(1);
+      const specs = getSpecs();
+      const specCount = specs.length;
+      const isJunior = target === 'Junior';
+      const hasBalance = balance !== 'None';
 
-  // Get first spec values (sanitized, numeric only)
-  const firstSpec = specs[0] || { length: '', weight: '' };
-  // Build display strings with units (only if value exists)
-  const specLengthDisplay = firstSpec.length ? `${firstSpec.length}cm` : '—';
-  const specWeightDisplay = firstSpec.weight ? `${firstSpec.weight}g` : '—';
-  
-  // Balance Japanese mapping (unchanged)
-  let balanceJapanese = "ミドル\nバランス";
-  if (balance.includes("Top Middle")) balanceJapanese = "トップミドル\nバランス";
-  else if (balance.includes("Top")) balanceJapanese = "トップ\nバランス";
-  else if (balance.includes("Counter")) balanceJapanese = "カウンター\nバランス";
+      // First spec for the black circle
+      const firstSpec = specs[0] || { length: '', weight: '' };
+      const specLengthDisplay = firstSpec.length ? `${firstSpec.length}cm` : '—';
+      const specWeightDisplay = firstSpec.weight ? `${firstSpec.weight}g` : '—';
 
-  let prompt = "";
-  let negativePrompt = "low quality, distorted layout, blurry textures, deformed shapes, incorrect proportions, messy composition, poor lighting, oversaturated colors, unrealistic materials, fake looking, cartoonish, anime style, CGI look, plastic appearance, low resolution, pixelated, blurry, no focus, harsh shadows, overexposed, underexposed, watermark, text artifacts, cropped edges, cut off product, missing parts, duplicate elements, floating objects, awkward positioning, uneven spacing, cluttered layout, unbalanced composition, distorted typography, wrong colors, inaccurate branding, fake logo, misaligned elements.";
+      // Build a formatted list of all specs (for inclusion in prompt)
+      let specList = '';
+      if (specCount > 0) {
+        specList = specs.map((s, idx) => {
+          const len = s.length ? `${s.length}cm` : '—';
+          const wt = s.weight ? `${s.weight}g` : '—';
+          return `Spec ${idx+1}: ${len} / ${wt}`;
+        }).join('; ');
+      }
 
-  if (frame === 'Frame 1') {
-    // ========== FRAME 1 (unchanged, but uses first spec only) ==========
-    const rotationAngle = totalColors === 1 ? "56 degrees" : "62 degrees";
-    prompt += `Professional high-end e-commerce product catalog banner photography of a Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-    prompt += `The layout features a multi-angle cohesive presentation on a clean, solid studio white background (#FFFFFF) with a minimalist corporate athletic aesthetic. `;
-    prompt += `On the top-left corner of the image, there is a sharp stacked header badge block. `;
-    prompt += `The upper header consists of a solid black background rectangular box (#2B2B2B) containing bold white Japanese text "${category}" centered in a heavy sans-serif Japanese font with slightly smaller point size for a refined catalog look. `;
-    if (isJunior) {
-      prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
-      prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
+      // Balance Japanese mapping
+      let balanceJapanese = "ミドル\nバランス";
+      if (balance.includes("Top Middle")) balanceJapanese = "トップミドル\nバランス";
+      else if (balance.includes("Top")) balanceJapanese = "トップ\nバランス";
+      else if (balance.includes("Counter")) balanceJapanese = "カウンター\nバランス";
+
+      let prompt = "";
+      const negativePrompt = "low quality, distorted layout, blurry textures, deformed shapes, incorrect proportions, messy composition, poor lighting, oversaturated colors, unrealistic materials, fake looking, cartoonish, anime style, CGI look, plastic appearance, low resolution, pixelated, blurry, no focus, harsh shadows, overexposed, underexposed, watermark, text artifacts, cropped edges, cut off product, missing parts, duplicate elements, floating objects, awkward positioning, uneven spacing, cluttered layout, unbalanced composition, distorted typography, wrong colors, inaccurate branding, fake logo, misaligned elements.";
+
+      if (frame === 'Frame 1') {
+        const rotationAngle = totalColors === 1 ? "56 degrees" : "62 degrees";
+        prompt += `Professional high-end e-commerce product catalog banner photography of a Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+        prompt += `The layout features a multi-angle cohesive presentation on a clean, solid studio white background (#FFFFFF) with a minimalist corporate athletic aesthetic. `;
+        prompt += `On the top-left corner of the image, there is a sharp stacked header badge block. `;
+        prompt += `The upper header consists of a solid black background rectangular box (#2B2B2B) containing bold white Japanese text "${category}" centered in a heavy sans-serif Japanese font with slightly smaller point size for a refined catalog look. `;
+        if (isJunior) {
+          prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
+          prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
+        }
+        let balanceCropInstruction = "";
+        if (hasBalance) {
+          balanceCropInstruction = `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
+          if (balance === "Top") balanceCropInstruction += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Top Middle") balanceCropInstruction += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Middle") balanceCropInstruction += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Counter") balanceCropInstruction += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
+          balanceCropInstruction += `Ensure exactly ONE single balance badge is displayed in the final layout, absolutely no more, no less. `;
+          prompt += `Directly positioned underneath the stacked header boxes on the left side, place the single extracted balance element. ${balanceCropInstruction}`;
+        }
+        prompt += `The main layout showcases a dramatic, heavily cropped and macro-enlarged view of ONLY the upper half, barrel, and head section of the bat, occupying approximately 50% of the upper frame canvas space. `;
+        prompt += `This prominent bat features the primary '${activeColor}' finish and is dynamically tilted at exactly ${rotationAngle} counter-clockwise, meaning the bat's body cuts diagonally across the frame starting from the bottom-left and pointing sharply up towards the top-right corner. `;
+        prompt += `The barrel section is enlarged significantly to capture rich product texture and brand engraving. `;
+        prompt += `Positioned strictly at the absolute bottom margin of the 600x600 canvas, acting as a structural base and visual anchor, is the full-size bat view area. `;
+        if (totalColors === 1) {
+          prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish, seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
+        } else {
+          prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are multiple secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal. `;
+          prompt += `The first horizontal bat at the top of this footer stack displays the main active '${activeColor}' finish. `;
+          prompt += `Perfectly aligned and stacked directly underneath it, touching the absolute bottom edge, additional horizontal full-size bats showcase the alternative color finishes of ${otherColors.join(', ')} respectively, presenting the full product range in a clean catalog strip. `;
+        }
+        // ----- LOGO PLACEMENT (AT ABSOLUTE BOTTOM EDGE) -----
+        prompt += `At the very bottom edge of the canvas, in the lower‑right corner, the red dynamic graphic logo of the manufacturer 'ZETT' is sharply displayed. No other design elements appear below or overlapping the logo. `;
+        prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures and technical labels.`;
+        prompt += negativePrompt;
+      }
+      else if (frame === 'Frame 2') {
+        prompt += `Professional e-commerce product breakdown and specification banner photography of a Japanese baseball bat for ${category} strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+        prompt += `The banner layout is split into a strict three-piece structured design on a seamless, solid white background, presenting multiple detailed views of the product simultaneously. `;
+        prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
+        if (totalColors === 1) {
+          prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
+        } else {
+          prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
+        }
+        prompt += `Image C displays a vertical close-up focus on the upper part, barrel, and head area covering exactly 50% to 55% of the bat's length. `;
+
+        // --- SPECIFICATION CIRCLE BADGES (TOP RIGHT) ---
+        prompt += `On the upper-right side of the image, the technical specifications are presented in stacked high-contrast circular badges. `;
+
+        // BLACK CIRCLE: first spec size & weight
+        prompt += `The top badge is a solid black circular badge (#000000). Inside this black circle, large bold white Japanese-style typography displays the text centered on two separate lines: top line reads "${specLengthDisplay}", bottom line reads "${specWeightDisplay}". It features a clean vector design, sharp geometric edges, a minimalistic layout, and a premium catalog appearance with absolute readability. `;
+
+        // WHITE CIRCLE: balance type
+        prompt += `The bottom badge is a solid white circular badge (#FFFFFF) with a thin black border stroke for definition. Inside this white circle, the balance specification is displayed with clean dark typography. `;
+
+        // --- SPEC COUNT BADGE (if more than 1 spec) ---
+        if (specCount > 1) {
+          prompt += `Above the two circular badges, a small rectangular badge is placed indicating the number of specifications: "${specCount} SPEC" in bold white text on a dark gray background, positioned to the upper-right of the circles. `;
+        }
+
+        // --- LIST ALL SPECIFICATIONS (combine into prompt) ---
+        if (specList) {
+          prompt += `The complete list of specifications is: ${specList}. `;
+        }
+
+        // --- BALANCE & バランス BELOW CIRCLES ---
+        if (hasBalance) {
+          prompt += `Directly below the two specification circles, the balance type is clearly indicated with two lines of text: the English word "balance" in clean sans-serif font, and directly underneath it, the Japanese text "${balanceJapanese.replace('\n', ' ')}" in matching typography. `;
+          prompt += `These two text lines are centered, positioned neatly below the circular badges, using a slightly smaller font size than the circle text for a refined hierarchical catalog layout. `;
+          prompt += `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
+          if (balance === "Top") prompt += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Top Middle") prompt += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Middle") prompt += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
+          else if (balance === "Counter") prompt += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
+          prompt += `Place this single extracted balance icon immediately adjacent to the text labels, creating a cohesive balance specification display. `;
+        }
+
+        prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution. `;
+
+        // ----- LOGO AT ABSOLUTE BOTTOM EDGE -----
+        prompt += `At the very bottom edge of the canvas, in the lower‑right corner, the manufacturer brand logo 'ZETT' appears in its signature red color. No other elements overlap or sit below the logo. `;
+        prompt += negativePrompt;
+      }
+
+      return prompt;
     }
-    let balanceCropInstruction = "";
-    if (hasBalance) {
-      balanceCropInstruction = `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
-      if (balance === "Top") balanceCropInstruction += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Top Middle") balanceCropInstruction += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Middle") balanceCropInstruction += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Counter") balanceCropInstruction += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
-      balanceCropInstruction += `Ensure exactly ONE single balance badge is displayed in the final layout, absolutely no more, no less. `;
-      prompt += `Directly positioned underneath the stacked header boxes on the left side, place the single extracted balance element. ${balanceCropInstruction}`;
-    }
-    prompt += `The main layout showcases a dramatic, heavily cropped and macro-enlarged view of ONLY the upper half, barrel, and head section of the bat, occupying approximately 50% of the upper frame canvas space. `;
-    prompt += `This prominent bat features the primary '${activeColor}' finish and is dynamically tilted at exactly ${rotationAngle} counter-clockwise, meaning the bat's body cuts diagonally across the frame starting from the bottom-left and pointing sharply up towards the top-right corner. `;
-    prompt += `The barrel section is enlarged significantly to capture rich product texture and brand engraving. `;
-    prompt += `Positioned strictly at the absolute bottom margin of the 600x600 canvas, acting as a structural base and visual anchor, is the full-size bat view area. `;
-    if (totalColors === 1) {
-      prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish, seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
-    } else {
-      prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are multiple secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal. `;
-      prompt += `The first horizontal bat at the top of this footer stack displays the main active '${activeColor}' finish. `;
-      prompt += `Perfectly aligned and stacked directly underneath it, touching the absolute bottom edge, additional horizontal full-size bats showcase the alternative color finishes of ${otherColors.join(', ')} respectively, presenting the full product range in a clean catalog strip. `;
-    }
-    prompt += `In the lower-right corner, positioned cleanly just above the horizontal footer bats with no overlapping elements, the red dynamic graphic logo of the manufacturer 'ZETT' is sharply displayed. Nothing else appears above or on top of the logo area. `;
-    prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures and technical labels.`;
-    prompt += negativePrompt;
-  }
-  else if (frame === 'Frame 2') {
-    // ========== FRAME 2 (FIXED: spec count badge + no duplicate units) ==========
-    prompt += `Professional e-commerce product breakdown and specification banner photography of a Japanese baseball bat for ${category} strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-    prompt += `The banner layout is split into a strict three-piece structured design on a seamless, solid white background, presenting multiple detailed views of the product simultaneously. `;
-    prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
-    if (totalColors === 1) {
-      prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
-    } else {
-      prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
-    }
-    prompt += `Image C displays a vertical close-up focus on the upper part, barrel, and head area covering exactly 50% to 55% of the bat's length. `;
 
-    // --- SPECIFICATION CIRCLE BADGES (TOP RIGHT) ---
-    prompt += `On the upper-right side of the image, the technical specifications are presented in stacked high-contrast circular badges. `;
-
-    // ✅ BLACK CIRCLE: Size & Weight (first spec only, units added cleanly)
-    prompt += `The top badge is a solid black circular badge (#000000). Inside this black circle, large bold white Japanese-style typography displays the text centered on two separate lines: top line reads "${specLengthDisplay}", bottom line reads "${specWeightDisplay}". It features a clean vector design, sharp geometric edges, a minimalistic layout, and a premium catalog appearance with absolute readability. `;
-
-    // ✅ WHITE CIRCLE: Balance type with "balance" and "バランス" text below
-    prompt += `The bottom badge is a solid white circular badge (#FFFFFF) with a thin black border stroke for definition. Inside this white circle, the balance specification is displayed with clean dark typography. `;
-
-    // --- SPEC COUNT BADGE (NEW) ---
-    if (specCount > 1) {
-      prompt += `Above the two circular badges, a small rectangular badge is placed indicating the number of specifications: "${specCount} SPEC" in bold white text on a dark gray background, positioned to the upper-right of the circles. `;
-    }
-
-    // --- BALANCE & バランス BELOW THE SPECIFICATION CIRCLES ---
-    if (hasBalance) {
-      prompt += `Directly below the two specification circles, the balance type is clearly indicated with two lines of text: the English word "balance" in clean sans-serif font, and directly underneath it, the Japanese text "${balanceJapanese.replace('\n', ' ')}" in matching typography. `;
-      prompt += `These two text lines are centered, positioned neatly below the circular badges, using a slightly smaller font size than the circle text for a refined hierarchical catalog layout. `;
-      prompt += `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
-      if (balance === "Top") prompt += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Top Middle") prompt += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Middle") prompt += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
-      else if (balance === "Counter") prompt += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
-      prompt += `Place this single extracted balance icon immediately adjacent to the text labels, creating a cohesive balance specification display. `;
-    }
-
-    prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution. `;
-    prompt += `In the lower-right corner of the canvas, placed at the very bottom edge with no elements above or overlapping it, the manufacturer brand logo 'ZETT' appears in its signature red color. The logo area is kept completely clear of any other design elements. `;
-    prompt += negativePrompt;
-  }
-
-  return prompt;
-}
-
-    
     function updateOutput() {
       const layout = generateLayoutDesign();
       layoutOutput.value = layout;
@@ -412,12 +406,12 @@ function getSpecs() {
       URL.revokeObjectURL(url);
     });
     
-    // Auto-update on any input change
+    // Auto-update on input changes
     const autoUpdateInputs = [categorySelect, targetSelect, frameSelect, balanceSelect, activeColorInput];
     autoUpdateInputs.forEach(el => el.addEventListener('change', updateOutput));
     autoUpdateInputs.forEach(el => el.addEventListener('input', updateOutput));
     
-    // Listen for additional color inputs and spec inputs dynamically
+    // Observe dynamically added color and spec inputs
     const observer = new MutationObserver(() => {
       document.querySelectorAll('.additional-color').forEach(inp => {
         inp.removeEventListener('input', updateOutput);
@@ -437,7 +431,5 @@ function getSpecs() {
     updateSpecsRemoveButtons();
     setTimeout(() => { updateOutput(); }, 200);
   </script>
-    <script src="script.js"></script>
-
 </body>
 </html>
