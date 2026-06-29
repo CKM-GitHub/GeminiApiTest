@@ -284,7 +284,7 @@
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Products</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <input type="number" id="productQty" value="2" min="2" max="10" step="1"
+                        <input type="number" id="productQty"  min="2" max="10" step="1"
                         class="field w-28 text-center font-medium" />
                         <span class="text-sm text-slate-500">(2 – 10)</span>
                     </div>
@@ -377,7 +377,6 @@
         const manualFields = document.getElementById('manualFields');
         const headerInput = document.getElementById('headerInput');
         const logoInput = document.getElementById('logoInput');
-        const productQty = document.getElementById('productQty');
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const positiveOutput = document.getElementById('positiveOutput');
@@ -421,11 +420,7 @@
         // ──────────────────────────────────────────────────────────────
         // Quantity: allow typing freely, clamp on blur/input
         // ──────────────────────────────────────────────────────────────
-        productQty.addEventListener('keydown', function(e) {
-            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
-                e.preventDefault();
-            }
-        });
+     
 
         function clampQty() {
             let val = parseInt(this.value, 10);
@@ -435,9 +430,7 @@
             autoGenerate();
         }
 
-        productQty.addEventListener('input', clampQty);
-        productQty.addEventListener('blur', clampQty);
-
+       
         // ──────────────────────────────────────────────────────────────
         // buildPrompt() – updated with model presence
         // ──────────────────────────────────────────────────────────────
