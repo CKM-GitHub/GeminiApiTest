@@ -159,20 +159,6 @@
             color: #0f172a;
         }
 
-        .qty-ring {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 2.4rem;
-            height: 2.4rem;
-            background: #f1f5f9;
-            border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #0f172a;
-        }
-
         .divider {
             border: none;
             border-top: 1px solid #e2e8f0;
@@ -235,7 +221,7 @@
                 <p class="text-sm text-slate-500 mt-0.5">Commercial product advertisement · fixed model pose</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="badge badge-accent">v2.2</span>
+                <span class="badge badge-accent">v2.4</span>
                 <span class="badge">⚡ 1:1 square</span>
             </div>
         </header>
@@ -275,20 +261,20 @@
                     </p>
                 </div>
 
-                <!-- Product Quantity -->
+                <!-- Product Quantity (NO RESTRICTIONS) -->
                 <div>
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Products</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <input type="number" id="productQty" value="2" min="2" max="10" step="1"
-                        class="field w-28 text-center font-medium" />
-                        <span class="text-sm text-slate-500">(2 – 10)</span>
+                        <input type="number" id="productQty" value="2" class="field w-28 text-center font-medium" />
+                        <span class="text-sm text-slate-500">(any number)</span>
                     </div>
                     <p class="hint mt-1.5">
                         <span class="font-medium text-slate-600">2</span> diagonal &nbsp;·&nbsp;
                         <span class="font-medium text-slate-600">3–5</span> staggered grid &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">6–10</span> compact grid
+                        <span class="font-medium text-slate-600">6–10</span> compact grid &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">&gt;10</span> fallback layout
                     </p>
                 </div>
 
@@ -309,6 +295,26 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- Model Type (Conditional) -->
+            <div id="modelTypeContainer" class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6" style="display: none;">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Model Type</span>
+                    </div>
+                    <select id="modelType" class="field">
+                        <option value="attractive young adult male model">Young Adult Male</option>
+                        <option value="attractive young adult female model">Young Adult Female</option>
+                        <option value="athletic male model with defined physique">Athletic Male</option>
+                        <option value="tall slender female model with elegant posture">Elegant Female</option>
+                        <option value="casual relaxed-fit model">Casual Model</option>
+                        <option value="young Japanese male model with modern street style">🇯🇵 Japanese Young Male</option>
+                        <option value="young Japanese female model with contemporary fashion sense">🇯🇵 Japanese Young Female</option>
+                        <option value="Use the attached reference image as the face of the main subject. Strictly preserve the facial structure, identity, skin tone, hair, and expression from the uploaded photo. Apply a full face-swap or IP-Adapter transfer. Do not alter the face. Apply the selected clothing, pose, background, and overall scene style to this fixed face only.">📸 Custom Face (Use Uploaded Image)</option>
+                    </select>
+                    <p class="hint mt-1.5">Select the model archetype or use a custom face reference.</p>
+                </div>
             </div>
 
             <!-- Manual Fields (conditional) -->
@@ -387,6 +393,8 @@
         // DOM refs
         // ──────────────────────────────────────────────────────────────
         const modelPresence = document.getElementById('modelPresence');
+        const modelTypeContainer = document.getElementById('modelTypeContainer');
+        const modelTypeSelect = document.getElementById('modelType');
         const modeToggle = document.getElementById('modeToggle');
         const modeButtons = modeToggle.querySelectorAll('button');
         const manualFields = document.getElementById('manualFields');
@@ -437,19 +445,11 @@
         });
 
         // ──────────────────────────────────────────────────────────────
-        // Quantity: allow typing freely, clamp on blur/input
+        // Quantity: NO RESTRICTIONS — user types freely
+        // We only react to 'input' to trigger autoGenerate
         // ──────────────────────────────────────────────────────────────
+        productQty.addEventListener('input', autoGenerate);
 
-
-        function clampQty() {
-            let val = parseInt(this.value, 10);
-            if (isNaN(val) || val < 2) val = 2;
-            if (val > 10) val = 10;
-            this.value = val;
-            autoGenerate();
-        }
-
-      
         // ──────────────────────────────────────────────────────────────
         // Main Product toggle: show/hide color input
         // ──────────────────────────────────────────────────────────────
@@ -465,26 +465,43 @@
         mainProductSelect.addEventListener('change', toggleMainColor);
 
         // ──────────────────────────────────────────────────────────────
-        // buildPrompt() – updated with main product logic
+        // Model Presence toggle: show/hide model type select
         // ──────────────────────────────────────────────────────────────
-        function buildPrompt() {
+        function toggleModelType() {
+            const show = modelPresence.value === 'with';
+            modelTypeContainer.style.display = show ? 'grid' : 'none';
+            modelTypeSelect.disabled = !show;
+            autoGenerate();
+        }
+
+        modelPresence.addEventListener('change', toggleModelType);
+
+        // ──────────────────────────────────────────────────────────────
+        // buildPrompt() – uses parseInt, falls back to 2 if invalid
+        // but NO clamping to a range – any number is allowed
+        // ──────────────────────────────────────────────────────────────
+       function buildPrompt() {
             const mode = currentMode;
-            const qty = parseInt(productQty.value, 10) || 2;
+            const qty = parseInt(productQty.value, 10);
+            // If NaN, default to 2 (but we don't restrict beyond that)
+            const validQty = isNaN(qty) ? 2 : qty;
             const hasModel = modelPresence.value === 'with';
             const hasMainProduct = mainProductSelect.value === 'with';
             const mainColor = mainColorInput.value.trim() || 'Red';
+            const modelDescription = modelTypeSelect.value;
 
             // ----- Technical & Cinematic Finishing -----
             const photographyTerms =
-                "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers, clean commercial studio lighting setup with soft key light and subtle fill. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
+                "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers, clean commercial studio lighting setup. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
 
             // ----- Part A: Base Setup & Model (conditional) -----
+            // ပြင်ဆင်ချက် - 'with studio-grade soft shadows' ကို ဖြုတ်ပြီး 'flat, shadowless' စာသားများ ထည့်သွင်းထားပါတယ်
             let prompt =
-                `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a clean, solid, pristine plain white background with studio-grade soft shadows. `;
+                `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a clean, solid, pristine, flat plain white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. `;
 
             if (hasModel) {
                 prompt +=
-                    `On the left side of the frame, there is a fixed male model wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
+                    `On the left side of the frame, there is a fixed ${modelDescription} wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
             } else {
                 prompt +=
                     `No human model is present. The entire canvas is dedicated to the product display, with the products centered and scaled to fill the available space elegantly. `;
@@ -499,60 +516,60 @@
             }
 
             // ----- Part C: Multi-Product Dynamic Arrangement (adapt to model presence & main product) -----
-            // If main product is enabled, we describe one product as the hero, larger, others smaller.
-            // If not, we treat all equally.
-
             if (hasMainProduct) {
                 // Hero product description
                 prompt +=
-                    `Composition Layout with a Hero Product: Among the ${qty} variant products, one is designated as the main hero product. This hero product must be displayed significantly larger and more prominently than the others, acting as the focal point of the composition. The hero product is in the color "${mainColor}" and must be easily distinguishable. The remaining ${qty - 1} products are arranged around or next to the hero product, scaled down and positioned neatly to complement the hero without overcrowding. `;
+                    `Composition Layout with a Hero Product: Among the ${validQty} variant products, one is designated as the main hero product. This hero product must be displayed significantly larger and more prominently than the others, acting as the focal point of the composition. The hero product is in the color "${mainColor}" and must be easily distinguishable. The remaining ${validQty - 1} products are arranged around or next to the hero product, scaled down and positioned neatly to complement the hero without overcrowding. `;
 
                 // Additional specific arrangement based on quantity
-                if (qty === 2) {
+                if (validQty === 2) {
                     prompt +=
                         `With 2 products, the hero product occupies the dominant position (e.g., front and center), while the auxiliary product is placed slightly behind or to the side, smaller in scale. `;
-                } else if (qty >= 3 && qty <= 5) {
+                } else if (validQty >= 3 && validQty <= 5) {
                     prompt +=
-                        `With ${qty} products, the hero product takes the central or left-forward position, while the auxiliary products form a staggered grid around it, each scaled down to create a clear hierarchy. `;
-                } else if (qty >= 6 && qty <= 10) {
+                        `With ${validQty} products, the hero product takes the central or left-forward position, while the auxiliary products form a staggered grid around it, each scaled down to create a clear hierarchy. `;
+                } else if (validQty >= 6 && validQty <= 10) {
                     prompt +=
-                        `With ${qty} products, the hero product remains the largest and most central, while the others are arranged in a compact, organized grid around it, each reduced in size to ensure the hero remains the undeniable focus. `;
+                        `With ${validQty} products, the hero product remains the largest and most central, while the others are arranged in a compact, organized grid around it, each reduced in size to ensure the hero remains the undeniable focus. `;
+                } else {
+                    prompt +=
+                        `With ${validQty} products, the hero product is prominent, and the rest are arranged in a clean multi-row grid that adapts to the total count. `;
                 }
             } else {
                 // No main product: original symmetrical layout (equal sizes)
-                if (qty === 2) {
+                if (validQty === 2) {
                     if (hasModel) {
                         prompt +=
-                            `Composition Layout (Exactly 2 Products): On the right side of the model, display exactly 2 variant floating products arranged in a clean, cascading diagonal line. One product is positioned in the front-center foreground (subtly overlapping the model's profile edge), while the second product is scaled slightly larger and placed directly behind it toward the top-right quadrant. This arrangement must capture a distinct layered depth effect, realistic overlapping perspective, and identical proportions to the layout in the attached reference image. `;
+                            `Composition Layout (Exactly 2 Products): On the right side of the model, display exactly 2 variant floating products arranged in a clean, cascading diagonal line. One product is positioned in the front-center foreground (subtly overlapping the model's profile edge), while the second product is scaled slightly larger and placed directly behind it toward the top-right quadrant. This arrangement must capture a distinct layered flat effect, realistic overlapping perspective, and identical proportions to the layout in the attached reference image. `;
                     } else {
                         prompt +=
-                            `Composition Layout (Exactly 2 Products): Center the two variant products side by side in a balanced, symmetrical arrangement. Both products should be similarly scaled, with a slight overlap or depth layering to create visual interest. Ensure they occupy the central area of the canvas without touching the edges. `;
+                            `Composition Layout (Exactly 2 Products): Center the two variant products side by side in a balanced, symmetrical arrangement. Both products should be similarly scaled, with a slight overlap or flat layering to create visual interest. Ensure they occupy the central area of the canvas without touching the edges. `;
                     }
-                } else if (qty >= 3 && qty <= 5) {
+                } else if (validQty >= 3 && validQty <= 5) {
                     if (hasModel) {
-                        if (qty === 3) {
+                        if (validQty === 3) {
                             prompt +=
                                 `Composition Layout (3 Products): On the right side of the model, cleanly organize 3 variant products in a compact, staggered multi-layered composition. Each product's scale is downsized dynamically compared to the attached reference image to comfortably populate the negative whitespace on the right without crowding or clipping into the main model's boundary. `;
                         } else {
                             prompt +=
-                                `Composition Layout (${qty} Products): On the right side of the model, cleanly arrange the ${qty} variant products in a structured 2-row staggered grid layout. Each individual product must automatically downscale in size compared to the attached reference image, optimizing the right-side whitespace distribution while keeping clean separation between the items and zero interference with the fixed model. `;
+                                `Composition Layout (${validQty} Products): On the right side of the model, cleanly arrange the ${validQty} variant products in a structured 2-row staggered grid layout. Each individual product must automatically downscale in size compared to the attached reference image, optimizing the right-side whitespace distribution while keeping clean separation between the items and zero interference with the fixed model. `;
                         }
                     } else {
                         prompt +=
-                            `Composition Layout (${qty} Products): Arrange the ${qty} variant products in a well-balanced 2-row staggered grid centered on the canvas. Each product should be evenly spaced, with consistent sizing, filling the available space without crowding. The layout should be neat and organized. `;
+                            `Composition Layout (${validQty} Products): Arrange the ${validQty} variant products in a well-balanced 2-row staggered grid centered on the canvas. Each product should be evenly spaced, with consistent sizing, filling the available space without crowding. The layout should be neat and organized. `;
                     }
-                } else if (qty >= 6 && qty <= 10) {
+                } else if (validQty >= 6 && validQty <= 10) {
                     if (hasModel) {
                         prompt +=
-                            `Composition Layout (${qty} Products - Compact Grid): On the right side of the model, arrange the ${qty} variant products in a highly organized, dense, and uniform grid system consisting of neat, semi-overlapping layered rows. The scale and dimensions of each product are significantly reduced to fit perfectly and seamlessly within the available right-side workspace canvas. The arrangement must look meticulously balanced, keeping a clear visual buffer away from the fixed model on the left. `;
+                            `Composition Layout (${validQty} Products - Compact Grid): On the right side of the model, arrange the ${validQty} variant products in a highly organized, dense, and uniform grid system consisting of neat, semi-overlapping layered rows. The scale and dimensions of each product are significantly reduced to fit perfectly and seamlessly within the available right-side workspace canvas. The arrangement must look meticulously balanced, keeping a clear visual buffer away from the fixed model on the left. `;
                     } else {
                         prompt +=
-                            `Composition Layout (${qty} Products - Compact Grid): Arrange the ${qty} variant products in a dense, multi-row grid that fills the entire canvas uniformly. Each product is scaled appropriately to fit within the frame, with slight overlaps to create depth, ensuring a clean and professional product showcase. `;
+                            `Composition Layout (${validQty} Products - Compact Grid): Arrange the ${validQty} variant products in a dense, multi-row grid that fills the entire canvas uniformly. Each product is scaled appropriately to fit within the frame, with slight overlaps, ensuring a clean and professional product showcase. `;
                     }
                 } else {
-                    // fallback
+                    // fallback for any other number (including >10 or 1, 0, negative)
                     prompt +=
-                        `Composition Layout (${qty} Products): Display the ${qty} variant products in a clean, organized layout that makes efficient use of the available space. `;
+                        `Composition Layout (${validQty} Products): Display the ${validQty} variant products in a clean, organized layout that makes efficient use of the available space. `;
                 }
             }
 
@@ -561,12 +578,14 @@
                 `Product Render Fidelity: Every standalone product layout must be rendered with absolute structural accuracy and individual color integrity. The apparel items must perfectly preserve their distinct original color profiles, embossed front-panel branding structures, clean hoodie drawstring finishes, fabric knit details, realistic tension folds, and sleeve cuff stitchings exactly like the reference garments in the attached reference image. All items must work together harmoniously as a unified product line display. `;
 
             // ----- Part E: Final Cinematic Polish Assembly -----
+            // ပြင်ဆင်ချက် - 'natural shadows underneath the garments' ကို ဖြုတ်ပြီး 'completely shadowless background' ထည့်သွင်းထားပါတယ်
             prompt +=
-                `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, natural shadows underneath the garments, premium clothing campaign vibe, ${photographyTerms}`;
+                `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, completely shadowless background, isolated product look, premium clothing campaign vibe, ${photographyTerms}`;
 
             // ----- Part F: Negative Prompt -----
+            // ပြင်ဆင်ချက် - 'shadows, drop shadows, ambient occlusion, background depth' တို့ကိုပါ မပါစေချင်တဲ့အထဲ ထပ်ဖြည့်ပေးထားပါတယ်
             const negativePrompt =
-                "unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures.";
+                "shadows, drop shadows, ambient occlusion, background depth, gradient background, unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures.";
 
             return { positive: prompt.trim(), negative: negativePrompt };
         }
@@ -638,16 +657,17 @@
 
         setMode('manual');
         toggleMainColor(); // set initial visibility
+        toggleModelType(); // set initial visibility
         generateAndDisplay();
 
-        // Auto-generate on all input changes
+        // Auto-generate on all input changes (except productQty already added)
         modelPresence.addEventListener('change', autoGenerate);
+        modelTypeSelect.addEventListener('change', autoGenerate);
         headerInput.addEventListener('input', autoGenerate);
         logoInput.addEventListener('input', autoGenerate);
-        productQty.addEventListener('input', autoGenerate);
         mainProductSelect.addEventListener('change', autoGenerate);
         mainColorInput.addEventListener('input', autoGenerate);
     </script>
-
+<script src="script.js"></script>
 </body>
 </html>
