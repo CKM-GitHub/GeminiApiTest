@@ -195,11 +195,12 @@
     // ----------------------------------------------
     // 1. PROMPT DATA PACKAGES (raw template strings)
     // ----------------------------------------------
- const PROMPT_LIBRARY = {
+ // ----------------------------------------------
+const PROMPT_LIBRARY = {
   threeProduct: {
    manual: {
-      main: `[MAIN PROMPT]
-Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure white background (#FFFFFF) strictly framed within a perfect square 1:1 aspect ratio canvas in a clean Japanese ecommerce layout.
+     main: `[MAIN PROMPT]
+Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands displayed together on a pure, flat, uniform white background (#FFFFFF) strictly framed within a perfect square 1:1 aspect ratio canvas in a clean Japanese ecommerce layout.
 
 --- DELIBERATE VISUAL MARGIN & EXPANSIVE WHITESPACE ---
 The entire image composition must feature a deliberate, wide internal margin and ample whitespace that acts as a safe, border-line free boundary zone of approximately 20 pixels wide on all four sides. No product elements, text banners, or logos are permitted to enter or touch this outermost boundary zone. All visible elements must be contained within the clean pure white canvas area, completely detached from the physical canvas boundaries by this wide internal whitespace. The overall composition should be central and balanced.
@@ -211,47 +212,47 @@ Centering within the safe, border-free area, a slightly scaled-down and compact 
 A clean purple rectangular banner header containing the white Japanese text "ユニセックス" in a bold sans-serif font is floating freely and detached within the inner-top-left whitespace, nowhere near the physical canvas corners. This purple banner must be positioned deeply inward from both top and left boundaries, isolated by a massive, highly visible gap of solid white background. It must appear airy and disconnected from any edges.
 The official "FILA" brand text logo is crisply displayed in its signature navy and red typography, floating freely and detached in the lower-right whitespace, deeply inset within the inner safe white area. This logo must be positioned deeply inward, completely separated and pushed far away from both bottom and right boundaries by a massive, highly visible gap of solid white background, creating a perfectly balanced and spacious layout.
 
-Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
-      
-      negative: `[NEGATIVE PROMPT]
-elements close to the outermost edge, elements hugging physical canvas corners, non-deliberate whitespace, narrow whitespace gaps, border lines of any kind, visible grids, cropped elements, clipped headers, cut-off logos, zero-margin placement, text hugging the frame boundary, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, shadows beneath products, non-white background, warped product shapes, altered typography, duplicate branding, gradient background`
-    },
-    withFrame: {
-      main: `[MAIN PROMPT]
-Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands isolated on a clean, seamless pure white background (#FFFFFF) strictly framed within a perfect square 1:1 aspect ratio canvas. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. No headers, no footers, no external text banners, and no graphical frames included—purely focusing on the product cluster layout.
+Bright, even studio lighting with no shadows underneath products, absolutely flat presentation, completely shadowless background, isolated product look, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
+     
+     negative: `[NEGATIVE PROMPT]
+shadows, drop shadows, ambient occlusion, background depth, gradient background, soft focus studio effects, elements close to the outermost edge, elements hugging physical canvas corners, non-deliberate whitespace, narrow whitespace gaps, border lines of any kind, visible grids, cropped elements, clipped headers, cut-off logos, zero-margin placement, text hugging the frame boundary, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, floating clothing, extra text, messy layout, missing logos, low quality text rendering, non-white background, warped product shapes, altered typography, duplicate branding`
+   },
+   withFrame: {
+     main: `[MAIN PROMPT]
+Ultra realistic ecommerce catalog multi-product photography of a group of three identical athletic terrycloth wristbands isolated on a clean, seamless pure, flat white background (#FFFFFF) strictly framed within a perfect square 1:1 aspect ratio canvas. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centered, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification. No headers, no footers, no external text banners, and no graphical frames included—purely focusing on the product cluster layout.
 
 --- CONTAINED COMPOSITION RULE (MINIATURE SCALE) ---
-The entire product cluster must be cluster-arranged in a miniature, miniature scale, forming a very small, compact grouping neatly contained within the exact central point of the square canvas, occupying only about 60% of the frame height and width. This arrangement leaves an EXTREME, VAST EXPANSE OF PURE, EMPTY WHITE SPACE as massive border on all four outer boundaries of the 1:1 square frame to create prominent white breathing room.
+The entire product cluster must be cluster-arranged in a miniature, miniature scale, forming a very small, compact grouping neatly contained within the exact central point of the square canvas, occupying only about 60% of the frame height and width. This arrangement leaves an EXTREME, VAST EXPANSE OF PURE, EMPTY FLAT WHITE SPACE as massive border on all four outer boundaries of the 1:1 square frame to create prominent white breathing room.
 
-Bright, even studio lighting with no harsh shadows, flat presentation, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
-      negative: `[NEGATIVE PROMPT]
-text banners, graphic frames, headers, footers, brand logos, words, decorative borders, elements touching the borders, elements hugging edges, large subject size, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, messy layout, shadows beneath products, non-white background, warped product shapes`
-    }
-  },
-      
-  wearingModelTemplate: {
-    main: `[MAIN PROMPT]
-A detailed, close-up lifestyle fashion advertisement photograph strictly framed within a perfect square 1:1 aspect ratio canvas, showcasing a {{modelType}} wearing the exact uploaded athletic terrycloth wristband naturally on their wrist. The original properties of the product are strictly maintained: the authentic navy blue color, the dense looped terrycloth fabric texture, tight structural stitching, and the crisp centered embroidery of the square logo with its distinct red, white, and navy components. The wristband realistically wraps around the arm, showing natural fabric tension and subtle physical folds matching the model's stance. Set against a {{backgroundLocation}} that provides a sophisticated, high-end atmosphere. 
+Bright, even studio lighting with no shadows underneath products, completely shadowless background, flat presentation, isolated product look, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
+     negative: `[NEGATIVE PROMPT]
+shadows, drop shadows, ambient occlusion, background depth, gradient background, text banners, graphic frames, headers, footers, brand logos, words, decorative borders, elements touching the borders, elements hugging edges, large subject size, deformed anatomy, distorted logos, blurry fabric texture, low resolution, inaccurate colors, human hands, human limbs, messy layout, non-white background, warped product shapes`
+   }
+ },
+     
+ wearingModelTemplate: {
+   main: `[MAIN PROMPT]
+A detailed, close-up lifestyle fashion advertisement photograph strictly framed within a perfect square 1:1 aspect ratio canvas, showcasing a {{modelType}} wearing the exact uploaded athletic terrycloth wristband naturally on their wrist. The original properties of the product are strictly maintained: the authentic navy blue color, the dense looped terrycloth fabric texture, tight structural stitching, and the crisp centered embroidery of the square logo with its distinct red, white, and navy components. The wristband realistically wraps around the arm, showing natural fabric tension and subtle physical folds matching the model's stance. Set against a pure, flat, uniform white background (#FFFFFF) that provides a sophisticated, high-end catalog atmosphere, with absolutely no shadows, no gradient, and no depth.
 
 --- EXTREME SAFETY MARGIN COMPOSITION ---
 The entire subject and arm are cluster-arranged in a significantly scaled down, compact miniature scale, contained within the exact central core zone of the square canvas, occupying only about 65% of the frame space, leaving an EXTREME, MASSIVE, continuous wide border width of empty safety area on all four outer boundaries of the frame. Ensuring no elements ever hug the edges.
 
-High fashion editorial lighting, crisp shadows, shallow depth of field with sharp focus on the wristband and textile texture, ultra-realistic skin tones, premium sports apparel campaign aesthetic, 8k resolution.`,
-    negative: `[NEGATIVE PROMPT]
-non-square composition, asymmetrical framing, elements cut off by borders, elements close to edges, tight margins, massive subject size, deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong color, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts`
-  },
-      
-  size600: {
-    main: `[MAIN PROMPT]
+High fashion editorial lighting focused strictly on the subject, no shadows on background, shallow depth of field with sharp focus on the wristband and textile texture, ultra-realistic skin tones, premium sports apparel campaign aesthetic, 8k resolution.`,
+   negative: `[NEGATIVE PROMPT]
+shadows on background, background gradient, non-white background, non-square composition, asymmetrical framing, elements cut off by borders, elements close to edges, tight margins, massive subject size, deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong color, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts`
+ },
+     
+ size600: {
+   main: `[MAIN PROMPT]
 Transform the uploaded product image into a Japanese e-commerce catalog style product photo. Keep the wristband product completely unchanged: Preserve the exact shape, proportions, color, texture, embroidery, logo placement, stitching, and fabric details. Do not alter the product design. Do not add or remove any product elements. 
 
 --- CONTAINED CATALOG LAYOUT & EXTREME MARGIN RULES ---
 The central product is cluster-arranged in a significantly scaled down, compact miniature scale and re-centered within the exact central core zone of a perfect square 1:1 aspect ratio canvas, ensuring whitespace around the product dramatically increases so it occupies ONLY approximately 60% of the canvas height. This creates an extremely noticeable, prominent, deep and wide continuous massive gray border Band on all four sides. Use a clean light gray background (#EEEEEE). Maintain a straight front-facing product orientation. At the bottom center, add a small Japanese product color label: "(NV0) フィラネイビー" in a small catalog caption size, dark gray text, clean Japanese sans-serif font, center aligned, and positioned deeply inset with an extreme massive, deep wide safety margin away from the absolute bottom edge with professional catalog spacing. 
 
-Image style: Japanese sporting goods catalog, e-commerce product listing, product cutout presentation, neutral studio lighting, sharp focus, accurate colors, no shadows beyond the original product, high-resolution commercial product photography, clean, minimal, print-ready catalog layout. Output: square catalog image identical in style to official Japanese sports brand product listings.`,
-    negative: `[NEGATIVE PROMPT]
-tight margins, narrow padding, large subject size, massive product size, elements close to borders, elements hugging edges, crooked placement, off-center alignment, dark shadows, complex backgrounds, human skin, human hands, colorful background gradients, cut off edges, low resolution, blurred typography, incorrect Japanese characters, massive font sizes, stylized frames, borders, low fidelity rendering, deformed logos, modified product text`
-  }
+Image style: Japanese sporting goods catalog, e-commerce product listing, product cutout presentation, neutral studio lighting, sharp focus, accurate colors, no shadows beyond the original product, absolutely flat background presentation, completely shadowless background, high-resolution commercial product photography, clean, minimal, print-ready catalog layout. Output: square catalog image identical in style to official Japanese sports brand product listings.`,
+   negative: `[NEGATIVE PROMPT]
+shadows on background, background gradient, background depth, tight margins, narrow padding, large subject size, massive product size, elements close to borders, elements hugging edges, crooked placement, off-center alignment, dark shadows, complex backgrounds, human skin, human hands, colorful background gradients, cut off edges, low resolution, blurred typography, incorrect Japanese characters, massive font sizes, stylized frames, borders, low fidelity rendering, deformed logos, modified product text`
+ }
 };
     // ------------------------------
     // DOM elements (Prompt Section)

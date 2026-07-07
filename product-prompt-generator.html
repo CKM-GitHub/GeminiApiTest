@@ -491,14 +491,15 @@
             const modelDescription = modelTypeSelect.value;
 
             // ----- Technical & Cinematic Finishing -----
-            const photographyTerms =
-                "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers, clean commercial studio lighting setup. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
+        // ----- Technical & Cinematic Finishing -----
+// ပြင်ဆင်ချက် - studio lighting ကြောင့် အဖြူရောင်နောက်ခံမှာ gradient သို့မဟုတ် မီးရောင်ရောင်ပြန်မလိုက်အောင် စာသားအနည်းငယ် ညှိထားပါတယ်
+const photographyTerms =
+    "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering of products, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
 
-            // ----- Part A: Base Setup & Model (conditional) -----
-            // ပြင်ဆင်ချက် - 'with studio-grade soft shadows' ကို ဖြုတ်ပြီး 'flat, shadowless' စာသားများ ထည့်သွင်းထားပါတယ်
-            let prompt =
-                `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a clean, solid, pristine, flat plain white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. `;
-
+// ----- Part A: Base Setup & Model (conditional) -----
+// ပြင်ဆင်ချက် - AI က ဓာတ်ပုံဆန်ဆန် အလင်းအမှောင်တွေ နောက်ခံထဲ လျှောက်မထည့်ဘဲ Pure #FFFFFF သက်သက်ထွက်အောင် 'solid hex color #FFFFFF background' လို့ ပိုမိုပြတ်သားစွာ သတ်မှတ်ပေးထားပါတယ်
+let prompt =
+    `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pure hex color #FFFFFF white background with absolutely no shadows, no gradient, no lighting falloff, and no depth. `;
             if (hasModel) {
                 prompt +=
                     `On the left side of the frame, there is a fixed ${modelDescription} wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
