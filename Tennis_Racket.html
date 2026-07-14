@@ -469,7 +469,6 @@
         "Shot on professional macro lens, f/4 aperture for total clarity across all text and product details, ultra-sharp focus on frame textures, 8k resolution, exact color matching.";
 
     // Part A: Base Frame Setup (Unstrung / No Strings Focus & Pure Background Base)
-    // ပြင်ဆင်ချက် - 'subtle, high-end studio floor shadows...' ကို ဖြုတ်ပြီး လုံးဝပြားချပ်တဲ့ 'solid, flat, uniform pure hex color #FFFFFF' ကို ထည့်သွင်းထားပါတယ်
     let prompt =
         `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pristine pure white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. The rendering must maintain absolute fidelity to the attached reference image: preserving the dark metallic red frame color, the subtle teal accent inserts on the inner throat-joint, the crisp white grip wrap texture, and the precise oval geometry of the racket head. Crucially, the tennis rackets must be completely unstrung with no strings inside the frame hoop; the inner frame area must be totally empty, hollow, and transparent, showing only the flat plain white background through the open racket head. `;
 
@@ -505,12 +504,10 @@
     }
 
     // Part E: Closing & Negative Assembly
-    // ပြင်ဆင်ချက် - 'clean studio lighting' နဲ့ 'studio strobe lighting' တွေကို ဖြုတ်ပြီး 'completely shadowless background' ပြောင်းလဲထားပါတယ်
     prompt +=
         `Final Polish: Premium athletic equipment campaign aesthetic, centered composition balance, completely shadowless background, isolated product cutout look, ${photographyTerms}`;
 
     // Part F: Strong Negative Prompt (Strings Block, Margin Rules, and Strict Background Color Guardrails)
-    // ပြင်ဆင်ချက် - shadows, drop shadows, ambient occlusion တွေကို ထပ်တိုးပြီး ပိတ်ပင်ထားပါတယ်
     const negativePrompt =
         "shadows, drop shadows, ambient occlusion, background depth, background lighting effects, racket strings, tennis strings, string pattern, netting, grid lines inside racket, strung racket, realistic string textures, off-white background, grey background, multi-tone background, background color bleeding, color gradients on background, shadows stretching across corners, dark backdrops, text touching image edges, text clipped at borders, cropped header banner, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, distorted circles, blurred badge borders, text overlapping product lines, smudging across white backgrounds, incorrect color hue, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, moving product placement, layout variation from reference.";
 
