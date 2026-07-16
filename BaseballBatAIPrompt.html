@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Baseball Bat Banner Layout Designer | Frame 1 / Frame 2</title>
+  <title>野球バット バナーレイアウトデザイナー | フレーム1 / フレーム2</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -35,116 +35,116 @@
 
   <div class="max-w-7xl mx-auto px-4 py-6 md:py-8">
     
-    <!-- Header -->
+    <!-- ヘッダー -->
     <div class="mb-8 text-center md:text-left">
-      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">⚾ Baseball Bat <span class="text-sports-red">Banner Layout Designer</span></h1>
-      <p class="text-gray-500 mt-2 text-sm">Automated layout rules based on Frame selection, color variations, specs, and balance</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">⚾ 野球バット <span class="text-sports-red">バナーレイアウトデザイナー</span></h1>
+      <p class="text-gray-500 mt-2 text-sm">フレーム選択、カラーバリエーション、仕様、バランスに基づく自動レイアウトルール</p>
     </div>
 
-    <!-- Main 2-Column Grid -->
+    <!-- メイン2カラムグリッド -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       
-      <!-- LEFT COLUMN: Configuration Panel -->
+      <!-- 左カラム：設定パネル -->
       <div class="space-y-6">
         
-        <!-- Basic Metadata -->
+        <!-- 基本メタデータ -->
         <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
           <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
-            <h2 class="font-semibold text-gray-800 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-sports-red rounded-full"></span>Product Metadata</h2>
+            <h2 class="font-semibold text-gray-800 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-sports-red rounded-full"></span>商品メタデータ</h2>
           </div>
           <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ</label>
               <select id="category" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-sports-red focus:border-sports-red">
-                <option value="軟式野球">軟式野球 (Softball)</option>
-                <option value="硬式野球">硬式野球 (Hardball)</option>
+                <option value="軟式野球">軟式野球</option>
+                <option value="硬式野球">硬式野球</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Target</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">対象</label>
               <select id="target" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="Standard">Standard (一般)</option>
-                <option value="Junior">Junior (ジュニア)</option>
+                <option value="Standard">一般</option>
+                <option value="Junior">ジュニア</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Frame Selected</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">フレーム選択</label>
               <select id="frameSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="Frame 1">Frame 1 (Angled main + color tiles + full bat footer)</option>
-                <option value="Frame 2">Frame 2 (3-piece split + color labels + specs)</option>
+                <option value="Frame 1">フレーム1（傾斜メイン＋カラータイル＋バットフッター）</option>
+                <option value="Frame 2">フレーム2（3分割＋カラーレーベル＋仕様表示）</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Bat Balance</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">バットバランス</label>
               <select id="balanceType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="None">None (指定なし)</option>
-                <option value="Top">Top (トップバランス)</option>
-                <option value="Top Middle">Top Middle (トップミドル)</option>
-                <option value="Middle">Middle (ミドルバランス)</option>
-                <option value="Counter">Counter (カウンターバランス)</option>
+                <option value="None">指定なし</option>
+                <option value="Top">トップバランス</option>
+                <option value="Top Middle">トップミドル</option>
+                <option value="Middle">ミドルバランス</option>
+                <option value="Counter">カウンターバランス</option>
               </select>
             </div>
           </div>
         </div>
 
-        <!-- Color Variations Section -->
+        <!-- カラーバリエーションセクション -->
         <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
           <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
-            <h2 class="font-semibold text-gray-800">Color Variations</h2>
+            <h2 class="font-semibold text-gray-800">カラーバリエーション</h2>
           </div>
           <div class="p-5 space-y-4">
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Total Color Variations</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">カラーバリエーション数</label>
               <select id="totalColors" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="1">1 Color</option>
-                <option value="2">2 Colors</option>
-                <option value="3">3 Colors</option>
-                <option value="4">4 Colors</option>
-                <option value="5">5 Colors</option>
-                <option value="6">6 Colors</option>
+                <option value="1">1色</option>
+                <option value="2">2色</option>
+                <option value="3">3色</option>
+                <option value="4">4色</option>
+                <option value="5">5色</option>
+                <option value="6">6色</option>
               </select>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">Main / Active Color Name</label>
-              <input type="text" id="activeColor" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="e.g., Black, Red, Silver" value="Black">
+              <label class="block text-sm font-medium text-gray-700 mb-1">メインカラー名</label>
+              <input type="text" id="activeColor" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例：ブラック、レッド、シルバー" value="Black">
             </div>
             <div id="additionalColorsContainer" class="space-y-2">
-              <!-- Additional color inputs will appear dynamically -->
+              <!-- 追加カラー入力が動的に表示されます -->
             </div>
           </div>
         </div>
 
-        <!-- Specifications Section (Length / Weight) -->
+        <!-- 仕様セクション（長さ／重量） -->
         <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
           <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center">
-            <h2 class="font-semibold text-gray-800">Specifications (cm / g)</h2>
-            <button id="addSpecBtn" class="text-xs bg-sports-red text-white px-3 py-1 rounded-lg hover:bg-red-700 transition">+ Add Spec</button>
+            <h2 class="font-semibold text-gray-800">仕様（cm / g）</h2>
+            <button id="addSpecBtn" class="text-xs bg-sports-red text-white px-3 py-1 rounded-lg hover:bg-red-700 transition">+ 仕様追加</button>
           </div>
           <div class="p-5 space-y-3" id="specsContainer">
             <div class="spec-row flex gap-3 items-center">
-              <input type="text" placeholder="Length (cm) e.g., 83" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-              <input type="text" placeholder="Weight (g) e.g., 720" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+              <input type="text" placeholder="長さ (cm) 例：83" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
+              <input type="text" placeholder="重量 (g) 例：720" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
               <button class="remove-spec text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
             </div>
           </div>
-          <div class="px-5 pb-4 text-xs text-gray-500">* Multiple specs show "2 SPEC" / "3 SPEC" badge at top of spec module (Frame 2 only)</div>
+          <div class="px-5 pb-4 text-xs text-gray-500">* 複数仕様がある場合、仕様モジュール上部に「2 SPEC」「3 SPEC」バッジが表示されます（フレーム2のみ）</div>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Generated Layout Output -->
+      <!-- 右カラム：生成レイアウト出力 -->
       <div class="bg-white rounded-xl shadow-sm border border-border-light sticky top-6 h-fit">
         <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center flex-wrap gap-2">
-          <h2 class="font-semibold text-gray-800">📐 Layout Specification (Design Prompt)</h2>
+          <h2 class="font-semibold text-gray-800">📐 レイアウト仕様（デザインプロンプト）</h2>
           <div class="flex gap-2">
-            <button id="generateBtn" class="bg-sports-red text-white px-4 py-1.5 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-1"><i class="fas fa-magic"></i> Generate</button>
-            <button id="copyBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="far fa-copy"></i> Copy</button>
+            <button id="generateBtn" class="bg-sports-red text-white px-4 py-1.5 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-1"><i class="fas fa-magic"></i> 生成</button>
+            <button id="copyBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="far fa-copy"></i> コピー</button>
             <button id="downloadBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="fas fa-download"></i> TXT</button>
           </div>
         </div>
         <div class="p-5">
-          <textarea id="layoutOutput" readonly class="w-full h-[550px] border border-gray-200 rounded-lg p-4 font-mono text-sm bg-gray-50 focus:ring-1 focus:ring-sports-red resize-none overflow-auto">Configure options and click "Generate" to create the banner layout design based on selected frame rules.</textarea>
+          <textarea id="layoutOutput" readonly class="w-full h-[550px] border border-gray-200 rounded-lg p-4 font-mono text-sm bg-gray-50 focus:ring-1 focus:ring-sports-red resize-none overflow-auto">オプションを設定し「生成」をクリックして、選択したフレームルールに基づいたバナーレイアウトデザインを作成します。</textarea>
         </div>
-        <div class="px-5 pb-4 text-xs text-gray-400 flex items-center gap-2"><i class="fas fa-info-circle"></i> Follows strict rules: Frame 1 (rotation 56°/62°, color grid, full bat footer) | Frame 2 (3-split, circular spec labels, color label logic)</div>
+        <div class="px-5 pb-4 text-xs text-gray-400 flex items-center gap-2"><i class="fas fa-info-circle"></i> 厳格なルールに従います：フレーム1（回転56°/62°、カラーグリッド、フルバットフッター）｜フレーム2（3分割、円形仕様ラベル、カラーレーベルロジック）</div>
       </div>
     </div>
   </div>
@@ -429,5 +429,6 @@ prompt += `The banner layout is split into a strict three-piece structured desig
     updateSpecsRemoveButtons();
     setTimeout(() => { updateOutput(); }, 200);
   </script>
+  <script src="script.js"></script>
 </body>
 </html>

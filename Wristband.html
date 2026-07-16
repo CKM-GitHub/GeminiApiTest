@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>FILA Studio | Prompt  + Image Resizer (600x600)</title>
+  <title>FILA Studio | プロンプト + 画像リサイザー (600x600)</title>
   <!-- Tailwind CSS + Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
@@ -44,150 +44,150 @@
 <body class="antialiased">
 
   <main class="max-w-5xl mx-auto px-4 py-8 md:py-12">
-    <!-- header branding -->
+    <!-- ヘッダーブランディング -->
     <div class="mb-8 text-center md:text-left md:flex md:items-end md:justify-between border-b border-gray-200 pb-5">
       <div>
         <h1 class="text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-r from-[#1e2a47] to-[#2d3e6e] bg-clip-text text-transparent">Prompt Forge<span class="text-sm font-normal text-gray-500 align-middle ml-2">⚡︎ e‑commerce</span></h1>
-        <p class="text-gray-500 mt-1 text-sm max-w-xl">Dynamic prompt constructor · Fila wristband catalog · UI state machine ready</p>
+        <p class="text-gray-500 mt-1 text-sm max-w-xl">動的プロンプト構築 · Fila リストバンドカタログ · UIステートマシン対応</p>
       </div>
-      <div class="mt-3 md:mt-0 text-xs text-gray-400 bg-white/60 rounded-full px-3 py-1 inline-block">Japanese sportswear logic</div>
+      <div class="mt-3 md:mt-0 text-xs text-gray-400 bg-white/60 rounded-full px-3 py-1 inline-block">日本製スポーツウェアロジック</div>
     </div>
 
-    <!-- Instruction Guide (Gemini) -->
+    <!-- 使い方ガイド (Gemini) -->
     <div class="guide-card rounded-xl p-4 mb-6 shadow-sm flex flex-wrap items-start justify-between gap-3 border border-amber-200">
       <div class="flex-1">
         <div class="flex items-center gap-2">
           <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-          <span class="font-semibold text-gray-800">📸 How to generate images with Google Gemini</span>
+          <span class="font-semibold text-gray-800">📸 Google Geminiで画像を生成する方法</span>
         </div>
-        <p class="text-sm text-gray-700 mt-1 ml-6">1️⃣ Click <strong>“Generate compiled prompt”</strong> below → 2️⃣ Copy the prompt (📋 button) → 3️⃣ Open <a href="https://gemini.google.com/app" target="_blank" class="text-blue-600 underline font-medium">gemini.google.com/app</a> → 4️⃣ Choose <strong>“Create image”</strong> (or Imagen feature) → 5️⃣ Upload your product photo (wristband) → 6️⃣ Paste the prompt → 7️⃣ Generate & download your catalog image (1024x1024).</p>
-        <p class="text-xs text-amber-700 mt-1 ml-6">💡 Tip: For “3 product layout” manual mode, customize header/footer text below. For “Wearing to model”, pick model type & background.</p>
+        <p class="text-sm text-gray-700 mt-1 ml-6">1️⃣ 下の <strong>「プロンプトを生成」</strong> をクリック → 2️⃣ プロンプトをコピー（📋 ボタン） → 3️⃣ <a href="https://gemini.google.com/app" target="_blank" class="text-blue-600 underline font-medium">gemini.google.com/app</a> を開く → 4️⃣ <strong>「画像を作成」</strong>（または Imagen 機能）を選択 → 5️⃣ 商品画像（リストバンド）をアップロード → 6️⃣ プロンプトを貼り付け → 7️⃣ カタログ画像（1024x1024）を生成・ダウンロード</p>
+        <p class="text-xs text-amber-700 mt-1 ml-6">💡 ヒント：「3商品レイアウト」のマニュアルモードでは、ヘッダー/フッターテキストをカスタマイズ可能。「モデル着用」では、モデルタイプと背景シチュエーションを選択。</p>
       </div>
-      <a href="https://gemini.google.com/app" target="_blank" class="inline-flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-sm font-medium transition shrink-0">Open Gemini →</a>
+      <a href="https://gemini.google.com/app" target="_blank" class="inline-flex items-center gap-1 bg-amber-100 hover:bg-amber-200 text-amber-800 px-3 py-1.5 rounded-full text-sm font-medium transition shrink-0">Geminiを開く →</a>
     </div>
 
-    <!-- Main card: configuration panel -->
+    <!-- メインカード：設定パネル -->
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden card-hover">
       <div class="p-6 space-y-7">
-        <!-- primary generation type -->
+        <!-- 生成戦略 -->
         <div>
           <label class="block text-sm font-semibold text-gray-700 mb-1.5 flex items-center gap-2">
             <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> 
-            Generation strategy
+            生成戦略
           </label>
           <select id="generationType" class="w-full md:w-2/3 border border-gray-300 rounded-xl px-4 py-2.5 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition outline-none text-gray-800 shadow-sm">
-            <option value="3 product layout">📦 3 product layout (multi‑product frame)</option>
-            <option value="Wearing to model">🧥 Wearing to model · lifestyle</option>
-            <option value="600px size">🖼️ 600px size · 1:1 catalog + JP label</option>
+            <option value="3 product layout">📦 3商品レイアウト（マルチプロダクトフレーム）</option>
+            <option value="Wearing to model">🧥 モデル着用 · ライフスタイル</option>
+            <option value="600px size">🖼️ 600pxサイズ · 1:1カタログ＋日本語ラベル</option>
           </select>
         </div>
 
-        <!-- CONDITIONAL UI ZONES -->
-        <!-- Zone A: Frame Selection + dynamic header/footer text inputs (manual mode) -->
+        <!-- 条件付きUIゾーン -->
+        <!-- ゾーンA：フレーム選択＋動的ヘッダー/フッターテキスト入力（マニュアルモード） -->
         <div id="frameSelectionWrapper" class="transition-fade bg-gray-50/50 rounded-xl p-4 border border-gray-200/80 hidden">
-          <label class="block text-sm font-medium text-gray-800 mb-2">🖌️ Frame Selection <span class="text-xs text-gray-400">(layout composition)</span></label>
+          <label class="block text-sm font-medium text-gray-800 mb-2">🖌️ フレーム選択 <span class="text-xs text-gray-400">（レイアウト構成）</span></label>
           <select id="frameSelection" class="w-full md:w-2/3 border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-blue-400/30 focus:border-blue-400">
-            <option value="manual">📄 Manual mode — full layout (headers + footers + banners)</option>
-            <option value="with frame">🗂️ With frame — isolated product asset pack (no UI chrome)</option>
+            <option value="manual">📄 マニュアルモード — フルレイアウト（ヘッダー＋フッター＋バナー）</option>
+            <option value="with frame">🗂️ フレーム付き — 独立プロダクトアセット（UI装飾なし）</option>
           </select>
-          <p class="text-xs text-gray-400 mt-1">manual = customizable header banner + footer brand text | with frame = product cluster only</p>
+          <p class="text-xs text-gray-400 mt-1">マニュアル＝カスタマイズ可能なヘッダーバナー＋フッターブランドテキスト｜フレーム付き＝プロダクトクラスターのみ</p>
           
-          <!-- Dynamic header & footer text fields (only visible when manual mode selected) -->
+          <!-- 動的ヘッダー＆フッターテキストフィールド（マニュアルモード選択時のみ表示） -->
           <div id="headerFooterCustomFields" class="mt-4 space-y-3 pl-1 border-l-2 border-blue-200 hidden transition-fade">
             <div>
-              <label class="block text-sm font-medium text-gray-700">🏷️ Header banner text (Japanese / any)</label>
+              <label class="block text-sm font-medium text-gray-700">🏷️ ヘッダーバナーテキスト（日本語 / 任意）</label>
               <input type="text" id="headerTextInput" value="ユニセックス" class="mt-1 w-full md:w-2/3 border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300">
-              <p class="text-xs text-gray-400 mt-0.5">Appears in top-left purple banner</p>
+              <p class="text-xs text-gray-400 mt-0.5">左上の紫バナーに表示</p>
             </div>
             <div>
-              <label class="block text-sm font-medium text-gray-700">🏷️ Footer brand logo text</label>
+              <label class="block text-sm font-medium text-gray-700">🏷️ フッターブランドロゴテキスト</label>
               <input type="text" id="footerTextInput" value="FILA" class="mt-1 w-full md:w-2/3 border border-gray-300 rounded-lg px-3 py-2 bg-white focus:ring-2 focus:ring-blue-300">
-              <p class="text-xs text-gray-400 mt-0.5">Displayed in bottom right corner (brand signature)</p>
+              <p class="text-xs text-gray-400 mt-0.5">右下隅に表示（ブランドサイン）</p>
             </div>
           </div>
         </div>
 
-        <!-- Zone B: Model Type & Background Location (visible for "Wearing to model") -->
+        <!-- ゾーンB：モデルタイプ＆背景ロケーション（「モデル着用」選択時に表示） -->
         <div id="modelBackgroundWrapper" class="transition-fade grid grid-cols-1 md:grid-cols-2 gap-5 bg-gray-50/50 rounded-xl p-4 border border-gray-200/80 hidden">
           <div>
-            <label class="block text-sm font-medium text-gray-800 mb-1.5">🧑‍🎨 Model Type</label>
+            <label class="block text-sm font-medium text-gray-800 mb-1.5">🧑‍🎨 モデルタイプ</label>
             <select id="modelType" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white focus:ring-2 focus:ring-blue-400/30">
-              <option value="a professional athletic male model with toned arms">Male athletic model (toned)</option>
-              <option value="a dynamic female fitness model with natural stance">Female fitness model</option>
-              <option value="a Japanese streetwear model with minimalist posture">Japanese streetwear model</option>
-              <option value="a muscular sporty senior model showcasing endurance gear">Senior athletic model</option>
+              <option value="a professional athletic male model with toned arms">男性アスリートモデル（引き締まった腕）</option>
+              <option value="a dynamic female fitness model with natural stance">女性フィットネスモデル（ナチュラルポーズ）</option>
+              <option value="a Japanese streetwear model with minimalist posture">日本のストリートウェアモデル（ミニマル）</option>
+              <option value="a muscular sporty senior model showcasing endurance gear">シニアアスリートモデル（マッスル）</option>
             </select>
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-800 mb-1.5">🌆 Background Location</label>
+            <label class="block text-sm font-medium text-gray-800 mb-1.5">🌆 背景シチュエーション</label>
             <select id="backgroundLocation" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 bg-white focus:ring-2 focus:ring-blue-400/30">
-              <option value="a minimalist Tokyo studio with soft diffused window light">Minimalist Tokyo studio — soft window light</option>
-              <option value="a rainy Shibuya street at golden hour with bokeh city lights">Shibuya street · golden hour</option>
-              <option value="a clean cyclorama with subtle warm gradients">Clean cyclorama · warm gradient</option>
-              <option value="an urban rooftop overlooking neon signs, dusk atmosphere">Rooftop · neon dusk atmosphere</option>
+              <option value="a minimalist Tokyo studio with soft diffused window light">ミニマル東京スタジオ · 柔らかな窓光</option>
+              <option value="a rainy Shibuya street at golden hour with bokeh city lights">渋谷ストリート · ゴールデンアワー</option>
+              <option value="a clean cyclorama with subtle warm gradients">クリーンなシクロラマ · 暖色グラデーション</option>
+              <option value="an urban rooftop overlooking neon signs, dusk atmosphere">屋上 · ネオンの夕暮れ雰囲気</option>
             </select>
           </div>
         </div>
 
-        <!-- action buttons & copy helper -->
+        <!-- アクションボタン＆コピー補助 -->
         <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-gray-100 mt-2">
           <button id="generateBtn" class="inline-flex items-center gap-2 bg-[#1e2f4b] hover:bg-[#142236] text-white font-medium px-6 py-2.5 rounded-xl transition shadow-md hover:shadow-lg focus:ring-2 focus:ring-blue-400/60">
-            ✨ Generate compiled prompt
+            ✨ プロンプトを生成
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
           </button>
           <button id="copyBtn" class="text-gray-500 hover:text-gray-800 text-sm bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition flex items-center gap-1.5">
-            📋 Copy prompt
+            📋 プロンプトをコピー
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Output card: final prompt display -->
+    <!-- 出力カード：最終プロンプト表示 -->
     <div class="mt-8 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div class="border-b border-gray-100 px-6 py-3 bg-gray-50/40 flex flex-wrap justify-between items-center">
         <div class="flex items-center gap-2">
-          <span class="font-mono text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">PROMPT OUTPUT Latest</span>
-          <span class="text-xs text-gray-500">ready-to-use · main + negative prompt</span>
+          <span class="font-mono text-xs font-semibold text-blue-700 bg-blue-100 px-2 py-0.5 rounded-md">プロンプト出力（最新）</span>
+          <span class="text-xs text-gray-500">即時使用可能 · メイン＋ネガティブプロンプト</span>
         </div>
-        <div class="text-xs text-gray-400 hidden sm:block">🔁 dynamic variables replaced</div>
+        <div class="text-xs text-gray-400 hidden sm:block">🔁 動的変数を置換済み</div>
       </div>
       <div class="p-5">
-        <textarea id="promptOutput" rows="16" class="w-full border border-gray-200 rounded-xl p-4 bg-gray-50 text-gray-800 resize-y focus:ring-1 focus:ring-blue-300 outline-none" placeholder="Select generation type and click 'Generate compiled prompt'... The full prompt with negative section will appear here. Then copy & paste into Gemini." readonly></textarea>
-        <div class="text-right text-[11px] text-gray-400 mt-2">✓ Manual mode: header + footer custom text | Wearing mode: dynamic model & background | 600px: standardized 1:1</div>
+        <textarea id="promptOutput" rows="16" class="w-full border border-gray-200 rounded-xl p-4 bg-gray-50 text-gray-800 resize-y focus:ring-1 focus:ring-blue-300 outline-none" placeholder="生成戦略を選択し「プロンプトを生成」をクリック... メインプロンプトとネガティブセクションを含む完全なプロンプトが表示されます。その後、Geminiにコピー＆ペーストしてください。" readonly></textarea>
+        <div class="text-right text-[11px] text-gray-400 mt-2">✓ マニュアルモード：ヘッダー／フッターカスタムテキスト｜着用モード：動的モデル＆背景｜600px：標準化1:1</div>
       </div>
     </div>
 
-    <!-- NEW SECTION: Image Post-Processing (Resize 1024x1024 → 600x600) -->
+    <!-- 新セクション：画像ポストプロセッシング（1024x1024 → 600x600 リサイズ） -->
     <div class="mt-10 bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
       <div class="border-b border-gray-100 px-6 py-4 bg-gradient-to-r from-gray-50 to-white">
         <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-          <span class="text-xl">🖼️</span> Image Post-Processing
+          <span class="text-xl">🖼️</span> 画像ポストプロセッシング
         </h2>
-        <p class="text-xs text-gray-500 mt-0.5">Gemini generates 1024x1024 — resize to perfect 600x600 for catalogs (high quality)</p>
+        <p class="text-xs text-gray-500 mt-0.5">Geminiで生成された1024x1024画像を、カタログ用の完璧な600x600にリサイズ（高品質）</p>
       </div>
       <div class="p-6 space-y-5">
-        <!-- File input with Burmese/Myanmar hint -->
+        <!-- ファイル入力 -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-2">📷 Step 2: Upload the image from Gemini here</label>
+          <label class="block text-sm font-medium text-gray-700 mb-2">📷 ステップ2：Geminiで生成した画像をここにアップロード</label>
           <input type="file" id="imageUploader" accept="image/png, image/jpeg, image/jpg, image/webp" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer">
-          <p class="text-xs text-gray-400 mt-1.5">Supported: PNG, JPG, WEBP (recommended 1024x1024 from Gemini)</p>
+          <p class="text-xs text-gray-400 mt-1.5">対応形式：PNG, JPG, WEBP（推奨：Geminiで生成した1024x1024）</p>
         </div>
 
-        <!-- Hidden preview area (canvas + download button) - shown after image load -->
+        <!-- プレビューエリア（画像ロード後に表示） -->
         <div id="previewArea" class="hidden transition-all duration-200 border-t border-gray-100 pt-5 mt-2">
           <div class="flex flex-col items-center gap-4">
             <canvas id="resizeCanvas" width="600" height="600" class="rounded-xl border border-gray-200 shadow-md" style="width: 300px; height: 300px; max-width: 100%; height: auto;"></canvas>
             <button id="downloadBtn" class="inline-flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium px-5 py-2 rounded-xl transition shadow-md">
-              📥 Download 600x600 Image (PNG)
+              📥 600x600画像をダウンロード（PNG）
             </button>
-            <p class="text-xs text-gray-400 text-center">✓ Image resized to exactly 600x600 pixels with high-quality smoothing</p>
+            <p class="text-xs text-gray-400 text-center">✓ 高品質スムージング処理で正確に600x600ピクセルにリサイズ</p>
           </div>
         </div>
       </div>
     </div>
 
     <div class="text-center text-xs text-gray-400 mt-8 border-t border-gray-200 pt-6">
-      <span>⚙️ UI state machine · conditional fields follow generation type · custom header/footer only in manual mode · Image resizer uses canvas high-quality bicubic scaling</span>
+      <span>⚙️ UIステートマシン · 条件付きフィールドは生成戦略に追従 · ヘッダー/フッターカスタムはマニュアルモードのみ · 画像リサイザーはキャンバス高品質バイキュービックスケーリングを使用</span>
     </div>
   </main>
 
@@ -206,8 +206,8 @@ The entire image composition must feature a deliberate, wide internal margin and
 Centering within the safe, border-free area, a slightly scaled-down and compact group of three wristbands is displayed, surrounded by ample clean white empty space. The main, largest wristband on the left is a vibrant red color, oriented vertically and front-facing. Stacked neatly on the right side are the other two color variants: the top right wristband is navy blue, and the bottom right wristband is solid white. All three wristbands feature the exact same centred, square embroidered "F-Box" logo with a red top block, a navy blue stylized "F" shape, and a cream-white stitched background. The thick, looped terrycloth fabric texture, tight stitching, square proportions, and authentic details of each product are perfectly preserved without any modification.
 
 --- BANNER & LOGO PLACEMENT (DEEPLY INSET) ---
-A clean purple rectangular banner header containing the white Japanese text "ユニセックス" in a bold sans-serif font is floating freely and detached within the inner-top-left whitespace, nowhere near the physical canvas corners. This purple banner must be positioned deeply inward from both top and left boundaries, isolated by a massive, highly visible gap of solid white background. It must appear airy and disconnected from any edges.
-The official "FILA" brand text logo is crisply displayed in its signature navy and red typography, floating freely and detached in the lower-right whitespace, deeply inset within the inner safe white area. This logo must be positioned deeply inward, completely separated and pushed far away from both bottom and right boundaries by a massive, highly visible gap of solid white background, creating a perfectly balanced and spacious layout.
+A clean purple rectangular banner header containing the white Japanese text "{{headerText}}" in a bold sans-serif font is floating freely and detached within the inner-top-left whitespace, nowhere near the physical canvas corners. This purple banner must be positioned deeply inward from both top and left boundaries, isolated by a massive, highly visible gap of solid white background. It must appear airy and disconnected from any edges.
+The official "{{footerText}}" brand text logo is crisply displayed in its signature navy and red typography, floating freely and detached in the lower-right whitespace, deeply inset within the inner safe white area. This logo must be positioned deeply inward, completely separated and pushed far away from both bottom and right boundaries by a massive, highly visible gap of solid white background, creating a perfectly balanced and spacious layout.
 
 Bright, even studio lighting with no shadows underneath products, absolutely flat presentation, completely shadowless background, isolated product look, ultra-sharp focus on textile fibers, professional sports apparel catalog quality, 8k resolution.`,
      
@@ -358,7 +358,7 @@ shadows on background, background gradient, background depth, tight margins, nar
     async function copyPromptToClipboard() {
       if (!promptOutput.value.trim()) {
         const tempMsg = document.createElement('div');
-        tempMsg.innerText = '⚠️ Generate a prompt first.';
+        tempMsg.innerText = '⚠️ 先にプロンプトを生成してください。';
         tempMsg.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
         document.body.appendChild(tempMsg);
         setTimeout(() => tempMsg.remove(), 1800);
@@ -367,12 +367,12 @@ shadows on background, background gradient, background depth, tight margins, nar
       try {
         await navigator.clipboard.writeText(promptOutput.value);
         const successMsg = document.createElement('div');
-        successMsg.innerText = '✅ Prompt copied! Paste into Gemini → Create image.';
+        successMsg.innerText = '✅ プロンプトをコピーしました！Geminiに貼り付けて → 画像作成';
         successMsg.className = 'fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-green-700 text-white text-sm px-4 py-2 rounded-full shadow-lg z-50';
         document.body.appendChild(successMsg);
         setTimeout(() => successMsg.remove(), 1800);
       } catch (err) {
-        alert('Manual copy: select all text and press Ctrl+C');
+        alert('手動コピー：テキストをすべて選択し Ctrl+C を押してください');
       }
     }
     
@@ -405,7 +405,7 @@ shadows on background, background gradient, background depth, tight margins, nar
       
       // Validate file type
       if (!file.type.startsWith('image/')) {
-        alert('Please upload an image file (PNG, JPG, WEBP).');
+        alert('画像ファイル（PNG、JPG、WEBP）をアップロードしてください。');
         imageUploader.value = '';
         previewArea.classList.add('hidden');
         return;
@@ -423,14 +423,14 @@ shadows on background, background gradient, background depth, tight margins, nar
           previewArea.classList.remove('hidden');
         };
         img.onerror = function() {
-          alert('Failed to load image. Please try another file.');
+          alert('画像の読み込みに失敗しました。別のファイルをお試しください。');
           previewArea.classList.add('hidden');
           imageUploader.value = '';
         };
         img.src = e.target.result;
       };
       reader.onerror = function() {
-        alert('Error reading file.');
+        alert('ファイルの読み込みエラーが発生しました。');
         previewArea.classList.add('hidden');
         imageUploader.value = '';
       };
@@ -439,7 +439,7 @@ shadows on background, background gradient, background depth, tight margins, nar
     
     function downloadResizedImage() {
       if (!currentResizedDataURL) {
-        alert('No resized image available. Please upload an image first.');
+        alert('リサイズ済み画像がありません。先に画像をアップロードしてください。');
         return;
       }
       const link = document.createElement('a');
@@ -454,11 +454,11 @@ shadows on background, background gradient, background depth, tight margins, nar
     function initEventListeners() {
       generationTypeSelect.addEventListener('change', () => {
         updateConditionalVisibility();
-        promptOutput.value = '// Configuration changed — click "Generate compiled prompt" //';
+        promptOutput.value = '// 設定が変更されました — 「プロンプトを生成」をクリック //';
       });
       frameSelection.addEventListener('change', () => {
         toggleHeaderFooterFields();
-        promptOutput.value = '// Frame mode changed, regenerate prompt to apply header/footer text //';
+        promptOutput.value = '// フレームモードが変更されました — ヘッダー／フッターテキストを適用するには再生成してください //';
       });
       generateBtn.addEventListener('click', generateAndDisplay);
       copyBtn.addEventListener('click', copyPromptToClipboard);
@@ -474,7 +474,7 @@ shadows on background, background gradient, background depth, tight margins, nar
       if (!footerTextInput.value) footerTextInput.value = "FILA";
       if (!modelTypeSelect.value) modelTypeSelect.value = "a professional athletic male model with toned arms";
       if (!backgroundLocationSelect.value) backgroundLocationSelect.value = "a minimalist Tokyo studio with soft diffused window light";
-      promptOutput.value = '✨ Ready. Choose strategy, customize text (manual mode), then click Generate. Follow Gemini guide above.\n\nAfter generating image in Gemini (1024x1024), use the section below to resize to 600x600.';
+      promptOutput.value = '✨ 準備完了。戦略を選択し（マニュアルモードでテキストをカスタマイズ）、「プロンプトを生成」をクリック。上記のGeminiガイドに従ってください。\n\nGeminiで画像（1024x1024）を生成後、下のセクションで600x600にリサイズできます。';
       // initially hide preview area
       previewArea.classList.add('hidden');
     }

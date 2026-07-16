@@ -13,11 +13,7 @@ const menuHtml = `
             flex-wrap:wrap;
             align-items:center;
         ">
-            <a href="index.html" class="menu-link">🏠 Home</a>
             <a href="Wristband.html" class="menu-link">💪 Wristband</a>
-            <a href="wearingModel.html" class="menu-link">👕 Wearing Model</a>
-            <a href="GroqAPITest.html" class="menu-link">🤖 Groq API Test</a>
-            <a href="DefaultPlusUserPrompt.html" class="menu-link">📝 Default Prompt</a>
             <a href="BaseballBatAIPrompt.html" class="menu-link">⚾ Baseball Bat AI Prompt</a>
             <a href="Aifashion.html" class="menu-link">🎨 AI Fashion</a>
              <a href="product-prompt-generator.html" class="menu-link">Product Prompt Generator</a>

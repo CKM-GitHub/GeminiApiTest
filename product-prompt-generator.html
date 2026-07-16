@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Prompt Studio — Product Ad</title>
+    <title>プロンプトスタジオ — 商品広告</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <style>
-        /* ── minimal light theme ── */
+        /* ── ミニマルライトテーマ ── */
         body {
             background: #f5f7fa;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -214,179 +214,179 @@
 
     <div class="max-w-5xl mx-auto px-4 py-8 md:py-12">
 
-        <!-- Header -->
+        <!-- ヘッダー -->
         <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">Prompt Studio</h1>
-                <p class="text-sm text-slate-500 mt-0.5">Commercial product advertisement · fixed model pose</p>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">プロンプトスタジオ</h1>
+                <p class="text-sm text-slate-500 mt-0.5">コマーシャル商品広告 · 固定モデルポーズ</p>
             </div>
             <div class="flex items-center gap-3">
                 <span class="badge badge-accent">v2.4</span>
-                <span class="badge">⚡ 1:1 square</span>
+                <span class="badge">⚡ 1:1 正方形</span>
             </div>
         </header>
 
-        <!-- Main Card -->
+        <!-- メインカード -->
         <div class="card p-6 md:p-8">
 
-            <!-- Row: Model + Mode + Quantity + Main Product -->
+            <!-- 行: モデル + モード + 商品数 + メイン商品 -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
 
-                <!-- Model Presence -->
+                <!-- モデルの有無 -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Model</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">モデル</span>
                     </div>
                     <select id="modelPresence" class="field">
-                        <option value="with">With Model</option>
-                        <option value="without">Without Model</option>
+                        <option value="with">モデルあり</option>
+                        <option value="without">モデルなし</option>
                     </select>
-                    <p class="hint mt-1.5">Include or remove the male model.</p>
+                    <p class="hint mt-1.5">男性モデルを含む／含まないを切り替え</p>
                 </div>
 
-                <!-- Mode -->
+                <!-- モード -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Mode</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">モード</span>
                         <span class="text-xs text-slate-400">—</span>
-                        <span class="text-xs text-slate-400">header &amp; logo</span>
+                        <span class="text-xs text-slate-400">ヘッダー＆ロゴ</span>
                     </div>
                     <div class="mode-pill w-full flex" id="modeToggle">
-                        <button data-mode="manual" class="active flex-1 text-center">✏️ Manual</button>
-                        <button data-mode="reference" class="flex-1 text-center">🖼️ Reference</button>
+                        <button data-mode="manual" class="active flex-1 text-center">✏️ 手動</button>
+                        <button data-mode="reference" class="flex-1 text-center">🖼️ 参照</button>
                     </div>
                     <p class="hint mt-1.5">
-                        <span class="font-medium text-slate-600">Manual</span> → custom text &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">Reference</span> → skip overlays
+                        <span class="font-medium text-slate-600">手動</span> → カスタムテキスト &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">参照</span> → オーバーレイをスキップ
                     </p>
                 </div>
 
-                <!-- Product Quantity (NO RESTRICTIONS) -->
+                <!-- 商品数（制限なし） -->
                 <div>
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Products</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">商品数</span>
                     </div>
                     <div class="flex items-center gap-3">
                         <input type="number" id="productQty" value="2" class="field w-28 text-center font-medium" />
-                        <span class="text-sm text-slate-500">(any number)</span>
+                        <span class="text-sm text-slate-500">（任意の数）</span>
                     </div>
                     <p class="hint mt-1.5">
-                        <span class="font-medium text-slate-600">2</span> diagonal &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">3–5</span> staggered grid &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">6–10</span> compact grid &nbsp;·&nbsp;
-                        <span class="font-medium text-slate-600">&gt;10</span> fallback layout
+                        <span class="font-medium text-slate-600">2</span> 斜め配置 &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">3–5</span> 千鳥グリッド &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">6–10</span> コンパクトグリッド &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">&gt;10</span> フォールバックレイアウト
                     </p>
                 </div>
 
-                <!-- Main Product -->
+                <!-- メイン商品 -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Main Product</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">メイン商品</span>
                     </div>
                     <select id="mainProductSelect" class="field">
-                        <option value="with">With Main Product</option>
-                        <option value="without">Without Main Product</option>
+                        <option value="with">メイン商品あり</option>
+                        <option value="without">メイン商品なし</option>
                     </select>
-                    <p class="hint mt-1.5">Highlight one product as the hero; others smaller.</p>
-                    <!-- Conditional color input -->
+                    <p class="hint mt-1.5">1つの商品をヒーローとして強調し、他は小さく表示</p>
+                    <!-- 条件付きカラー入力 -->
                     <div id="mainColorFields" class="mt-2 transition-all duration-200 overflow-hidden" style="max-height: 80px; opacity: 1;">
-                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">Main Product Color</label>
-                        <input type="text" id="mainColorInput" value="Red" placeholder="e.g. Red, Blue, Black" class="field" />
+                        <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">メイン商品カラー</label>
+                        <input type="text" id="mainColorInput" value="レッド" placeholder="例：レッド、ブルー、ブラック" class="field" />
                     </div>
                 </div>
 
             </div>
 
-            <!-- Model Type (Conditional) -->
+            <!-- モデルタイプ（条件付き） -->
             <div id="modelTypeContainer" class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6" style="display: none;">
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Model Type</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">モデルタイプ</span>
                     </div>
                     <select id="modelType" class="field">
-                        <option value="attractive young adult male model">Young Adult Male</option>
-                        <option value="attractive young adult female model">Young Adult Female</option>
-                        <option value="athletic male model with defined physique">Athletic Male</option>
-                        <option value="tall slender female model with elegant posture">Elegant Female</option>
-                        <option value="casual relaxed-fit model">Casual Model</option>
-                        <option value="young Japanese male model with modern street style">🇯🇵 Japanese Young Male</option>
-                        <option value="young Japanese female model with contemporary fashion sense">🇯🇵 Japanese Young Female</option>
-                        <option value="Use the attached reference image as the face of the main subject. Strictly preserve the facial structure, identity, skin tone, hair, and expression from the uploaded photo. Apply a full face-swap or IP-Adapter transfer. Do not alter the face. Apply the selected clothing, pose, background, and overall scene style to this fixed face only.">📸 Custom Face (Use Uploaded Image)</option>
+                        <option value="attractive young adult male model">ヤングアダルト男性</option>
+                        <option value="attractive young adult female model">ヤングアダルト女性</option>
+                        <option value="athletic male model with defined physique">アスレチック男性</option>
+                        <option value="tall slender female model with elegant posture">エレガント女性</option>
+                        <option value="casual relaxed-fit model">カジュアルモデル</option>
+                        <option value="young Japanese male model with modern street style">🇯🇵 日本のヤング男性</option>
+                        <option value="young Japanese female model with contemporary fashion sense">🇯🇵 日本のヤング女性</option>
+                        <option value="Use the attached reference image as the face of the main subject. Strictly preserve the facial structure, identity, skin tone, hair, and expression from the uploaded photo. Apply a full face-swap or IP-Adapter transfer. Do not alter the face. Apply the selected clothing, pose, background, and overall scene style to this fixed face only.">📸 カスタム顔（アップロード画像を使用）</option>
                     </select>
-                    <p class="hint mt-1.5">Select the model archetype or use a custom face reference.</p>
+                    <p class="hint mt-1.5">モデルアーキタイプを選択するか、カスタム顔参照を使用</p>
                 </div>
             </div>
 
-            <!-- Manual Fields (conditional) -->
+            <!-- 手動フィールド（条件付き） -->
             <div id="manualFields" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 transition-all duration-200 overflow-hidden" style="max-height: 180px; opacity: 1;">
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">Header Text</label>
-                    <input type="text" id="headerInput" value="MENS" placeholder="e.g. MENS, SUMMER" class="field" />
-                    <p class="hint mt-1">Blue banner · top‑left</p>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">ヘッダーテキスト</label>
+                    <input type="text" id="headerInput" value="メンズ" placeholder="例：メンズ、サマー" class="field" />
+                    <p class="hint mt-1">青バナー · 左上</p>
                 </div>
                 <div>
-                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">Logo Text</label>
-                    <input type="text" id="logoInput" value="FILA" placeholder="e.g. FILA, NIKE" class="field" />
-                    <p class="hint mt-1">Brand text · bottom‑right</p>
+                    <label class="text-xs font-semibold uppercase tracking-wider text-slate-500 block mb-1">ロゴテキスト</label>
+                    <input type="text" id="logoInput" value="FILA" placeholder="例：FILA、NIKE" class="field" />
+                    <p class="hint mt-1">ブランドテキスト · 右下</p>
                 </div>
             </div>
 
             <hr class="divider my-6" />
 
-            <!-- Actions -->
+            <!-- アクション -->
             <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div class="flex flex-wrap items-center gap-3">
-                    <button id="generateBtn" class="btn-primary">⚡ Generate</button>
-                    <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+                    <button id="generateBtn" class="btn-primary">⚡ 生成</button>
+                    <button id="copyBtn" class="btn-secondary">📋 コピー</button>
                 </div>
-                <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span>
+                <span id="charCount" class="text-sm text-slate-500 font-medium">0 文字</span>
             </div>
 
-            <!-- Prompt Outputs -->
+            <!-- プロンプト出力 -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-                <!-- Positive -->
+                <!-- ポジティブ -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Positive</span>
-                        <span class="badge badge-accent text-[10px]">main prompt</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">ポジティブ</span>
+                        <span class="badge badge-accent text-[10px]">メインプロンプト</span>
                     </div>
                     <div class="prompt-box" id="positiveOutput" readonly contenteditable="false">
-                        Click <span class="text-blue-600 font-medium">Generate</span> to build your prompt…
+                        <span class="text-blue-600 font-medium">生成</span> をクリックしてプロンプトを作成…
                     </div>
                 </div>
 
-                <!-- Negative -->
+                <!-- ネガティブ -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Negative</span>
-                        <span class="badge badge-purple text-[10px]">exclude</span>
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">ネガティブ</span>
+                        <span class="badge badge-purple text-[10px]">除外</span>
                     </div>
                     <div class="prompt-box negative" id="negativeOutput" readonly contenteditable="false">
-                        Click <span class="text-purple-600 font-medium">Generate</span> to build your negative prompt…
+                        <span class="text-purple-600 font-medium">生成</span> をクリックしてネガティブプロンプトを作成…
                     </div>
                 </div>
 
             </div>
 
-            <!-- Footer hint -->
+            <!-- フッターヒント -->
             <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
                 <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                <span>Reference image: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">attached</code></span>
+                <span>参照画像: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">添付済み</code></span>
                 <span class="w-px h-4 bg-slate-200"></span>
-                <span>85mm · f/2.8 · 8k · studio lighting</span>
+                <span>85mm · f/2.8 · 8k · スタジオ照明</span>
             </div>
 
         </div>
 
-        <!-- Footer -->
+        <!-- フッター -->
         <div class="text-center text-xs text-slate-400 font-medium tracking-wider mt-6 uppercase">
-            Prompt structured for commercial e‑commerce generation
+            コマーシャルeコマース生成向けに構築されたプロンプト
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast-copy">✅ Copied to clipboard!</div>
+    <!-- トースト -->
+    <div id="toast" class="toast-copy">✅ クリップボードにコピーしました！</div>
 
     <script>
         // ──────────────────────────────────────────────────────────────
@@ -595,7 +595,7 @@ let prompt =
             positiveOutput.textContent = result.positive;
             negativeOutput.textContent = result.negative;
             const total = result.positive.length + result.negative.length;
-            charCount.textContent = `${total} characters total`;
+            charCount.textContent = `${total} 文字 (合計)`;
         }
 
         function autoGenerate() {
@@ -612,13 +612,13 @@ let prompt =
             const pos = positiveOutput.textContent.trim();
             const neg = negativeOutput.textContent.trim();
             if (!pos || pos === "Click Generate to build your prompt…") {
-                showToast('⚠️ Generate a prompt first.');
+                showToast('⚠️ 先にプロンプトを生成してください。');
                 return;
             }
             const full = `--- POSITIVE PROMPT ---\n${pos}\n\n--- NEGATIVE PROMPT ---\n${neg}`;
             try {
                 await navigator.clipboard.writeText(full);
-                showToast('✅ Both prompts copied!');
+                showToast('✅ 両方のプロンプトをコピーしました！');
             } catch (_) {
                 const ta = document.createElement('textarea');
                 ta.value = full;
@@ -626,7 +626,7 @@ let prompt =
                 ta.select();
                 document.execCommand('copy');
                 ta.remove();
-                showToast('✅ Copied!');
+                showToast('✅ コピーしました！');
             }
         });
 

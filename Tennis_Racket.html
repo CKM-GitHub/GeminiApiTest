@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tennis Racket — Prompt Studio</title>
+    <title>テニスラケット — プロンプトスタジオ</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
     <style>
-        /* ── minimal light theme ── */
+        /* ── ミニマルライトテーマ ── */
         body {
             background: #f0f2f5;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -244,149 +244,149 @@
 
     <div class="max-w-5xl mx-auto px-4 py-8 md:py-12">
 
-        <!-- ─── HEADER ─── -->
+        <!-- ─── ヘッダー ─── -->
         <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
-                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">🎾 Racket Prompt Studio</h1>
-                <p class="text-sm text-slate-500 mt-0.5">Tennis e‑commerce · fixed product reference</p>
+                <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">🎾 ラケットプロンプトスタジオ</h1>
+                <p class="text-sm text-slate-500 mt-0.5">テニスeコマース · 固定商品参照</p>
             </div>
             <div class="flex items-center gap-3">
                 <span class="badge-pill accent">v1.1</span>
-                <span class="badge-pill">⚡ 1:1 square</span>
+                <span class="badge-pill">⚡ 1:1 正方形</span>
                 <span class="badge-pill">📷 image_bab467.png</span>
             </div>
         </header>
 
-        <!-- ─── MAIN CARD ─── -->
+        <!-- ─── メインカード ─── -->
         <div class="card p-6 md:p-8">
 
-            <!-- ─── ROW 1: Layout Selection ─── -->
+            <!-- ─── 行1: レイアウト選択 ─── -->
             <div class="mb-6">
-                <label class="label-text block mb-1.5">📐 Layout</label>
+                <label class="label-text block mb-1.5">📐 レイアウト</label>
                 <select id="layoutSelect" class="field">
-                    <option value="layout1">Layout 1: Split Detail View</option>
-                    <option value="layout2">Layout 2: Multi-Product Lineup</option>
+                    <option value="layout1">レイアウト1: 分割ディテールビュー</option>
+                    <option value="layout2">レイアウト2: マルチプロダクトラインナップ</option>
                 </select>
                 <p class="hint mt-1.5">
-                    <span class="font-medium text-slate-600">Split Detail</span> → macro crops of one racket &nbsp;·&nbsp;
-                    <span class="font-medium text-slate-600">Multi-Product</span> → cropped head + full upright racket
+                    <span class="font-medium text-slate-600">分割ディテール</span> → 1本のラケットのマクロクロップ &nbsp;·&nbsp;
+                    <span class="font-medium text-slate-600">マルチプロダクト</span> → クロップヘッド ＋ 直立フルラケット
                 </p>
             </div>
 
             <hr class="divider my-6" />
 
-            <!-- ─── ROW 2: Header & Logo Control ─── -->
+            <!-- ─── 行2: ヘッダー＆ロゴ制御 ─── -->
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <span class="label-text">🏷️ Header &amp; Logo</span>
+                    <span class="label-text">🏷️ ヘッダー＆ロゴ</span>
                     <span class="text-xs text-slate-400">—</span>
-                    <span class="text-xs text-slate-400">manual text or reference overlay</span>
+                    <span class="text-xs text-slate-400">手動テキストまたは参照オーバーレイ</span>
                 </div>
 
                 <div class="mode-pill w-full flex" id="modeToggle">
-                    <button data-mode="manual" class="active flex-1 text-center">✏️ Manual</button>
-                    <button data-mode="reference" class="flex-1 text-center">🖼️ Reference</button>
+                    <button data-mode="manual" class="active flex-1 text-center">✏️ 手動</button>
+                    <button data-mode="reference" class="flex-1 text-center">🖼️ 参照</button>
                 </div>
 
-                <!-- Conditional: Manual fields -->
+                <!-- 条件付き: 手動フィールド -->
                 <div id="manualFields" class="conditional-fields grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4" style="max-height: 280px; opacity: 1;">
                     <div>
-                        <label class="text-xs font-medium text-slate-600 block mb-1">Header Main Text</label>
-                        <input type="text" id="headerMainInput" value="硬式テニス" placeholder="e.g. 硬式テニス" class="field" />
+                        <label class="text-xs font-medium text-slate-600 block mb-1">ヘッダー メインテキスト</label>
+                        <input type="text" id="headerMainInput" value="硬式テニス" placeholder="例: 硬式テニス" class="field" />
                     </div>
                     <div>
-                        <label class="text-xs font-medium text-slate-600 block mb-1">Header Sub‑Text</label>
-                        <input type="text" id="headerSubInput" value="Vコア95" placeholder="e.g. Vコア95" class="field" />
+                        <label class="text-xs font-medium text-slate-600 block mb-1">ヘッダー サブテキスト</label>
+                        <input type="text" id="headerSubInput" value="Vコア95" placeholder="例: Vコア95" class="field" />
                     </div>
                     <div>
-                        <label class="text-xs font-medium text-slate-600 block mb-1">Logo Text</label>
-                        <input type="text" id="logoInput" value="YONEX" placeholder="e.g. YONEX" class="field" />
+                        <label class="text-xs font-medium text-slate-600 block mb-1">ロゴテキスト</label>
+                        <input type="text" id="logoInput" value="YONEX" placeholder="例: YONEX" class="field" />
                     </div>
-                    <p class="hint col-span-1 sm:col-span-3 -mt-1">Dark charcoal banner + text in upper‑left · 10px margin buffer · Logo in bottom‑right</p>
+                    <p class="hint col-span-1 sm:col-span-3 -mt-1">ダークチャコールバナー＋左上にテキスト · 10pxマージンバッファ · ロゴは右下</p>
                 </div>
             </div>
 
             <hr class="divider my-6" />
 
-            <!-- ─── ROW 3: Badge Sticker Overlay ─── -->
+            <!-- ─── 行3: バッジステッカーオーバーレイ ─── -->
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-2">
-                    <span class="label-text">⭕ Badge Sticker</span>
+                    <span class="label-text">⭕ バッジステッカー</span>
                     <span class="text-xs text-slate-400">—</span>
-                    <span class="text-xs text-slate-400">circle overlay</span>
+                    <span class="text-xs text-slate-400">円形オーバーレイ</span>
                 </div>
 
                 <select id="badgeSelect" class="field max-w-xs">
-                    <option value="none">None</option>
-                    <option value="enabled">Enable Badge</option>
+                    <option value="none">なし</option>
+                    <option value="enabled">バッジ有効</option>
                 </select>
 
-                <!-- Conditional: Badge text input -->
+                <!-- 条件付き: バッジテキスト入力 -->
                 <div id="badgeFields" class="conditional-fields mt-3" style="max-height: 80px; opacity: 1;">
-                    <label class="text-xs font-medium text-slate-600 block mb-1">Badge Text</label>
-                    <input type="text" id="badgeInput" value="フレームのみ" placeholder="e.g. フレームのみ" class="field max-w-xs" />
-                    <p class="hint mt-1.5">Rendered in a charcoal circle badge · lower‑central void</p>
+                    <label class="text-xs font-medium text-slate-600 block mb-1">バッジテキスト</label>
+                    <input type="text" id="badgeInput" value="フレームのみ" placeholder="例: フレームのみ" class="field max-w-xs" />
+                    <p class="hint mt-1.5">チャコール円形バッジでレンダリング · 下部中央の空き領域</p>
                 </div>
             </div>
 
             <hr class="divider my-6" />
 
-            <!-- ─── ACTIONS ─── -->
+            <!-- ─── アクション ─── -->
             <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
                 <div class="flex flex-wrap items-center gap-3">
-                    <button id="generateBtn" class="btn-primary">⚡ Generate Prompt</button>
-                    <button id="copyBtn" class="btn-secondary">📋 Copy</button>
+                    <button id="generateBtn" class="btn-primary">⚡ プロンプト生成</button>
+                    <button id="copyBtn" class="btn-secondary">📋 コピー</button>
                 </div>
-                <span id="charCount" class="text-sm text-slate-500 font-medium">0 characters</span>
+                <span id="charCount" class="text-sm text-slate-500 font-medium">0 文字</span>
             </div>
 
-            <!-- ─── PROMPT OUTPUTS ─── -->
+            <!-- ─── プロンプト出力 ─── -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
 
-                <!-- Positive -->
+                <!-- ポジティブ -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="label-text">Positive</span>
-                        <span class="badge-pill accent text-[10px]">main prompt</span>
+                        <span class="label-text">ポジティブ</span>
+                        <span class="badge-pill accent text-[10px]">メインプロンプト</span>
                     </div>
                     <div class="prompt-box" id="positiveOutput" readonly contenteditable="false">
-                        Click <span class="text-blue-600 font-medium">Generate</span> to build your prompt…
+                        <span class="text-blue-600 font-medium">生成</span> をクリックしてプロンプトを作成…
                     </div>
                 </div>
 
-                <!-- Negative -->
+                <!-- ネガティブ -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
-                        <span class="label-text">Negative</span>
-                        <span class="badge-pill purple text-[10px]">exclude</span>
+                        <span class="label-text">ネガティブ</span>
+                        <span class="badge-pill purple text-[10px]">除外</span>
                     </div>
                     <div class="prompt-box negative" id="negativeOutput" readonly contenteditable="false">
-                        Click <span class="text-purple-600 font-medium">Generate</span> to build your negative prompt…
+                        <span class="text-purple-600 font-medium">生成</span> をクリックしてネガティブプロンプトを作成…
                     </div>
                 </div>
 
             </div>
 
-            <!-- ─── FOOTER HINT ─── -->
+            <!-- ─── フッターヒント ─── -->
             <div class="mt-6 flex flex-wrap items-center gap-3 text-xs text-slate-400">
                 <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                <span>Reference product: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">image_bab467.png</code></span>
+                <span>参照商品: <code class="bg-slate-100 px-2 py-0.5 rounded border border-slate-200 text-slate-600">image_bab467.png</code></span>
                 <span class="w-px h-4 bg-slate-200"></span>
-                <span>85mm · f/4 · 8k · studio lighting</span>
+                <span>85mm · f/4 · 8k · スタジオ照明</span>
                 <span class="w-px h-4 bg-slate-200"></span>
                 <span>#262626 · #1A66FF · YONEX</span>
             </div>
 
         </div>
 
-        <!-- ─── FOOTER ─── -->
+        <!-- ─── フッター ─── -->
         <div class="text-center text-xs text-slate-400 font-medium tracking-wider mt-6 uppercase">
-            Prompt structured for tennis e‑commerce · all layout refs match image_d5f6a8.png &amp; image_d5f6ca.png
+            テニスeコマース向けに構築されたプロンプト · すべてのレイアウト参照は image_d5f6a8.png および image_d5f6ca.png に一致
         </div>
     </div>
 
-    <!-- ─── TOAST ─── -->
-    <div id="toast" class="toast-copy">✅ Copied to clipboard!</div>
+    <!-- ─── トースト ─── -->
+    <div id="toast" class="toast-copy">✅ クリップボードにコピーしました！</div>
 
     <script>
         // ──────────────────────────────────────────────────────────────
@@ -522,7 +522,7 @@
             positiveOutput.textContent = result.positive;
             negativeOutput.textContent = result.negative;
             const total = result.positive.length + result.negative.length;
-            charCount.textContent = `${total} characters total`;
+            charCount.textContent = `${total} 文字 (合計)`;
         }
 
         function autoGenerate() {
@@ -539,13 +539,13 @@
             const pos = positiveOutput.textContent.trim();
             const neg = negativeOutput.textContent.trim();
             if (!pos || pos === "Click Generate to build your prompt…") {
-                showToast('⚠️ Generate a prompt first.');
+                showToast('⚠️ 先にプロンプトを生成してください。');
                 return;
             }
             const full = `--- POSITIVE PROMPT ---\n${pos}\n\n--- NEGATIVE PROMPT ---\n${neg}`;
             try {
                 await navigator.clipboard.writeText(full);
-                showToast('✅ Both prompts copied!');
+                showToast('✅ 両方のプロンプトをコピーしました！');
             } catch (_) {
                 const ta = document.createElement('textarea');
                 ta.value = full;
@@ -553,7 +553,7 @@
                 ta.select();
                 document.execCommand('copy');
                 ta.remove();
-                showToast('✅ Copied!');
+                showToast('✅ コピーしました！');
             }
         });
 
