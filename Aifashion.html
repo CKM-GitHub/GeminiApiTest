@@ -1,534 +1,628 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>CKM AI プロンプトジェネレーター | 画像ベース商品セレクター</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'dark-bg': '#0A0A0C',
-            'card-bg': '#14151A',
-            'border-dim': '#2A2D35',
-            'accent-green': '#1F7A4C',
-            'accent-gold': '#F59E0B',
-            'accent-purple': '#8B5CF6',
-          },
-          fontFamily: {
-            'sans': ['Inter', 'system-ui', 'Poppins', 'sans-serif'],
-          },
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>CKM AI プロンプトジェネレーター | 画像ベース商品セレクター</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0A0A0C',
+                        'card-bg': '#14151A',
+                        'border-dim': '#2A2D35',
+                        'accent-green': '#1F7A4C',
+                        'accent-gold': '#F59E0B',
+                        'accent-purple': '#8B5CF6',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'Poppins', 'sans-serif'],
+                    },
+                }
+            }
         }
-      }
-    }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #1E1F24; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #3A3F4B; border-radius: 10px; }
-    body { background: #0A0A0C; }
-    .copy-btn:active { transform: scale(0.96); }
-    .prompt-box { transition: all 0.2s ease; white-space: pre-wrap; word-break: break-word; }
-    .prompt-box:focus-within { border-color: #1F7A4C; box-shadow: 0 0 0 2px rgba(31,122,76,0.3); }
-    .loading-spinner {
-      border: 2px solid rgba(255,255,255,0.2);
-      border-top: 2px solid #1F7A4C;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      animation: spin 0.7s linear infinite;
-      display: inline-block;
-    }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-    .btn-api {
-      background: linear-gradient(95deg, #2A2D35, #3E424F);
-    }
-    .btn-api:hover {
-      background: linear-gradient(95deg, #363A46, #4A4F5E);
-    }
-    .product-card {
-      transition: all 0.2s ease;
-    }
-    .product-card:hover {
-      transform: translateY(-2px);
-    }
-    input[type="checkbox"] {
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: #1F7A4C;
-    }
-  </style>
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1E1F24;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3A3F4B;
+            border-radius: 10px;
+        }
+        body {
+            background: #0A0A0C;
+        }
+        .copy-btn:active {
+            transform: scale(0.96);
+        }
+        .prompt-box {
+            transition: all 0.2s ease;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .prompt-box:focus-within {
+            border-color: #1F7A4C;
+            box-shadow: 0 0 0 2px rgba(31, 122, 76, 0.3);
+        }
+        .loading-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-top: 2px solid #1F7A4C;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        .btn-api {
+            background: linear-gradient(95deg, #2A2D35, #3E424F);
+        }
+        .btn-api:hover {
+            background: linear-gradient(95deg, #363A46, #4A4F5E);
+        }
+        .product-card {
+            transition: all 0.2s ease;
+        }
+        .product-card:hover {
+            transform: translateY(-2px);
+        }
+        input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #1F7A4C;
+        }
+        select {
+            cursor: pointer;
+        }
+        .spec-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #9CA3AF;
+            letter-spacing: 0.02em;
+        }
+        .spec-value {
+            color: #F3F4F6;
+            font-weight: 500;
+        }
+    </style>
 </head>
 <body class="font-sans antialiased">
 
-  <main class="min-h-screen w-full px-4 py-6 md:py-8 lg:py-10">
-    <div class="max-w-7xl mx-auto">
-      <!-- ヘッダー -->
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1F7A4C] to-[#289C60] flex items-center justify-center shadow-lg">
-            <span class="text-white font-bold text-xl">CKM</span>
-          </div>
-          <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">CKM AI ファッション <span class="text-[#1F7A4C]">プロンプトジェネレーター</span></h1>
-        </div>
-        <div class="text-xs text-gray-400 bg-[#14151A] px-3 py-1.5 rounded-full border border-[#2A2D35]">画像ベース選択 · 両方のプロンプトをコピー</div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-        
-        <!-- 左：シンプル商品選択パネル -->
-        <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl overflow-hidden">
-          <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217]">
-            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#1F7A4C]"></span>商品選択</h2>
-            <p class="text-gray-400 text-xs mt-1">画像を添付する商品を選択 — AIが自動的にフレーミングを調整します</p>
-          </div>
-          
-          <div class="p-5 md:p-6 space-y-6">
-            <!-- 商品チェックボックスグリッド -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
-              
-              <!-- Tシャツカード -->
-              <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
-                <label class="flex items-start gap-4 cursor-pointer">
-                  <input type="checkbox" id="hasTop" class="mt-1">
-                  <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                      <i class="fas fa-tshirt text-[#1F7A4C] text-xl"></i>
-                      <h3 class="font-semibold text-white">Tシャツ / トップス</h3>
+    <main class="min-h-screen w-full px-4 py-6 md:py-8 lg:py-10">
+        <div class="max-w-7xl mx-auto">
+            <!-- ヘッダー -->
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-[#1F7A4C] to-[#289C60] flex items-center justify-center shadow-lg">
+                        <span class="text-white font-bold text-xl">CKM</span>
                     </div>
-                    <p class="text-xs text-gray-400">シャツ画像を添付 → AIがミディアムアッパーボディショットを生成</p>
-                  </div>
-                </label>
-              </div>
-
-              <!-- パンツカード -->
-              <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
-                <label class="flex items-start gap-4 cursor-pointer">
-                  <input type="checkbox" id="hasPants" class="mt-1">
-                  <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                      <i class="fas fa-shopping-cart text-[#1F7A4C] text-xl"></i>
-                      <h3 class="font-semibold text-white">パンツ / ボトムス</h3>
-                    </div>
-                    <p class="text-xs text-gray-400">パンツ画像を添付 → AIがウエストから下のローアングルショットを生成</p>
-                  </div>
-                </label>
-              </div>
-
-              <!-- シューズカード -->
-              <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
-                <label class="flex items-start gap-4 cursor-pointer">
-                  <input type="checkbox" id="hasShoes" class="mt-1">
-                  <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                      <i class="fas fa-shoe-prints text-[#1F7A4C] text-xl"></i>
-                      <h3 class="font-semibold text-white">シューズ / フットウェア</h3>
-                    </div>
-                    <p class="text-xs text-gray-400">シューズ画像を添付 → AIがマクロフットウェアクローズアップを生成</p>
-                  </div>
-                </label>
-              </div>
-
-              <!-- テニスリストバンドカード -->
-              <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
-                <label class="flex items-start gap-4 cursor-pointer">
-                  <input type="checkbox" id="hasWristband" class="mt-1">
-                  <div class="flex-1">
-                    <div class="flex items-center gap-2 mb-1">
-                      <i class="fas fa-hand-peace text-[#1F7A4C] text-xl"></i>
-                      <h3 class="font-semibold text-white">テニスリストバンド</h3>
-                    </div>
-                    <p class="text-xs text-gray-400">リストバンド画像を添付 → AIが手首アクセサリーを強調</p>
-                  </div>
-                </label>
-              </div>
-              <!-- 新規：ドレスカード -->
-  <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
-    <label class="flex items-start gap-4 cursor-pointer">
-      <input type="checkbox" id="hasDress" class="mt-1">
-      <div class="flex-1">
-        <div class="flex items-center gap-2 mb-1">
-          <i class="fas fa-female text-[#1F7A4C] text-xl"></i>
-          <!-- or use fa-dress if you have FontAwesome 6 -->
-          <h3 class="font-semibold text-white">ドレス</h3>
-        </div>
-        <p class="text-xs text-gray-400">ドレス画像を添付 → AIがフルボディエレガントショットを生成</p>
-      </div>
-    </label>
-  </div>
-            </div>
-
-            <!-- 動的レイアウト情報 -->
-            <div class="bg-[#0E0F13] rounded-xl p-4 border border-[#2A2D35]">
-              <div class="flex items-center gap-2 mb-2">
-                <i class="fas fa-magic text-[#F59E0B] text-sm"></i>
-                <span class="text-sm font-medium text-gray-300">動的フレーミングロジック</span>
-              </div>
-              <div class="text-xs text-gray-400 space-y-1">
-                <p>✓ <span class="text-[#1F7A4C]">Tシャツのみ</span> → ミディアムアッパーボディポートレート</p>
-                <p>✓ <span class="text-[#1F7A4C]">パンツのみ</span> → ウエストダウンローアングル</p>
-                <p>✓ <span class="text-[#1F7A4C]">シューズのみ</span> → マクロフットウェアクローズアップ</p>
-                <p>✓ <span class="text-[#1F7A4C]">リストバンドのみ</span> → 手/手首クローズアップ</p>
-                <p>✓ <span class="text-[#1F7A4C]">複数アイテム</span> → フルボディルックブック</p>
-              </div>
-            </div>
-
-            <!-- 背景＆モデル（コンテキスト保持） -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">📍 背景シチュエーション</label>
-                <div class="select-wrapper">
-                  <select id="backgroundLocation" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
-                    <option value="minimalist concrete photography studio with soft diffused lighting">🏢 ミニマリストコンクリートスタジオ</option>
-                    <option value="bright modern art gallery with white walls and natural daylight">🖼️ 明るい現代アートギャラリー</option>
-                    <option value="clean white cyclorama photography studio" selected>📸 ホワイトシクロラマスタジオ</option>
-                    <option value="luxury marble loft with floor-to-ceiling windows">✨ ラグジュアリーマーブルロフト</option>
-                    <option value="urban rooftop overlooking city skyline">🌆 アーバンルーフトップ</option>
-                    <option value="solid, flat, uniform pure hex color #FFFFFF white background with absolutely no shadows, no gradient, and no depth" selected>⬜ 純白（#FFFFFF）</option>
-                  </select>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white tracking-tight">CKM AI ファッション <span class="text-[#1F7A4C]">プロンプトジェネレーター</span></h1>
                 </div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">🧥 モデルタイプ</label>
-               <div class="select-wrapper">
-  <select id="modelType" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white">
-    <option value="attractive young adult male model">ヤングアダルト男性</option>
-    <option value="attractive young adult female model">ヤングアダルト女性</option>
-    <option value="athletic male model with defined physique">アスレチック男性</option>
-    <option value="tall slender female model with elegant posture">エレガント女性</option>
-    <option value="casual relaxed-fit model">カジュアルモデル</option>
-    <!-- 👇 新規オプション追加 -->
-    <option value="young Japanese male model with modern street style">🇯🇵 日本のヤング男性</option>
-    <option value="young Japanese female model with contemporary fashion sense">🇯🇵 日本のヤング女性</option>
-    <option value="Use the attached reference image as the face of the main subject. Strictly preserve the facial structure, identity, skin tone, hair, and expression from the uploaded photo. Apply a full face-swap or IP-Adapter transfer. Do not alter the face. Apply the selected clothing, pose, background, and overall scene style to this fixed face only.">
-    📸 カスタム顔（アップロード画像を使用）
-  </option>
-  </select>
-</div>
-              </div>
+                <div class="text-xs text-gray-400 bg-[#14151A] px-3 py-1.5 rounded-full border border-[#2A2D35]">画像ベース選択 · 両方のプロンプトをコピー</div>
             </div>
 
-            <!-- アクションボタン -->
-            <div class="pt-4 flex flex-col sm:flex-row gap-4">
-              <button id="systemGenerateBtn" class="flex-1 bg-gradient-to-r from-[#1F7A4C] to-[#289C60] hover:from-[#166a41] hover:to-[#1f8a54] text-white font-bold py-3 px-5 rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2">
-                <i class="fas fa-magic text-sm"></i> プロンプト生成
-              </button>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+
+                <!-- 左：シンプル商品選択パネル -->
+                <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl overflow-hidden">
+                    <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217]">
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#1F7A4C]"></span>商品選択</h2>
+                        <p class="text-gray-400 text-xs mt-1">画像を添付する商品を選択 — AIが自動的にフレーミングを調整します</p>
+                    </div>
+
+                    <div class="p-5 md:p-6 space-y-6">
+                        <!-- 商品チェックボックスグリッド -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2 gap-4">
+
+                            <!-- Tシャツカード -->
+                            <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+                                <label class="flex items-start gap-4 cursor-pointer">
+                                    <input type="checkbox" id="hasTop" class="mt-1" />
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="fas fa-tshirt text-[#1F7A4C] text-xl"></i>
+                                            <h3 class="font-semibold text-white">Tシャツ / トップス</h3>
+                                        </div>
+                                        <p class="text-xs text-gray-400">シャツ画像を添付 → AIがミディアムアッパーボディショットを生成</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- パンツカード -->
+                            <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+                                <label class="flex items-start gap-4 cursor-pointer">
+                                    <input type="checkbox" id="hasPants" class="mt-1" />
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="fas fa-pants text-[#1F7A4C] text-xl"></i>
+                                        <h3 class="font-semibold text-white">パンツ / ボトムス</h3>
+                                        </div>
+                                        <p class="text-xs text-gray-400">パンツ画像を添付 → AIがウエストから下のローアングルショットを生成</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- シューズカード -->
+                            <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+                                <label class="flex items-start gap-4 cursor-pointer">
+                                    <input type="checkbox" id="hasShoes" class="mt-1" />
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="fas fa-shoe-prints text-[#1F7A4C] text-xl"></i>
+                                            <h3 class="font-semibold text-white">シューズ / フットウェア</h3>
+                                        </div>
+                                        <p class="text-xs text-gray-400">シューズ画像を添付 → AIがマクロフットウェアクローズアップを生成</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- テニスリストバンドカード -->
+                            <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+                                <label class="flex items-start gap-4 cursor-pointer">
+                                    <input type="checkbox" id="hasWristband" class="mt-1" />
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="fas fa-dumbbell text-[#1F7A4C] text-xl"></i>
+                                            <h3 class="font-semibold text-white">テニスリストバンド</h3>
+                                        </div>
+                                        <p class="text-xs text-gray-400">リストバンド画像を添付 → AIが手首アクセサリーを強調</p>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- ドレスカード -->
+                            <div class="product-card bg-[#1E1F24] rounded-xl p-4 border border-[#2A2D35] hover:border-[#1F7A4C] transition-all">
+                                <label class="flex items-start gap-4 cursor-pointer">
+                                    <input type="checkbox" id="hasDress" class="mt-1" />
+                                    <div class="flex-1">
+                                        <div class="flex items-center gap-2 mb-1">
+                                            <i class="fas fa-vest text-[#1F7A4C] text-xl"></i>
+                                            <h3 class="font-semibold text-white">ドレス</h3>
+                                        </div>
+                                        <p class="text-xs text-gray-400">ドレス画像を添付 → AIがフルボディエレガントショットを生成</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- ★ 動的レイアウト情報 (更新) -->
+                        <div class="bg-[#0E0F13] rounded-xl p-4 border border-[#2A2D35]">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-magic text-[#F59E0B] text-sm"></i>
+                                <span class="text-sm font-medium text-gray-300">固定フレーミングロジック</span>
+                            </div>
+                            <div class="text-xs text-gray-400 space-y-1">
+                                <p>✓ <span class="text-[#1F7A4C]">常に単一モデル</span> → 左側に固定配置</p>
+                                <p>✓ <span class="text-[#1F7A4C]">身長・サイズ</span> → プロンプトに動的に反映</p>
+                                <p>✓ <span class="text-[#1F7A4C]">背景</span> → 選択値がプロンプトに挿入</p>
+                                <p>✓ <span class="text-[#1F7A4C]">モデルタイプ</span> → 選択肢に応じてプロンプトが変化</p>
+                            </div>
+                        </div>
+
+                        <!-- 背景＆モデル（コンテキスト保持） -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">📍 背景シチュエーション</label>
+                                <div class="select-wrapper">
+                                    <select id="backgroundLocation" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white appearance-none">
+                                        <option value="minimalist concrete photography studio with soft diffused lighting">🏢 ミニマリストコンクリートスタジオ</option>
+                                        <option value="bright modern art gallery with white walls and natural daylight">🖼️ 明るい現代アートギャラリー</option>
+                                        <option value="clean white cyclorama photography studio">📸 ホワイトシクロラマスタジオ</option>
+                                        <option value="luxury marble loft with floor-to-ceiling windows">✨ ラグジュアリーマーブルロフト</option>
+                                        <option value="urban rooftop overlooking city skyline">🌆 アーバンルーフトップ</option>
+                                        <option value="solid, flat, uniform pure hex color #FFFFFF white background with absolutely no shadows, no gradient, and no depth" selected>⬜ 純白（#FFFFFF）</option>
+                                        <option value="pristine professional blue and green outdoor hard tennis court under bright sunny daylight with natural athletic environment shadows">🎾 屋外テニスコート（ハードコート）</option>
+                                        <option value="high-end sandy turf outdoor Omni tennis court under natural overhead sunlight, showcasing detailed court textures">🌱 屋外テニスコート（オムニコート）</option>
+                                        <option value="professional dynamic outdoor multi-sport field under crisp daylight with clean athletic field markings">🏃 スポーツフィールド</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-300 mb-2">🧥 モデルタイプ</label>
+                                <div class="select-wrapper">
+                                    <select id="modelType" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-3 text-white appearance-none">
+                                        <option value="attractive young adult male model">ヤングアダルト男性</option>
+                                        <option value="attractive young adult female model">ヤングアダルト女性</option>
+                                        <option value="athletic male model with defined physique">アスレチック男性</option>
+                                        <option value="tall slender female model with elegant posture">エレガント女性</option>
+                                        <option value="casual relaxed-fit model">カジュアルモデル</option>
+                                        <option value="young Japanese male model with modern street style">🇯🇵 日本のヤング男性</option>
+                                        <option value="young Japanese female model with contemporary fashion sense">🇯🇵 日本のヤング女性</option>
+                                        <option value="Use the attached reference image as the face of the main subject. Strictly preserve the facial structure, identity, skin tone, hair, and expression from the uploaded photo. Apply a full face-swap or IP-Adapter transfer. Do not alter the face. Apply the selected clothing, pose, background, and overall scene style to this fixed face only.">
+                                            📸 カスタム顔（アップロード画像を使用）
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ★ モデルスペック設定 (Model Specs) を背景の直下に配置 -->
+                        <div class="bg-[#0E0F13] rounded-xl p-4 border border-[#2A2D35]">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="fas fa-ruler-combined text-[#F59E0B] text-sm"></i>
+                                <span class="text-sm font-semibold text-white">モデルスペック設定</span>
+                                <span class="text-[10px] text-gray-500 bg-[#1E1F24] px-2 py-0.5 rounded-full">Model Specs</span>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- モデル身長 -->
+                                <div>
+                                    <label for="modelHeight" class="block text-xs font-medium text-gray-400 mb-1.5">モデル身長</label>
+                                    <select id="modelHeight" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-2.5 text-white appearance-none">
+                                        <option value="165 cm">165 cm</option>
+                                        <option value="170 cm" selected>170 cm</option>
+                                        <option value="175 cm">175 cm</option>
+                                        <option value="180 cm">180 cm</option>
+                                    </select>
+                                </div>
+                                <!-- 着用サイズ -->
+                                <div>
+                                    <label for="wearingSize" class="block text-xs font-medium text-gray-400 mb-1.5">着用サイズ</label>
+                                    <select id="wearingSize" class="w-full bg-[#1E1F24] border border-[#2A2D35] rounded-xl px-4 py-2.5 text-white appearance-none">
+                                        <option value="Sサイズ">Sサイズ</option>
+                                        <option value="Mサイズ">Mサイズ</option>
+                                        <option value="Lサイズ" selected>Lサイズ</option>
+                                        <option value="XLサイズ">XLサイズ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mt-2 text-[10px] text-gray-500 flex items-center gap-1">
+                                <i class="fas fa-info-circle text-[#1F7A4C]"></i>
+                                <span>身長・サイズはプロンプト内のモデル記述に動的に反映されます</span>
+                            </div>
+                        </div>
+
+                        <!-- アクションボタン -->
+                        <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                            <button id="systemGenerateBtn" class="flex-1 bg-gradient-to-r from-[#1F7A4C] to-[#289C60] hover:from-[#166a41] hover:to-[#1f8a54] text-white font-bold py-3 px-5 rounded-xl transition-all duration-200 shadow-lg flex items-center justify-center gap-2">
+                                <i class="fas fa-magic text-sm"></i> プロンプト生成
+                            </button>
+                        </div>
+                        <p class="text-xs text-gray-500 text-center mt-1">💡 選択した商品・スペックに基づき、AIが固定単一モデルで構図を調整</p>
+                    </div>
+                </div>
+
+                <!-- 右：出力パネル -->
+                <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl flex flex-col">
+                    <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217] flex justify-between items-center flex-wrap gap-3">
+                        <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>生成プロンプト</h2>
+                        <div class="flex gap-2 flex-wrap">
+                            <button id="copyMainOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> メインをコピー</button>
+                            <button id="copyNegOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> ネガティブをコピー</button>
+                            <button id="copyBothBtn" class="copy-btn text-xs bg-[#1F7A4C] hover:bg-[#166a41] text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-copy"></i> 両方をコピー</button>
+                        </div>
+                    </div>
+                    <div class="flex-1 p-5 md:p-6 space-y-5">
+                        <!-- 選択アイテムサマリー -->
+                        <div class="bg-[#0E0F13] rounded-xl p-3 border border-[#2A2D35]">
+                            <div class="flex flex-wrap gap-4 text-sm">
+                                <div><span class="text-gray-400">選択商品：</span> <span id="summarySelected" class="text-[#1F7A4C] font-medium">なし</span></div>
+                                <div><span class="text-gray-400">モデル身長：</span> <span id="summaryHeight" class="text-[#F59E0B] font-medium">-</span></div>
+                                <div><span class="text-gray-400">着用サイズ：</span> <span id="summarySize" class="text-[#F59E0B] font-medium">-</span></div>
+                            </div>
+                        </div>
+
+                        <!-- メインプロンプトボックス -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-sm font-medium text-gray-300">✨ メインプロンプト</label>
+                                <span class="text-[10px] text-gray-500">85mm · f/1.8 · 8k</span>
+                            </div>
+                            <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[350px] text-gray-200 text-sm leading-relaxed overflow-y-auto font-mono">
+                                <span id="mainPromptText">画像を添付する商品を選択し、「プロンプト生成」をクリックしてください。</span>
+                            </div>
+                        </div>
+
+                        <!-- ネガティブプロンプトボックス -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="text-sm font-medium text-gray-300">⚠️ ネガティブプロンプト</label>
+                            </div>
+                            <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[120px] text-gray-300 text-xs leading-relaxed overflow-y-auto">
+                                <span id="negativePromptText">deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong shirt color, oversized collar, stretched sleeves, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts, duplicated clothing, malformed shoulders, unrealistic proportions, warped fabric, inaccurate stitching, fake patterns, glossy fabric, floating shoes, motion blur, low detail, compression artifacts</span>
+                            </div>
+                        </div>
+
+                        <div id="generationStatus" class="hidden flex items-center justify-center gap-3 bg-[#1E1F24] rounded-xl py-3">
+                            <div class="loading-spinner"></div>
+                            <span class="text-sm text-[#1F7A4C] font-medium">選択に基づいてプロンプトを生成中...</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <p class="text-xs text-gray-500 text-center mt-1">💡 選択した商品に基づき、AIが自動的にフレーミングと構図を調整</p>
-          </div>
         </div>
+    </main>
 
-        <!-- 右：出力パネル -->
-        <div class="bg-[#14151A] rounded-2xl border border-[#2A2D35] shadow-2xl flex flex-col">
-          <div class="p-5 md:p-6 border-b border-[#2A2D35] bg-[#111217] flex justify-between items-center flex-wrap gap-3">
-            <h2 class="text-lg font-semibold text-white flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-[#F59E0B]"></span>生成プロンプト</h2>
-            <div class="flex gap-2">
-              <button id="copyMainOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> メインをコピー</button>
-              <button id="copyNegOnly" class="copy-btn text-xs bg-[#1E1F24] hover:bg-[#2A2D35] text-gray-300 px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="far fa-copy"></i> ネガティブをコピー</button>
-              <button id="copyBothBtn" class="copy-btn text-xs bg-[#1F7A4C] hover:bg-[#166a41] text-white px-3 py-1.5 rounded-lg transition flex items-center gap-1"><i class="fas fa-copy"></i> 両方をコピー</button>
-            </div>
-          </div>
-          <div class="flex-1 p-5 md:p-6 space-y-5">
-            <!-- 選択アイテムサマリー -->
-            <div class="bg-[#0E0F13] rounded-xl p-3 border border-[#2A2D35]">
-              <div class="flex flex-wrap gap-4 text-sm">
-                <div><span class="text-gray-400">選択商品：</span> <span id="summarySelected" class="text-[#1F7A4C] font-medium">なし</span></div>
-              </div>
-            </div>
-            
-            <!-- メインプロンプトボックス -->
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-sm font-medium text-gray-300">✨ メインプロンプト</label>
-                <span class="text-[10px] text-gray-500">85mm · f/1.8 · 8k</span>
-              </div>
-              <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[350px] text-gray-200 text-sm leading-relaxed overflow-y-auto font-mono">
-                <span id="mainPromptText">画像を添付する商品を選択し、「プロンプト生成」をクリックしてください。</span>
-              </div>
-            </div>
-            
-            <!-- ネガティブプロンプトボックス -->
-            <div>
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-sm font-medium text-gray-300">⚠️ ネガティブプロンプト</label>
-              </div>
-              <div class="prompt-box w-full bg-[#0E0F13] border border-[#2A2D35] rounded-xl p-4 min-h-[100px] text-gray-300 text-xs leading-relaxed overflow-y-auto">
-                <span id="negativePromptText">deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong shirt color, oversized collar, stretched sleeves, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts, duplicated clothing, malformed shoulders, unrealistic proportions, warped fabric, inaccurate stitching, fake patterns, glossy fabric, floating shoes, motion blur, low detail, compression artifacts</span>
-              </div>
-            </div>
-            
-            <div id="generationStatus" class="hidden flex items-center justify-center gap-3 bg-[#1E1F24] rounded-xl py-3">
-              <div class="loading-spinner"></div>
-              <span class="text-sm text-[#1F7A4C] font-medium">選択に基づいてプロンプトを生成中...</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        (function() {
+            // ---- DOM refs ----
+            const hasTop = document.getElementById('hasTop');
+            const hasPants = document.getElementById('hasPants');
+            const hasShoes = document.getElementById('hasShoes');
+            const hasWristband = document.getElementById('hasWristband');
+            const hasDress = document.getElementById('hasDress');
 
-  <script>
-    (function() {
-      // DOM Elements - Checkboxes for product selection only
-      const hasTopCheckbox = document.getElementById('hasTop');
-      const hasPantsCheckbox = document.getElementById('hasPants');
-      const hasShoesCheckbox = document.getElementById('hasShoes');
-      const hasWristbandCheckbox = document.getElementById('hasWristband');
-        const hasDressCheckbox = document.getElementById('hasDress'); // NEW
+            const modelHeight = document.getElementById('modelHeight');
+            const wearingSize = document.getElementById('wearingSize');
+            const backgroundLocation = document.getElementById('backgroundLocation');
+            const modelType = document.getElementById('modelType');
 
-      const backgroundLocation = document.getElementById('backgroundLocation');
-      const modelType = document.getElementById('modelType');
-      
-      const generateBtn = document.getElementById('systemGenerateBtn');
-      const copyMainOnly = document.getElementById('copyMainOnly');
-      const copyNegOnly = document.getElementById('copyNegOnly');
-      const copyBothBtn = document.getElementById('copyBothBtn');
-      const mainPromptSpan = document.getElementById('mainPromptText');
-      const negativePromptSpan = document.getElementById('negativePromptText');
-      const generationStatus = document.getElementById('generationStatus');
-      const summarySelected = document.getElementById('summarySelected');
+            const generateBtn = document.getElementById('systemGenerateBtn');
+            const copyMainOnly = document.getElementById('copyMainOnly');
+            const copyNegOnly = document.getElementById('copyNegOnly');
+            const copyBothBtn = document.getElementById('copyBothBtn');
+            const mainPromptSpan = document.getElementById('mainPromptText');
+            const negativePromptSpan = document.getElementById('negativePromptText');
+            const generationStatus = document.getElementById('generationStatus');
+            const summarySelected = document.getElementById('summarySelected');
+            const summaryHeight = document.getElementById('summaryHeight');
+            const summarySize = document.getElementById('summarySize');
 
-      // Get selected product names for summary
-      function getSelectedProductNames() {
-        const products = [];
-        if (hasTopCheckbox.checked) products.push('👕 Tシャツ');
-        if (hasPantsCheckbox.checked) products.push('👖 パンツ');
-        if (hasShoesCheckbox.checked) products.push('👟 シューズ');
-        if (hasWristbandCheckbox.checked) products.push('🎾 リストバンド');
-            if (hasDressCheckbox.checked) products.push('👗 ドレス'); // NEW
+            // ---- helpers ----
+            function getSelectedProductNames() {
+                const products = [];
+                if (hasTop.checked) products.push('👕 Tシャツ');
+                if (hasPants.checked) products.push('👖 パンツ');
+                if (hasShoes.checked) products.push('👟 シューズ');
+                if (hasWristband.checked) products.push('🎾 リストバンド');
+                if (hasDress.checked) products.push('👗 ドレス');
+                return products;
+            }
 
-        return products;
-      }
+            function getSelectedItems() {
+                return {
+                    hasTop: hasTop.checked,
+                    hasPants: hasPants.checked,
+                    hasShoes: hasShoes.checked,
+                    hasWristband: hasWristband.checked,
+                    hasDress: hasDress.checked
+                };
+            }
 
-      function updateSummary() {
-        const selected = getSelectedProductNames();
-        if (selected.length === 0) {
-          summarySelected.innerText = 'なし';
-        } else {
-          summarySelected.innerText = selected.join(' · ');
-        }
-      }
+            function getHeight() {
+                return modelHeight.value;
+            }
 
-      function getSelectedItems() {
-        return {
-          hasTop: hasTopCheckbox.checked,
-          hasPants: hasPantsCheckbox.checked,
-          hasShoes: hasShoesCheckbox.checked,
-          hasWristband: hasWristbandCheckbox.checked,
-                hasDress: hasDressCheckbox.checked // NEW
+            function getSize() {
+                return wearingSize.value;
+            }
 
-        };
-      }
+            function getBackground() {
+                return backgroundLocation.value;
+            }
 
-      // Dynamic Layout & Pose based ONLY on which checkboxes are checked
-      function getDynamicLayoutAndPose() {
-        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
-        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband,hasDress].filter(Boolean).length;
-        
-        // Single product scenarios
-        if (hasTop && !hasPants && !hasShoes && !hasWristband && !hasDress)  {
-          return { 
-            layout: "Medium upper-body portrait shot", 
-            pose: "Looking confidently into the camera, showcasing the attached shirt's fabric drape, collar structure, and fit" 
-          };
-        }
-        if (!hasTop && hasPants && !hasShoes && !hasWristband  && !hasDress) {
-          return { 
-            layout: "Waist-down low-angle fashion shot", 
-            pose: "Standing with relaxed weight shift, highlighting the attached pants' pocket details, waistband, and leg fit" 
-          };
-        }
-        if (!hasTop && !hasPants && hasShoes && !hasWristband && !hasDress) {
-          return { 
-            layout: "Macro footwear close-up shot", 
-            pose: "Sleek foot placement on textured surface, showcasing the attached shoes' sole details, material texture, and silhouette" 
-          };
-        }
-        if (!hasTop && !hasPants && !hasShoes && hasWristband && !hasDress) {
-          return { 
-            layout: "Close-up hand and wrist detail shot", 
-            pose: "Natural relaxed wrist-forward pose, highlighting the attached wristband's texture, fit, and sporty aesthetic" 
-          };
-        }
-        
-         if (!hasTop && !hasPants && !hasShoes && !hasWristband && hasDress) {
-      return { 
-        layout: "Full-length elegant fashion portrait", 
-        pose: "Graceful standing pose, slightly turned, showcasing the attached dress's silhouette, fabric flow, and hemline details" 
-      };
-    }
-        // Multiple items selected - full body showcase
-        if (selectedCount >= 2) {
-          return { 
-            layout: "Full-body commercial lookbook shot", 
-            pose: "Dynamic walking forward pose or cool streetwear stance, capturing all attached products cohesively in one frame" 
-          };
-        }
-        
-        // Default fallback
-        return { layout: "Standard fashion portrait", pose: "Natural confident stance" };
-      }
+            function getModelType() {
+                return modelType.value;
+            }
 
-      // Build product description based on attached images
-      function buildProductDescription() {
-        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
-        const parts = [];
-        
-        if (hasTop) parts.push("the attached T-shirt image");
-        if (hasPants) parts.push("the attached pants image");
-        if (hasShoes) parts.push("the attached shoes image");
-        if (hasWristband) parts.push("the attached wristband image");
-            if (hasDress) parts.push("the attached dress image"); // NEW
+            // ---- summary update ----
+            function updateSummary() {
+                const products = getSelectedProductNames();
+                summarySelected.innerText = products.length ? products.join(' · ') : 'なし';
+                summaryHeight.innerText = getHeight();
+                summarySize.innerText = getSize();
+            }
 
-        if (parts.length === 0) return "no specific product images attached";
-        if (parts.length === 1) return parts[0];
-        if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
-        
-        const lastPart = parts.pop();
-        return `${parts.join(', ')}, and ${lastPart}`;
-      }
+            // ---- build product description based on checked items ----
+            function buildProductDescription(selected) {
+                const { hasTop: t, hasPants: p, hasShoes: s, hasWristband: w, hasDress: d } = selected;
+                const parts = [];
+                if (t) parts.push('the attached T-shirt image');
+                if (p) parts.push('the attached pants image');
+                if (s) parts.push('the attached shoes image');
+                if (w) parts.push('the attached wristband image');
+                if (d) parts.push('the attached dress image');
+                if (parts.length === 0) return 'no specific product images attached';
+                if (parts.length === 1) return parts[0];
+                if (parts.length === 2) return `${parts[0]} and ${parts[1]}`;
+                const last = parts.pop();
+                return `${parts.join(', ')}, and ${last}`;
+            }
 
-      // Generate the master prompt (clean, no detailed product specs)
-      function generateMasterPrompt() {
-        const { hasTop, hasPants, hasShoes, hasWristband ,hasDress} = getSelectedItems();
-        const selectedCount = [hasTop, hasPants, hasShoes, hasWristband,hasDress].filter(Boolean).length;
-        const { layout, pose } = getDynamicLayoutAndPose();
-        const productDesc = buildProductDescription();
-        const bgDesc = backgroundLocation.value;
-        const modelDesc = modelType.value;
-        
-        // Photography quality terms
-        const photographyTerms = "Shot on 85mm lens, f/1.8 aperture, shallow depth of field. Sharp focus on product textures and details. Professional studio lighting setup, highly detailed rendering, realistic fabric drape, commercial fashion lookbook quality, photorealistic, 8k resolution, rich color grading.";
-        
-let prompt = `Ultra realistic ecommerce fashion photography of a fully AI-generated ${modelDesc} wearing ${productDesc}. Square format, 1:1 aspect ratio, 600x600 pixels.`;        
-        // Add composition guidance based on selection
-        prompt += `${layout}. Pose: ${pose}. `;
-        
-        // Background and atmosphere
-        prompt += `Model standing in a ${bgDesc} with soft neutral background, subtle luxury fashion editorial atmosphere, natural confident pose, realistic anatomy, realistic skin texture, natural arms and hands visibility. `;
-        
-        // Add specific guidance for each product type
-        if (hasTop) {
-          prompt += `The attached shirt must be rendered with perfect accuracy — preserving original color, fabric texture, stitching details, collar structure, sleeve length, and any logo placement exactly as in the reference image. `;
-        }
-        if (hasPants) {
-          prompt += `The attached pants must maintain original waistband style, pocket placement, leg silhouette, and fabric drape exactly as shown in reference. `;
-        }
-        if (hasShoes) {
-          prompt += `The attached shoes must retain original sole shape, material finish, lacing system, and overall silhouette precisely. `;
-        }
-        if (hasWristband) {
-          prompt += `The attached wristband must be accurately placed on the wrist with correct thickness, color, and fabric texture matching reference. `;
-        }
-         if (hasDress) { // NEW
-      prompt += `The attached dress must be accurately rendered with original neckline, sleeve style, waistline, fabric pattern, hemline, and overall silhouette exactly matching the reference image. `;
-    }
-        
-        // Cinematic and technical finishing
-        prompt += `Cinematic studio lighting, soft shadows, premium fashion campaign look, ultra detailed rendering, realistic folds and tension, clean styling, modern aesthetic, ${photographyTerms} centered composition, ultra sharp focus on products, realistic color accuracy, professional ecommerce catalog quality, natural body proportions.`;
-        
-        // Add note for multiple products
-        if (selectedCount >= 2) {
-          prompt += ` All attached products must work together harmoniously in a single cohesive outfit shot.`;
-        } else if (selectedCount === 0) {
-          prompt += ` The model wears a minimalist clean outfit as a neutral canvas.`;
-        }
-        
-        return prompt.trim();
-      }
+            // ---- product-specific accuracy guidance ----
+            function buildProductAccuracy(selected) {
+                const { hasTop: t, hasPants: p, hasShoes: s, hasWristband: w, hasDress: d } = selected;
+                let acc = '';
+                if (t) acc +=
+                    'The attached shirt must be rendered with perfect accuracy — preserving original color, fabric texture, stitching details, collar structure, sleeve length, and any logo placement exactly as in the reference image. ';
+                if (p) acc +=
+                    'The attached pants must maintain original waistband style, pocket placement, leg silhouette, and fabric drape exactly as shown in reference. ';
+                if (s) acc +=
+                    'The attached shoes must retain original sole shape, material finish, lacing system, and overall silhouette precisely. ';
+                if (w) acc +=
+                    'The attached wristband must be accurately placed on the wrist with correct thickness, color, and fabric texture matching reference. ';
+                if (d) acc +=
+                    'The attached dress must be accurately rendered with original neckline, sleeve style, waistline, fabric pattern, hemline, and overall silhouette exactly matching the reference image. ';
+                return acc;
+            }
 
-      let isProcessing = false;
+            // ---- determine pronoun based on model type ----
+            function getPronoun(modelTypeValue) {
+                const lower = modelTypeValue.toLowerCase();
+                if (lower.includes('female')) return 'her';
+                if (lower.includes('male')) return 'his';
+                return 'their'; // neutral for custom face or other
+            }
 
-      async function runGeneration() {
-        if (isProcessing) return;
-        
-        isProcessing = true;
-        generationStatus.classList.remove('hidden');
-        generateBtn.disabled = true;
-        
-        // Small delay for smooth UX
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
-        const prompt = generateMasterPrompt();
-        mainPromptSpan.innerText = prompt;
-        
-        generationStatus.classList.add('hidden');
-        generateBtn.disabled = false;
-        isProcessing = false;
-        updateSummary();
-      }
+            // ---- generate fit description with correct pronoun ----
+            function buildFitDescription(size, heightClean, pronoun) {
+                if (size === 'Sサイズ' || size === 'Mサイズ') {
+                    return `naturally wearing the main apparel product in a tight-fit, snug size ${size.replace('サイズ','').trim()} configuration. The fabric must appear visibly taut against ${pronoun} ${heightClean} cm athletic body frame, showcasing high fabric tension, compressed contours, and sharp performance-oriented structural wrinkles. The sleeves and hemline appear slightly shorter and closer to the body, emphasizing a precise performance-fit profile.`;
+                } else if (size === 'Lサイズ' || size === 'XLサイズ') {
+                    return `naturally wearing the main apparel product in an oversized, loose-fit, and distinctly baggy size ${size.replace('サイズ','').trim()} configuration. The fabric must appear highly voluminous, creating deep cascading drapery, soft fabric pools, and heavy relaxed folds as it hangs comfortably off ${pronoun} ${heightClean} cm body frame. The shoulder seams drop naturally, and the sleeves/hem display a distinct slouchy, elongated street-fashion silhouette.`;
+                } else {
+                    return `naturally wearing the main apparel product in a standard, proper-fit size ${size.replace('サイズ','').trim()} configuration matching ${pronoun} ${heightClean} cm body frame.`;
+                }
+            }
 
-      // Copy function with visual feedback
-      async function copyToClipboard(text, buttonElement, successMessage) {
-        try {
-          await navigator.clipboard.writeText(text);
-          const originalHtml = buttonElement.innerHTML;
-          buttonElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
-          setTimeout(() => { buttonElement.innerHTML = originalHtml; }, 1500);
-        } catch (err) {
-          alert('❌ Copy failed');
-        }
-      }
-      
-      // Copy Main Prompt Only
-      copyMainOnly.addEventListener('click', () => {
-        const txt = mainPromptSpan.innerText;
-        if (txt && !txt.includes('Select the products')) {
-          copyToClipboard(txt, copyMainOnly, 'Main prompt');
-        } else {
-          alert('Generate a prompt first.');
-        }
-      });
-      
-      // Copy Negative Prompt Only
-      copyNegOnly.addEventListener('click', () => {
-        const txt = negativePromptSpan.innerText;
-        copyToClipboard(txt, copyNegOnly, 'Negative prompt');
-      });
-      
-      // Copy Both Prompts (Main + Negative)
-      copyBothBtn.addEventListener('click', () => {
-        const mainTxt = mainPromptSpan.innerText;
-        if (mainTxt && !mainTxt.includes('Select the products')) {
-          const negativeTxt = negativePromptSpan.innerText;
-          const bothPrompts = `[MASTER PROMPT]\n${mainTxt}\n\n[NEGATIVE PROMPT]\n${negativeTxt}`;
-          copyToClipboard(bothPrompts, copyBothBtn, 'Both prompts');
-        } else {
-          alert('Generate a prompt first.');
-        }
-      });
-      
-      generateBtn.addEventListener('click', runGeneration);
-      
-      // Auto-update summary on checkbox change
-      const allCheckboxes = [hasTopCheckbox, hasPantsCheckbox, hasShoesCheckbox, hasWristbandCheckbox];
-      allCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', () => {
-          updateSummary();
-        });
-      });
-      
-      [backgroundLocation, modelType].forEach(select => {
-        select.addEventListener('change', () => {
-          updateSummary();
-        });
-      });
-      
-      // Initial load
-      setTimeout(() => {
-        updateSummary();
-        runGeneration();
-      }, 200);
-    })();
-  </script>
-    <script src="script.js"></script>
+            // ---- generate master prompt (fixed single model on left) ----
+            function generateMasterPrompt() {
+                const selected = getSelectedItems();
+                const height = getHeight(); // e.g. "170 cm"
+                const size = getSize(); // e.g. "Lサイズ"
+                const bg = getBackground();
+                const modelTypeValue = getModelType();
+                const productDesc = buildProductDescription(selected);
+                const accuracy = buildProductAccuracy(selected);
 
+                const photographyTerms =
+                    'Shot on 85mm lens, f/1.8 aperture, shallow depth of field. Sharp focus on product textures and details. Professional studio lighting setup, highly detailed rendering, realistic fabric drape, commercial fashion lookbook quality, photorealistic, 8k resolution, rich color grading.';
+
+                const heightClean = height.replace(' cm', '').trim(); // "170"
+                const pronoun = getPronoun(modelTypeValue);
+                const fitDescription = buildFitDescription(size, heightClean, pronoun);
+
+                // Determine if custom face option is selected
+                const isCustomFace = modelTypeValue.includes("Use the attached reference image");
+
+                let prompt = '';
+
+                if (isCustomFace) {
+                    // For custom face, we include the full instruction as part of the subject description
+                    prompt = `Ultra realistic ecommerce fashion photography of the main subject wearing ${productDesc}. ${modelTypeValue} `;
+                } else {
+                    prompt = `Ultra realistic ecommerce fashion photography of a ${modelTypeValue} wearing ${productDesc}. `;
+                }
+
+                // Square format
+                prompt += `Square format, 1:1 aspect ratio, 600x600 pixels. `;
+
+                // Focus Subject segment
+                if (isCustomFace) {
+                    prompt +=
+                        `Focus Subject: On the left side of the frame, there is the main subject who is exactly ${heightClean} cm tall, ${fitDescription} The model strictly maintains the anchored posture and framing layout requested by the structural template framework. `;
+                } else {
+                    prompt +=
+                        `Focus Subject: On the left side of the frame, there is a ${modelTypeValue} who is exactly ${heightClean} cm tall, ${fitDescription} The model strictly maintains the anchored posture and framing layout requested by the structural template framework. `;
+                }
+
+                // Background
+                prompt += `The model is positioned in a ${bg} environment. `;
+
+                // Accuracy
+                prompt += accuracy;
+
+                // Photography & quality terms
+                prompt +=
+                    `Cinematic studio lighting, soft shadows, premium fashion campaign look, ultra detailed rendering, realistic folds and tension, clean styling, modern aesthetic, ${photographyTerms} centered composition but with model on left, ultra sharp focus on products, realistic color accuracy, professional ecommerce catalog quality, natural body proportions.`;
+
+                // Multi-product harmony or fallback
+                const count = Object.values(selected).filter(Boolean).length;
+                if (count >= 2) {
+                    prompt += ` All attached products must work together harmoniously in a single cohesive outfit shot.`;
+                } else if (count === 0) {
+                    prompt += ` The model wears a minimalist clean outfit as a neutral canvas.`;
+                }
+
+                return prompt.trim();
+            }
+
+            // ---- negative prompt with enhanced guardrails ----
+            function getNegativePrompt() {
+                const base =
+                    'deformed anatomy, distorted body, bad hands, extra fingers, extra limbs, duplicate body parts, warped torso, floating clothing, unrealistic cloth folds, incorrect logo placement, altered logo, fake branding, blurry shirt texture, low resolution fabric, wrong shirt color, oversized collar, stretched sleeves, unrealistic wrinkles, poorly fitted clothing, cropped body, missing arms, bad posture, distorted face, low quality skin, plastic skin, uncanny face, cartoon style, anime style, CGI look, overexposed lighting, underexposed shadows, blurry image, noisy background, watermark, text artifacts, duplicated clothing, malformed shoulders, unrealistic proportions, warped fabric, inaccurate stitching, fake patterns, glossy fabric, floating shoes, motion blur, low detail, compression artifacts';
+
+                const enhanced =
+                    'wrong sizing proportions, warped model anatomy, distorted garment fit, incorrect scale, mismatched body-to-garment ratio, unnatural fabric tension, size grading errors, anatomical disproportion, fit anomalies, margin errors, structural misalignment, garment floating off body, incorrect silhouette, twisted seams, puckered fabric, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged outlines, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, pixelated edges, out of focus layers, muddy textures';
+
+                return base + ', ' + enhanced;
+            }
+
+            // ---- copy helper ----
+            async function copyToClipboard(text, buttonElement) {
+                try {
+                    await navigator.clipboard.writeText(text);
+                    const orig = buttonElement.innerHTML;
+                    buttonElement.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    setTimeout(() => { buttonElement.innerHTML = orig; }, 1500);
+                } catch (_) {
+                    alert('❌ コピーに失敗しました');
+                }
+            }
+
+            // ---- generation ----
+            let isProcessing = false;
+
+            async function runGeneration() {
+                if (isProcessing) return;
+                isProcessing = true;
+                generationStatus.classList.remove('hidden');
+                generateBtn.disabled = true;
+
+                await new Promise(r => setTimeout(r, 120));
+
+                const main = generateMasterPrompt();
+                const neg = getNegativePrompt();
+                mainPromptSpan.innerText = main;
+                negativePromptSpan.innerText = neg;
+
+                generationStatus.classList.add('hidden');
+                generateBtn.disabled = false;
+                isProcessing = false;
+                updateSummary();
+            }
+
+            // ---- event binding ----
+            generateBtn.addEventListener('click', runGeneration);
+
+            copyMainOnly.addEventListener('click', () => {
+                const txt = mainPromptSpan.innerText;
+                if (txt && !txt.includes('画像を添付する商品を選択')) {
+                    copyToClipboard(txt, copyMainOnly);
+                } else {
+                    alert('先にプロンプトを生成してください。');
+                }
+            });
+
+            copyNegOnly.addEventListener('click', () => {
+                const txt = negativePromptSpan.innerText;
+                copyToClipboard(txt, copyNegOnly);
+            });
+
+            copyBothBtn.addEventListener('click', () => {
+                const main = mainPromptSpan.innerText;
+                if (main && !main.includes('画像を添付する商品を選択')) {
+                    const neg = negativePromptSpan.innerText;
+                    copyToClipboard(`[MASTER PROMPT]\n${main}\n\n[NEGATIVE PROMPT]\n${neg}`, copyBothBtn);
+                } else {
+                    alert('先にプロンプトを生成してください。');
+                }
+            });
+
+            // ---- auto-update summary on any change ----
+            const allCheckboxes = [hasTop, hasPants, hasShoes, hasWristband, hasDress];
+            allCheckboxes.forEach(cb => cb.addEventListener('change', updateSummary));
+            [modelHeight, wearingSize, backgroundLocation, modelType].forEach(el =>
+                el.addEventListener('change', updateSummary)
+            );
+
+            // ---- initial load ----
+            setTimeout(() => {
+                updateSummary();
+                runGeneration();
+            }, 300);
+        })();
+    </script>
+    <script src="script.js">
+    </script>
 </body>
 </html>
