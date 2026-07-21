@@ -15,7 +15,7 @@ const menuHtml = `
         ">
            <a href="Wristband.html" class="menu-link">💪 Wristband</a>
 <a href="BaseballBatAIPrompt.html" class="menu-link">⚾ Baseball Bat AI Prompt</a>
-<a href="Virtual_Try_On_AI.html" class="menu-link">🎨 Virtual Try On AI</a>
+<a href="Virtual_Try_On_AI.html" class="menu-link">🧍‍♂️ Virtual Try On AI</a>
 <a href="First_Image_Generator.html" class="menu-link">🖼️ First Image Generator</a>
 <a href="Tennis_Racket.html" class="menu-link">🎾 Tennis Racket</a>
 
