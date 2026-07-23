@@ -1,434 +1,593 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>野球バット バナーレイアウトデザイナー | フレーム1 / フレーム2</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            'sports-red': '#DC2626',
-            'sports-dark': '#1F2937',
-            'border-light': '#E5E7EB',
-          },
-          fontFamily: {
-            'sans': ['Inter', 'system-ui', 'sans-serif'],
-          },
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>野球バット バナーレイアウトデザイナー | フレーム1 / フレーム2</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sports-red': '#DC2626',
+                        'sports-dark': '#1F2937',
+                        'border-light': '#E5E7EB',
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
         }
-      }
-    }
-  </script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
-  <style>
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #E5E7EB; border-radius: 10px; }
-    ::-webkit-scrollbar-thumb { background: #DC2626; border-radius: 10px; }
-    .spec-row { animation: fadeIn 0.2s ease; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
-  </style>
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #E5E7EB; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #DC2626; border-radius: 10px; }
+        .spec-row { animation: fadeIn 0.2s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .logo-text-input { transition: all 0.25s ease; }
+        .logo-text-input.hidden { opacity: 0; max-height: 0; overflow: hidden; padding: 0; margin: 0; pointer-events: none; }
+        .logo-text-input.visible { opacity: 1; max-height: 80px; padding-top: 0.5rem; pointer-events: auto; }
+        .badge-preview { display: inline-block; background: #000; color: #fff; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; letter-spacing: 0.02em; }
+        .logo-sample-box { border: 2px dashed #ccc; border-radius: 8px; min-height: 56px; display: flex; align-items: center; justify-content: center; background: #fafafa; font-size: 0.85rem; color: #999; transition: all 0.2s; }
+        .logo-sample-box.has-text { border-color: #000; background: #fff; color: #000; font-weight: 700; font-size: 1.1rem; }
+        .color-chip { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ddd; margin-right: 4px; vertical-align: middle; }
+        .bat-count-badge { background: #DC2626; color: #fff; font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.6rem; border-radius: 9999px; margin-left: 0.4rem; }
+    </style>
 </head>
 <body class="bg-gray-50 font-sans antialiased">
 
-  <div class="max-w-7xl mx-auto px-4 py-6 md:py-8">
-    
-    <!-- ヘッダー -->
-    <div class="mb-8 text-center md:text-left">
-      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">⚾ 野球バット <span class="text-sports-red">バナーレイアウトデザイナー</span></h1>
-      <p class="text-gray-500 mt-2 text-sm">フレーム選択、カラーバリエーション、仕様、バランスに基づく自動レイアウトルール</p>
+    <div class="max-w-7xl mx-auto px-4 py-6 md:py-8">
+
+        <!-- ヘッダー -->
+        <div class="mb-8 text-center md:text-left">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">⚾ 野球バット <span class="text-sports-red">バナーレイアウトデザイナー</span></h1>
+            <p class="text-gray-500 mt-2 text-sm">フレーム選択、カラーバリエーション、仕様、バランス、ロゴ設定に基づく自動レイアウトルール</p>
+        </div>
+
+        <!-- メイン2カラムグリッド -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- 左カラム：設定パネル -->
+            <div class="space-y-6">
+
+                <!-- 基本メタデータ -->
+                <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
+                    <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
+                        <h2 class="font-semibold text-gray-800 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-sports-red rounded-full"></span>商品メタデータ</h2>
+                    </div>
+                    <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ</label>
+                            <select id="category" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-sports-red focus:border-sports-red">
+                                <option value="軟式野球">軟式野球</option>
+                                <option value="硬式野球">硬式野球</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">対象</label>
+                            <select id="target" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                <option value="Standard">一般</option>
+                                <option value="Junior">ジュニア</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">フレーム選択</label>
+                            <select id="frameSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                <option value="Frame 1">フレーム1（傾斜メイン＋カラータイル＋バットフッター）</option>
+                                <option value="Frame 2">フレーム2（3分割＋カラーレーベル＋仕様表示）</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">バットバランス</label>
+                            <select id="balanceType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                <option value="None">指定なし</option>
+                                <option value="Top">トップバランス</option>
+                                <option value="Top Middle">トップミドル</option>
+                                <option value="Middle">ミドルバランス</option>
+                                <option value="Counter">カウンターバランス</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- カラーバリエーションセクション -->
+                <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
+                    <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
+                        <h2 class="font-semibold text-gray-800">カラーバリエーション</h2>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">カラーバリエーション数</label>
+                            <select id="totalColors" class="w-full border border-gray-300 rounded-lg px-3 py-2">
+                                <option value="1">1色</option>
+                                <option value="2">2色</option>
+                                <option value="3" selected>3色</option>
+                                <option value="4">4色</option>
+                                <option value="5">5色</option>
+                                <option value="6">6色</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">メインカラー名（ヒーローバット）</label>
+                            <input type="text" id="activeColor" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例：ブラック、レッド、シルバー" value="Black" />
+                        </div>
+                        <div id="additionalColorsContainer" class="space-y-2">
+                            <!-- 追加カラー入力が動的に表示されます -->
+                        </div>
+                        <!-- バットカウント表示 -->
+                        <div class="mt-2 text-xs text-gray-500 flex items-center gap-2 border-t border-gray-100 pt-3">
+                            <span class="font-medium text-gray-700">構成:</span>
+                            <span id="batCountDisplay" class="bg-gray-100 px-2 py-0.5 rounded-full">1 ヒーロー + 0 セカンダリー = 1 バット</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 仕様セクション（長さ／重量） -->
+                <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
+                    <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center">
+                        <h2 class="font-semibold text-gray-800">仕様（cm / g）</h2>
+                        <button id="addSpecBtn" class="text-xs bg-sports-red text-white px-3 py-1 rounded-lg hover:bg-red-700 transition">+ 仕様追加</button>
+                    </div>
+                    <div class="p-5 space-y-3" id="specsContainer">
+                        <div class="spec-row flex gap-3 items-center">
+                            <input type="text" placeholder="長さ (cm) 例：83" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                            <input type="text" placeholder="重量 (g) 例：720" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                            <button class="remove-spec text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+                        </div>
+                    </div>
+                    <div class="px-5 pb-4 text-xs text-gray-500">* 複数仕様がある場合、仕様モジュール上部に「2 SPEC」「3 SPEC」バッジが表示されます（フレーム2のみ）</div>
+                </div>
+
+                <!-- ロゴ設定セクション -->
+                <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
+                    <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
+                        <h2 class="font-semibold text-gray-800 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-sports-red rounded-full"></span>ロゴ設定 <span class="text-xs font-normal text-gray-400">（固定：右下隅）</span></h2>
+                    </div>
+                    <div class="p-5 space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ロゴタイプ</label>
+                            <select id="logoSel" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-sports-red focus:border-sports-red">
+                                <option value="photo">フレームロゴ写真（アップロード画像）</option>
+                                <option value="text">手動ロゴテキスト</option>
+                            </select>
+                        </div>
+                        <div id="logoTextWrapper" class="logo-text-input hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">ロゴテキスト</label>
+                            <input type="text" id="logoTextInput" class="w-full border border-gray-300 rounded-lg px-3 py-2 font-mono" placeholder="例：ZETT / CUSTOM / 野球" value="ZETT" />
+                            <p class="text-xs text-gray-400 mt-1">入力されたテキストは <strong class="text-black">#000000（ソリッドブラック）</strong> でレンダリングされます</p>
+                        </div>
+                        <div class="mt-1">
+                            <div id="logoPreview" class="logo-sample-box flex items-center justify-between px-4">
+                                <span class="text-xs text-gray-400">⬅ キャンバス左下</span>
+                                <span id="logoPreviewBadge" class="badge-preview">ZETT</span>
+                                <span class="text-xs text-gray-400">右下 ➡</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 右カラム：生成レイアウト出力 -->
+            <div class="bg-white rounded-xl shadow-sm border border-border-light sticky top-6 h-fit">
+                <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center flex-wrap gap-2">
+                    <h2 class="font-semibold text-gray-800">📐 レイアウト仕様（デザインプロンプト）</h2>
+                    <div class="flex gap-2">
+                        <button id="generateBtn" class="bg-sports-red text-white px-4 py-1.5 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-1"><i class="fas fa-magic"></i> 生成</button>
+                        <button id="copyBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="far fa-copy"></i> コピー</button>
+                        <button id="downloadBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="fas fa-download"></i> TXT</button>
+                    </div>
+                </div>
+                <div class="p-5">
+                    <textarea id="layoutOutput" readonly class="w-full h-[600px] border border-gray-200 rounded-lg p-4 font-mono text-sm bg-gray-50 focus:ring-1 focus:ring-sports-red resize-none overflow-auto">オプションを設定し「生成」をクリックして、選択したフレームルールに基づいたバナーレイアウトデザインを作成します。</textarea>
+                </div>
+                <div class="px-5 pb-4 text-xs text-gray-400 flex items-center gap-2 flex-wrap">
+                    <i class="fas fa-info-circle"></i>
+                    <span>厳格なルール：フレーム1（回転56°/62°、カラーグリッド、フルバットフッター）｜フレーム2（3分割、円形仕様ラベル、カラーレーベル）｜ロゴは常に右下隅に固定</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <!-- メイン2カラムグリッド -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      
-      <!-- 左カラム：設定パネル -->
-      <div class="space-y-6">
-        
-        <!-- 基本メタデータ -->
-        <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
-          <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
-            <h2 class="font-semibold text-gray-800 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-sports-red rounded-full"></span>商品メタデータ</h2>
-          </div>
-          <div class="p-5 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">カテゴリ</label>
-              <select id="category" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-sports-red focus:border-sports-red">
-                <option value="軟式野球">軟式野球</option>
-                <option value="硬式野球">硬式野球</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">対象</label>
-              <select id="target" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="Standard">一般</option>
-                <option value="Junior">ジュニア</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">フレーム選択</label>
-              <select id="frameSelect" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="Frame 1">フレーム1（傾斜メイン＋カラータイル＋バットフッター）</option>
-                <option value="Frame 2">フレーム2（3分割＋カラーレーベル＋仕様表示）</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">バットバランス</label>
-              <select id="balanceType" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="None">指定なし</option>
-                <option value="Top">トップバランス</option>
-                <option value="Top Middle">トップミドル</option>
-                <option value="Middle">ミドルバランス</option>
-                <option value="Counter">カウンターバランス</option>
-              </select>
-            </div>
-          </div>
-        </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
 
-        <!-- カラーバリエーションセクション -->
-        <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
-          <div class="px-5 py-4 bg-gray-50 border-b border-border-light">
-            <h2 class="font-semibold text-gray-800">カラーバリエーション</h2>
-          </div>
-          <div class="p-5 space-y-4">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">カラーバリエーション数</label>
-              <select id="totalColors" class="w-full border border-gray-300 rounded-lg px-3 py-2">
-                <option value="1">1色</option>
-                <option value="2">2色</option>
-                <option value="3">3色</option>
-                <option value="4">4色</option>
-                <option value="5">5色</option>
-                <option value="6">6色</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">メインカラー名</label>
-              <input type="text" id="activeColor" class="w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="例：ブラック、レッド、シルバー" value="Black">
-            </div>
-            <div id="additionalColorsContainer" class="space-y-2">
-              <!-- 追加カラー入力が動的に表示されます -->
-            </div>
-          </div>
-        </div>
+    <script>
+        // ============================================================
+        //  DOM 参照
+        // ============================================================
+        const categorySelect = document.getElementById('category');
+        const targetSelect = document.getElementById('target');
+        const frameSelect = document.getElementById('frameSelect');
+        const balanceSelect = document.getElementById('balanceType');
+        const totalColorsSelect = document.getElementById('totalColors');
+        const activeColorInput = document.getElementById('activeColor');
+        const additionalColorsContainer = document.getElementById('additionalColorsContainer');
+        const specsContainer = document.getElementById('specsContainer');
+        const addSpecBtn = document.getElementById('addSpecBtn');
+        const generateBtn = document.getElementById('generateBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const layoutOutput = document.getElementById('layoutOutput');
+        const batCountDisplay = document.getElementById('batCountDisplay');
 
-        <!-- 仕様セクション（長さ／重量） -->
-        <div class="bg-white rounded-xl shadow-sm border border-border-light overflow-hidden">
-          <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center">
-            <h2 class="font-semibold text-gray-800">仕様（cm / g）</h2>
-            <button id="addSpecBtn" class="text-xs bg-sports-red text-white px-3 py-1 rounded-lg hover:bg-red-700 transition">+ 仕様追加</button>
-          </div>
-          <div class="p-5 space-y-3" id="specsContainer">
-            <div class="spec-row flex gap-3 items-center">
-              <input type="text" placeholder="長さ (cm) 例：83" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-              <input type="text" placeholder="重量 (g) 例：720" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-              <button class="remove-spec text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
-            </div>
-          </div>
-          <div class="px-5 pb-4 text-xs text-gray-500">* 複数仕様がある場合、仕様モジュール上部に「2 SPEC」「3 SPEC」バッジが表示されます（フレーム2のみ）</div>
-        </div>
-      </div>
+        const logoSel = document.getElementById('logoSel');
+        const logoTextWrapper = document.getElementById('logoTextWrapper');
+        const logoTextInput = document.getElementById('logoTextInput');
+        const logoPreviewBadge = document.getElementById('logoPreviewBadge');
+        const logoPreview = document.getElementById('logoPreview');
 
-      <!-- 右カラム：生成レイアウト出力 -->
-      <div class="bg-white rounded-xl shadow-sm border border-border-light sticky top-6 h-fit">
-        <div class="px-5 py-4 bg-gray-50 border-b border-border-light flex justify-between items-center flex-wrap gap-2">
-          <h2 class="font-semibold text-gray-800">📐 レイアウト仕様（デザインプロンプト）</h2>
-          <div class="flex gap-2">
-            <button id="generateBtn" class="bg-sports-red text-white px-4 py-1.5 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-1"><i class="fas fa-magic"></i> 生成</button>
-            <button id="copyBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="far fa-copy"></i> コピー</button>
-            <button id="downloadBtn" class="border border-gray-300 text-gray-700 px-4 py-1.5 rounded-lg text-sm hover:bg-gray-50 transition"><i class="fas fa-download"></i> TXT</button>
-          </div>
-        </div>
-        <div class="p-5">
-          <textarea id="layoutOutput" readonly class="w-full h-[550px] border border-gray-200 rounded-lg p-4 font-mono text-sm bg-gray-50 focus:ring-1 focus:ring-sports-red resize-none overflow-auto">オプションを設定し「生成」をクリックして、選択したフレームルールに基づいたバナーレイアウトデザインを作成します。</textarea>
-        </div>
-        <div class="px-5 pb-4 text-xs text-gray-400 flex items-center gap-2"><i class="fas fa-info-circle"></i> 厳格なルールに従います：フレーム1（回転56°/62°、カラーグリッド、フルバットフッター）｜フレーム2（3分割、円形仕様ラベル、カラーレーベルロジック）</div>
-      </div>
-    </div>
-  </div>
+        // ============================================================
+        //  追加カラー入力の動的更新
+        // ============================================================
+        function updateAdditionalColors() {
+            const total = parseInt(totalColorsSelect.value, 10);
+            const additionalCount = Math.max(0, total - 1);
+            additionalColorsContainer.innerHTML = '';
+            for (let i = 2; i <= total; i++) {
+                const div = document.createElement('div');
+                div.className = 'additional-color-row';
+                div.innerHTML = `
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Color ${i} Name (セカンダリー)</label>
+                    <input type="text" class="additional-color w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="e.g., Silver, Red, Blue" />
+                `;
+                additionalColorsContainer.appendChild(div);
+            }
+            updateBatCountDisplay();
+        }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        function getAllColors() {
+            const colors = [];
+            const main = activeColorInput.value.trim();
+            if (main) colors.push(main);
+            document.querySelectorAll('.additional-color').forEach(inp => {
+                if (inp.value.trim()) colors.push(inp.value.trim());
+            });
+            return colors;
+        }
 
-  <script>
-    // DOM Elements
-    const categorySelect = document.getElementById('category');
-    const targetSelect = document.getElementById('target');
-    const frameSelect = document.getElementById('frameSelect');
-    const balanceSelect = document.getElementById('balanceType');
-    const totalColorsSelect = document.getElementById('totalColors');
-    const activeColorInput = document.getElementById('activeColor');
-    const additionalColorsContainer = document.getElementById('additionalColorsContainer');
-    const specsContainer = document.getElementById('specsContainer');
-    const addSpecBtn = document.getElementById('addSpecBtn');
-    const generateBtn = document.getElementById('generateBtn');
-    const copyBtn = document.getElementById('copyBtn');
-    const downloadBtn = document.getElementById('downloadBtn');
-    const layoutOutput = document.getElementById('layoutOutput');
+        function updateBatCountDisplay() {
+            const colors = getAllColors();
+            const total = colors.length;
+            const hero = total > 0 ? 1 : 0;
+            const secondary = Math.max(0, total - 1);
+            const totalBats = hero + secondary;
+            batCountDisplay.textContent = `${hero} ヒーロー + ${secondary} セカンダリー = ${totalBats} バット`;
+            if (totalBats > 1) {
+                batCountDisplay.className = 'bg-gray-100 px-2 py-0.5 rounded-full font-medium text-gray-800';
+            } else {
+                batCountDisplay.className = 'bg-gray-100 px-2 py-0.5 rounded-full text-gray-500';
+            }
+        }
 
-    // Helper: Dynamic additional color inputs
-    function updateAdditionalColors() {
-      const total = parseInt(totalColorsSelect.value, 10);
-      const additionalCount = Math.max(0, total - 1);
-      additionalColorsContainer.innerHTML = '';
-      for (let i = 2; i <= total; i++) {
-        const div = document.createElement('div');
-        div.className = 'additional-color-row';
-        div.innerHTML = `
-          <label class="block text-sm font-medium text-gray-700 mb-1">Color ${i} Name</label>
-          <input type="text" class="additional-color w-full border border-gray-300 rounded-lg px-3 py-2" placeholder="e.g., Silver, Red, Blue">
-        `;
-        additionalColorsContainer.appendChild(div);
-      }
-    }
+        // ============================================================
+        //  仕様行の操作
+        // ============================================================
+        function updateSpecsRemoveButtons() {
+            document.querySelectorAll('.remove-spec').forEach(btn => {
+                btn.removeEventListener('click', handleRemoveSpec);
+                btn.addEventListener('click', handleRemoveSpec);
+            });
+        }
 
-    function getAllColors() {
-      const colors = [];
-      const main = activeColorInput.value.trim();
-      if (main) colors.push(main);
-      document.querySelectorAll('.additional-color').forEach(inp => {
-        if (inp.value.trim()) colors.push(inp.value.trim());
-      });
-      return colors;
-    }
+        function handleRemoveSpec(e) {
+            const row = e.currentTarget.closest('.spec-row');
+            if (document.querySelectorAll('.spec-row').length > 1) row.remove();
+            else alert('At least one specification is required');
+        }
 
-    // Specifications handling
-    function updateSpecsRemoveButtons() {
-      document.querySelectorAll('.remove-spec').forEach(btn => {
-        btn.removeEventListener('click', handleRemoveSpec);
-        btn.addEventListener('click', handleRemoveSpec);
-      });
-    }
+        function addSpecRow() {
+            const newRow = document.createElement('div');
+            newRow.className = 'spec-row flex gap-3 items-center';
+            newRow.innerHTML = `
+                <input type="text" placeholder="Length (cm) e.g., 84" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                <input type="text" placeholder="Weight (g) e.g., 730" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" />
+                <button class="remove-spec text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
+            `;
+            specsContainer.appendChild(newRow);
+            updateSpecsRemoveButtons();
+        }
 
-    function handleRemoveSpec(e) {
-      const row = e.currentTarget.closest('.spec-row');
-      if (document.querySelectorAll('.spec-row').length > 1) row.remove();
-      else alert('At least one specification is required');
-    }
+        function getSpecs() {
+            const specs = [];
+            document.querySelectorAll('.spec-row').forEach(row => {
+                let length = row.querySelector('.spec-length')?.value.trim() || '';
+                let weight = row.querySelector('.spec-weight')?.value.trim() || '';
+                length = length.replace(/[^0-9.]/g, '');
+                weight = weight.replace(/[^0-9.]/g, '');
+                if (length || weight) specs.push({ length, weight });
+            });
+            return specs;
+        }
 
-    function addSpecRow() {
-      const newRow = document.createElement('div');
-      newRow.className = 'spec-row flex gap-3 items-center';
-      newRow.innerHTML = `
-        <input type="text" placeholder="Length (cm) e.g., 84" class="spec-length flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-        <input type="text" placeholder="Weight (g) e.g., 730" class="spec-weight flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm">
-        <button class="remove-spec text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
-      `;
-      specsContainer.appendChild(newRow);
-      updateSpecsRemoveButtons();
-    }
+        // ============================================================
+        //  ロゴ UI の連動
+        // ============================================================
+        function updateLogoUI() {
+            const val = logoSel.value;
+            if (val === 'text') {
+                logoTextWrapper.classList.remove('hidden');
+                logoTextWrapper.classList.add('visible');
+            } else {
+                logoTextWrapper.classList.add('hidden');
+                logoTextWrapper.classList.remove('visible');
+            }
+            updateLogoPreview();
+        }
 
-    function getSpecs() {
-      const specs = [];
-      document.querySelectorAll('.spec-row').forEach(row => {
-        let length = row.querySelector('.spec-length')?.value.trim() || '';
-        let weight = row.querySelector('.spec-weight')?.value.trim() || '';
-        // Strip all non-numeric characters (keep decimal point)
-        length = length.replace(/[^0-9.]/g, '');
-        weight = weight.replace(/[^0-9.]/g, '');
-        if (length || weight) specs.push({ length, weight });
-      });
-      return specs;
-    }
+        function updateLogoPreview() {
+            const val = logoSel.value;
+            const text = logoTextInput.value.trim() || 'ZETT';
+            if (val === 'text') {
+                logoPreviewBadge.textContent = text || '(テキスト)';
+                logoPreviewBadge.style.background = '#000000';
+                logoPreviewBadge.style.color = '#ffffff';
+                logoPreview.classList.add('has-text');
+                logoPreview.style.borderColor = '#000';
+            } else {
+                logoPreviewBadge.textContent = '🖼️ LOGO';
+                logoPreviewBadge.style.background = '#DC2626';
+                logoPreviewBadge.style.color = '#ffffff';
+                logoPreview.classList.remove('has-text');
+                logoPreview.style.borderColor = '#ccc';
+            }
+        }
 
-    // ======================== LAYOUT GENERATION LOGIC ========================
-    function generateLayoutDesign() {
-      const category = categorySelect.value;
-      const target = targetSelect.value;
-      const frame = frameSelect.value;
-      const balance = balanceSelect.value;
-      const totalColors = parseInt(totalColorsSelect.value, 10);
-      const colors = getAllColors();
-      const activeColor = colors[0] || 'Main Color';
-      const otherColors = colors.slice(1);
-      const specs = getSpecs();
-      const specCount = specs.length;
-      const isJunior = target === 'Junior';
-      const hasBalance = balance !== 'None';
+        // ============================================================
+        //  プロンプト生成（コアロジック）
+   // ============================================================
+function generateLayoutDesign() {
+    const category = categorySelect.value;
+    const target = targetSelect.value;
+    const frame = frameSelect.value;
+    const balance = balanceSelect.value;
+    const totalColors = parseInt(totalColorsSelect.value, 10);
+    const colors = getAllColors();
+    const activeColor = colors[0] || 'Main Color';
+    const otherColors = colors.slice(1);
+    const specs = getSpecs();
+    const specCount = specs.length;
+    const isJunior = target === 'Junior';
+    const hasBalance = balance !== 'None';
 
-      // First spec for the black circle
-      const firstSpec = specs[0] || { length: '', weight: '' };
-      const specLengthDisplay = firstSpec.length ? `${firstSpec.length}cm` : '—';
-      const specWeightDisplay = firstSpec.weight ? `${firstSpec.weight}g` : '—';
+    // ロゴ設定
+    const logoMode = logoSel.value;
+    // FIXED: Default မှ ZETT ကို ဖယ်ထုတ်ထားသည်
+    const logoText = logoTextInput.value.trim() || '';
 
-      // Build a formatted list of all specs (for inclusion in prompt)
-      let specList = '';
-      if (specCount > 0) {
+    // 最初の仕様
+    const firstSpec = specs[0] || { length: '', weight: '' };
+    const specLengthDisplay = firstSpec.length ? `${firstSpec.length}cm` : '—';
+    const specWeightDisplay = firstSpec.weight ? `${firstSpec.weight}g` : '—';
+
+    let specList = '';
+    if (specCount > 0) {
         specList = specs.map((s, idx) => {
-          const len = s.length ? `${s.length}cm` : '—';
-          const wt = s.weight ? `${s.weight}g` : '—';
-          return `Spec ${idx+1}: ${len} / ${wt}`;
+            const len = s.length ? `${s.length}cm` : '—';
+            const wt = s.weight ? `${s.weight}g` : '—';
+            return `Spec ${idx+1}: ${len} / ${wt}`;
         }).join('; ');
-      }
+    }
 
-      // Balance Japanese mapping
-      let balanceJapanese = "ミドル\nバランス";
-      if (balance.includes("Top Middle")) balanceJapanese = "トップミドル\nバランス";
-      else if (balance.includes("Top")) balanceJapanese = "トップ\nバランス";
-      else if (balance.includes("Counter")) balanceJapanese = "カウンター\nバランス";
+    // バランス日本語
+    let balanceJapanese = "ミドル\nバランス";
+    if (balance.includes("Top Middle")) balanceJapanese = "トップミドル\nバランス";
+    else if (balance.includes("Top")) balanceJapanese = "トップ\nバランス";
+    else if (balance.includes("Counter")) balanceJapanese = "カウンター\nバランス";
 
-      let prompt = "";
-      const negativePrompt = "low quality, distorted layout, blurry textures, deformed shapes, incorrect proportions, messy composition, poor lighting, oversaturated colors, unrealistic materials, fake looking, cartoonish, anime style, CGI look, plastic appearance, low resolution, pixelated, blurry, no focus, harsh shadows, overexposed, underexposed, watermark, text artifacts, cropped edges, cut off product, missing parts, duplicate elements, floating objects, awkward positioning, uneven spacing, cluttered layout, unbalanced composition, distorted typography, wrong colors, inaccurate branding, fake logo, misaligned elements.";
+    // ---------- 共通ネガティブ ----------
+    // FIXED: ZETT နှင့် Red dynamic logos များကို Negative Prompt ထဲတွင် ပိတ်ပင်ထားသည်
+    const negativePrompt =
+        "low quality, distorted layout, blurry textures, deformed shapes, incorrect proportions, messy composition, poor lighting, oversaturated colors, unrealistic materials, fake looking, cartoonish, anime style, CGI look, plastic appearance, low resolution, pixelated, blurry, no focus, harsh shadows, overexposed, underexposed, watermark, text artifacts, duplicate elements, floating objects, awkward positioning, uneven spacing, cluttered layout, unbalanced composition, distorted typography, wrong colors, inaccurate branding, fake logo, misaligned elements, vertical bat in main view, strictly upright hero bat, ZETT logo, ZETT branding, red manufacturer logo, red graphics.";
 
-      if (frame === 'Frame 1') {
-        const rotationAngle = totalColors === 1 ? "56 degrees" : "62 degrees";
-        prompt += `Professional high-end e-commerce product catalog banner photography of a Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-prompt += `The layout features a multi-angle cohesive presentation on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no shadows, no gradient, and a minimalist corporate athletic aesthetic. `;        prompt += `On the top-left corner of the image, there is a sharp stacked header badge block. `;
+    // ---------- ロゴの指示（共通） ----------
+    let logoInstruction = '';
+    if (logoMode === 'photo') {
+        logoInstruction =
+            `At the absolute bottom-right corner of the canvas — flush with both the right edge and the bottom edge — display the manufacturer's brand logo image (provided/uploaded as "Frame Logo Photo"). The logo must be firmly anchored at the very bottom-right corner of the overall layout/frame, with no other design elements appearing below or overlapping it. Use clean integration without altering the bat's natural product body.`;
+    } else if (logoText !== '') {
+        const safeText = logoText.replace(/"/g, '\\"');
+        logoInstruction =
+            `At the absolute bottom-right corner of the canvas — flush with both the right edge and the bottom edge — render the custom text "${safeText}" as SOLID BLACK TEXT (#000000) over the designated logo area. The text must be firmly anchored at the very bottom-right corner of the overall layout/frame. Use a clean, bold, sans-serif typography with high contrast and sharp edges (#000000 pure black with no shadows, no gradients).`;
+    }
+
+    // ---------- フレーム別プロンプト ----------
+    let prompt = '';
+
+    if (frame === 'Frame 1') {
+        // ---- Base Banner & Header Block ----
+        prompt += `Professional high-end e-commerce product catalog banner photography of an authentic Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+        prompt += `The layout features a multi-angle cohesive presentation on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no shadows, no gradient, and a minimalist corporate athletic aesthetic. `;
+
+        prompt += `On the top-left corner of the image, place a sharp stacked header badge block with a clear 20px outer margin from the top and left edges of the canvas. `;
         prompt += `The upper header consists of a solid black background rectangular box (#2B2B2B) containing bold white Japanese text "${category}" centered in a heavy sans-serif Japanese font with slightly smaller point size for a refined catalog look. `;
+
         if (isJunior) {
-          prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
-          prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
+            prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
+            prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
         }
-        let balanceCropInstruction = "";
+
+        // ---- Balance Icon ----
         if (hasBalance) {
-          balanceCropInstruction = `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
-          if (balance === "Top") balanceCropInstruction += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Top Middle") balanceCropInstruction += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Middle") balanceCropInstruction += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Counter") balanceCropInstruction += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
-          balanceCropInstruction += `Ensure exactly ONE single balance badge is displayed in the final layout, absolutely no more, no less. `;
-          prompt += `Directly positioned underneath the stacked header boxes on the left side, place the single extracted balance element. ${balanceCropInstruction}`;
+            prompt += `Directly positioned underneath the stacked header boxes on the left side (also with 20px margin), place a single extracted balance element. From the attached reference image containing four horizontal balance icons, strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
+            if (balance === "Top") prompt += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
+            else if (balance === "Top Middle") prompt += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
+            else if (balance === "Middle") prompt += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
+            else if (balance === "Counter") prompt += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
+            prompt += `Ensure exactly ONE single balance badge is displayed in the final layout, absolutely no more, no less. `;
         }
-        prompt += `The main layout showcases a dramatic, heavily cropped and macro-enlarged view of ONLY the upper half, barrel, and head section of the bat, occupying approximately 50% of the upper frame canvas space. `;
-        prompt += `This prominent bat features the primary '${activeColor}' finish and is dynamically tilted at exactly ${rotationAngle} counter-clockwise, meaning the bat's body cuts diagonally across the frame starting from the bottom-left and pointing sharply up towards the top-right corner. `;
-        prompt += `The barrel section is enlarged significantly to capture rich product texture and brand engraving. `;
+
+        // ---- ★ Main Hero Diagonal Bat ----
+        prompt += `The upper and central parts of the canvas feature a dramatic, macro-zoomed close-up view of ONLY the upper barrel, head section, and model decals of the primary bat in '${activeColor}' finish. `;
+        prompt += `CROP & COMPOSITION RULE: The handle, grip tape, and handle knob of this hero bat are COMPLETELY CROP-OUT and pushed entirely outside the bottom-left canvas frame and are NOT visible. Only the thick barrel and transition area are shown, creating an aggressive, dynamic upward diagonal composition at 55 degrees from lower-left rising towards the top-right corner. `;
+        prompt += `This zoomed barrel showcases prominent, high-detail model branding graphics (e.g., SKYBEAT text), clear brand logo decals, glossy metallic finish, and authentic product specification stickers near the transition area, exactly matching a real commercial store item. `;
+        prompt += `Maintain consistent '${activeColor}' finish seamlessly across the visible barrel portion without discoloration. `;
+
+        // ---- ★ Secondary Bottom Horizontal Bats ----
+        const secondaryColors = otherColors;
+        const secondaryCount = secondaryColors.length;
+        const totalBats = 1 + secondaryCount;
+
         prompt += `Positioned strictly at the absolute bottom margin of the 600x600 canvas, acting as a structural base and visual anchor, is the full-size bat view area. `;
-        if (totalColors === 1) {
-          prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish, seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
+
+        if (secondaryCount === 0) {
+            prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish with authentic product details and grip tape, seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
         } else {
-          prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are multiple secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal. `;
-          prompt += `The first horizontal bat at the top of this footer stack displays the main active '${activeColor}' finish. `;
-          prompt += `Perfectly aligned and stacked directly underneath it, touching the absolute bottom edge, additional horizontal full-size bats showcase the alternative color finishes of ${otherColors.join(', ')} respectively, presenting the full product range in a clean catalog strip. `;
+            prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are ${secondaryCount} secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal. `;
+            prompt += `These horizontal full-size bats showcase ONLY the alternative color finishes of ${secondaryColors.join(', ')} respectively, presenting the full product range with realistic graphics and grip tape details. They sit below the diagonal zoomed bat, completely separated and tidy. `;
+            prompt += `STRICT CONSTRAINT: Total bat count across the canvas MUST BE EXACTLY ${totalBats} (1 Hero Diagonal Zoomed Barrel-Only Bat in '${activeColor}' + ${secondaryCount} Horizontal Secondary Bats in ${secondaryColors.join(', ')}). DO NOT duplicate the primary hero color '${activeColor}' in the bottom horizontal stack. `;
         }
-        // ----- LOGO PLACEMENT (AT ABSOLUTE BOTTOM EDGE) -----
-        prompt += `At the very bottom edge of the canvas, in the lower‑right corner, the red dynamic graphic logo of the manufacturer 'ZETT' is sharply displayed. No other design elements appear below or overlapping the logo. `;
-        prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures and technical labels.`;
+
+        // ---- Logo Placement ----
+        prompt += logoInstruction;
+
+        // ---- Final Render Quality ----
+        prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures, decals, and metallic surfaces. `;
         prompt += negativePrompt;
-      }
-      else if (frame === 'Frame 2') {
-        prompt += `Professional e-commerce product breakdown and specification banner photography of a Japanese baseball bat for ${category} strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-prompt += `The banner layout is split into a strict three-piece structured design on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no depth and no shadows, presenting multiple detailed views of the product simultaneously. `;        prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
+
+    } else { // Frame 2
+        prompt += `Professional e-commerce product breakdown and specification banner photography strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+        prompt += `The banner layout is split into a strict three-piece structured design on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no depth and no shadows, presenting multiple detailed views of the product simultaneously. `;
+        
+        // FIXED: Category Header Badge, Balance Display, and Manufacturer Logos are explicitly excluded for Frame 2
+        prompt += `EXCLUSION CONSTRAINT: DO NOT include any category header badges, DO NOT include balance type text/icons, and DO NOT include any manufacturer brand logos or text on this Frame 2 layout. Keep the layout solely focused on product shots and specification circles. `;
+
+        prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
+
         if (totalColors === 1) {
-          prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
+            prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
         } else {
-          prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
+            prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
         }
         prompt += `Image C displays a vertical close-up focus on the upper part, barrel, and head area covering exactly 50% to 55% of the bat's length. `;
 
-        // --- SPECIFICATION CIRCLE BADGES (TOP RIGHT) ---
+        // ★ Alignment Fix
+        prompt += `CRITICAL FIX: The secondary bat image in Frame 2 must have a strict 90-degree, perfectly vertical alignment. Correct any slight rightward tilt. The bat must stand absolutely perpendicular to the bottom edge of the canvas, with zero deviation from true vertical. `;
+
+        // --- SPECIFICATION CIRCLE BADGES ONLY ---
         prompt += `On the upper-right side of the image, the technical specifications are presented in stacked high-contrast circular badges. `;
+        prompt += `The top badge is a solid black circular badge (#000000). Inside this black circle, large bold white Japanese-style typography displays the text centered on two separate lines: top line reads "${specLengthDisplay}", bottom line reads "${specWeightDisplay}". `;
 
-        // BLACK CIRCLE: first spec size & weight
-        prompt += `The top badge is a solid black circular badge (#000000). Inside this black circle, large bold white Japanese-style typography displays the text centered on two separate lines: top line reads "${specLengthDisplay}", bottom line reads "${specWeightDisplay}". It features a clean vector design, sharp geometric edges, a minimalistic layout, and a premium catalog appearance with absolute readability. `;
-
-        // WHITE CIRCLE: balance type
-        prompt += `The bottom badge is a solid white circular badge (#FFFFFF) with a thin black border stroke for definition. Inside this white circle, the balance specification is displayed with clean dark typography. `;
-
-        // --- SPEC COUNT BADGE (if more than 1 spec) ---
         if (specCount > 1) {
-          prompt += `Above the two circular badges, a small rectangular badge is placed indicating the number of specifications: "${specCount} SPEC" in bold white text on a dark gray background, positioned to the upper-right of the circles. `;
+            prompt += `Above the circular badge, a small rectangular badge is placed indicating the number of specifications: "${specCount} SPEC" in bold white text on a dark gray background. `;
         }
 
-        // --- LIST ALL SPECIFICATIONS (combine into prompt) ---
         if (specList) {
-          prompt += `The complete list of specifications is: ${specList}. `;
+            prompt += `The complete list of specifications is: ${specList}. `;
         }
 
-        // --- BALANCE & バランス BELOW CIRCLES ---
-        if (hasBalance) {
-          prompt += `Directly below the two specification circles, the balance type is clearly indicated with two lines of text: the English word "balance" in clean sans-serif font, and directly underneath it, the Japanese text "${balanceJapanese.replace('\n', ' ')}" in matching typography. `;
-          prompt += `These two text lines are centered, positioned neatly below the circular badges, using a slightly smaller font size than the circle text for a refined hierarchical catalog layout. `;
-          prompt += `From the attached reference image containing four horizontal balance icons, you MUST strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
-          if (balance === "Top") prompt += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Top Middle") prompt += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Middle") prompt += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
-          else if (balance === "Counter") prompt += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
-          prompt += `Place this single extracted balance icon immediately adjacent to the text labels, creating a cohesive balance specification display. `;
-        }
-
-        prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution. `;
-
-        // ----- LOGO AT ABSOLUTE BOTTOM EDGE -----
-        prompt += `At the very bottom edge of the canvas, in the lower‑right corner, the manufacturer brand logo 'ZETT' appears in its signature red color. No other elements overlap or sit below the logo. `;
+        prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture, decals, and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution. `;
         prompt += negativePrompt;
-      }
-
-      return prompt;
     }
 
-    function updateOutput() {
-      const layout = generateLayoutDesign();
-      layoutOutput.value = layout;
-    }
+    return prompt;
+}
+        // ============================================================
+        //  出力更新
+        // ============================================================
+        function updateOutput() {
+            const layout = generateLayoutDesign();
+            layoutOutput.value = layout;
+        }
 
-    // Event Listeners
-    totalColorsSelect.addEventListener('change', () => {
-      updateAdditionalColors();
-      updateOutput();
-    });
-    
-    addSpecBtn.addEventListener('click', () => {
-      addSpecRow();
-      updateOutput();
-    });
-    
-    generateBtn.addEventListener('click', updateOutput);
-    
-    copyBtn.addEventListener('click', async () => {
-      if (!layoutOutput.value.trim() || layoutOutput.value.includes('Configure options')) {
-        alert('Please generate a layout first.');
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(layoutOutput.value);
-        const original = copyBtn.innerHTML;
-        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-        setTimeout(() => { copyBtn.innerHTML = original; }, 1500);
-      } catch (err) { alert('Failed to copy'); }
-    });
-    
-    downloadBtn.addEventListener('click', () => {
-      if (!layoutOutput.value.trim() || layoutOutput.value.includes('Configure options')) {
-        alert('Generate a layout first.');
-        return;
-      }
-      const blob = new Blob([layoutOutput.value], { type: 'text/plain' });
-      const link = document.createElement('a');
-      const url = URL.createObjectURL(blob);
-      link.href = url;
-      link.download = `baseball_banner_layout_${new Date().toISOString().slice(0,19)}.txt`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
-    });
-    
-    // Auto-update on input changes
-    const autoUpdateInputs = [categorySelect, targetSelect, frameSelect, balanceSelect, activeColorInput];
-    autoUpdateInputs.forEach(el => el.addEventListener('change', updateOutput));
-    autoUpdateInputs.forEach(el => el.addEventListener('input', updateOutput));
-    
-    // Observe dynamically added color and spec inputs
-    const observer = new MutationObserver(() => {
-      document.querySelectorAll('.additional-color').forEach(inp => {
-        inp.removeEventListener('input', updateOutput);
-        inp.addEventListener('input', updateOutput);
-      });
-      document.querySelectorAll('.spec-length, .spec-weight').forEach(inp => {
-        inp.removeEventListener('input', updateOutput);
-        inp.addEventListener('input', updateOutput);
-      });
-      updateSpecsRemoveButtons();
-    });
-    observer.observe(additionalColorsContainer, { childList: true, subtree: true });
-    observer.observe(specsContainer, { childList: true, subtree: true });
-    
-    // Initial setup
-    updateAdditionalColors();
-    updateSpecsRemoveButtons();
-    setTimeout(() => { updateOutput(); }, 200);
-  </script>
-  <script src="script.js"></script>
+        // ============================================================
+        //  イベントバインド
+        // ============================================================
+
+        // ロゴ関連
+        logoSel.addEventListener('change', () => {
+            updateLogoUI();
+            updateOutput();
+        });
+        logoTextInput.addEventListener('input', () => {
+            updateLogoPreview();
+            updateOutput();
+        });
+
+        // カラー関連
+        totalColorsSelect.addEventListener('change', () => {
+            updateAdditionalColors();
+            updateOutput();
+        });
+        activeColorInput.addEventListener('input', () => {
+            updateBatCountDisplay();
+            updateOutput();
+        });
+
+        // 仕様関連
+        addSpecBtn.addEventListener('click', () => {
+            addSpecRow();
+            updateOutput();
+        });
+
+        generateBtn.addEventListener('click', updateOutput);
+
+        copyBtn.addEventListener('click', async () => {
+            if (!layoutOutput.value.trim() || layoutOutput.value.includes('Configure options')) {
+                alert('Please generate a layout first.');
+                return;
+            }
+            try {
+                await navigator.clipboard.writeText(layoutOutput.value);
+                const original = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => { copyBtn.innerHTML = original; }, 1500);
+            } catch (_) { alert('Failed to copy'); }
+        });
+
+        downloadBtn.addEventListener('click', () => {
+            if (!layoutOutput.value.trim() || layoutOutput.value.includes('Configure options')) {
+                alert('Generate a layout first.');
+                return;
+            }
+            const blob = new Blob([layoutOutput.value], { type: 'text/plain' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = `baseball_banner_layout_${new Date().toISOString().slice(0, 19)}.txt`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        });
+
+        // 自動更新用入力
+        const autoUpdateInputs = [categorySelect, targetSelect, frameSelect, balanceSelect];
+        autoUpdateInputs.forEach(el => {
+            el.addEventListener('change', updateOutput);
+            el.addEventListener('input', updateOutput);
+        });
+
+        // 動的カラー・仕様入力の監視
+        const observer = new MutationObserver(() => {
+            document.querySelectorAll('.additional-color').forEach(inp => {
+                inp.removeEventListener('input', updateOutput);
+                inp.addEventListener('input', () => {
+                    updateBatCountDisplay();
+                    updateOutput();
+                });
+            });
+            document.querySelectorAll('.spec-length, .spec-weight').forEach(inp => {
+                inp.removeEventListener('input', updateOutput);
+                inp.addEventListener('input', updateOutput);
+            });
+            updateSpecsRemoveButtons();
+        });
+        observer.observe(additionalColorsContainer, { childList: true, subtree: true });
+        observer.observe(specsContainer, { childList: true, subtree: true });
+
+        // ============================================================
+        //  初期化
+        // ============================================================
+        updateAdditionalColors();
+        updateSpecsRemoveButtons();
+        updateLogoUI();
+        updateBatCountDisplay();
+        setTimeout(() => { updateOutput(); }, 200);
+    </script>
 </body>
 </html>
