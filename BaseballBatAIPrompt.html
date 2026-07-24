@@ -32,9 +32,6 @@
         .logo-text-input { transition: all 0.25s ease; }
         .logo-text-input.hidden { opacity: 0; max-height: 0; overflow: hidden; padding: 0; margin: 0; pointer-events: none; }
         .logo-text-input.visible { opacity: 1; max-height: 80px; padding-top: 0.5rem; pointer-events: auto; }
-        .badge-preview { display: inline-block; background: #000; color: #fff; font-weight: 700; padding: 0.2rem 0.8rem; border-radius: 9999px; font-size: 0.7rem; letter-spacing: 0.02em; }
-        .logo-sample-box { border: 2px dashed #ccc; border-radius: 8px; min-height: 56px; display: flex; align-items: center; justify-content: center; background: #fafafa; font-size: 0.85rem; color: #999; transition: all 0.2s; }
-        .logo-sample-box.has-text { border-color: #000; background: #fff; color: #000; font-weight: 700; font-size: 1.1rem; }
         .color-chip { display: inline-block; width: 14px; height: 14px; border-radius: 50%; border: 1px solid #ddd; margin-right: 4px; vertical-align: middle; }
         .bat-count-badge { background: #DC2626; color: #fff; font-size: 0.65rem; font-weight: 600; padding: 0.1rem 0.6rem; border-radius: 9999px; margin-left: 0.4rem; }
     </style>
@@ -161,13 +158,7 @@
                             <input type="text" id="logoTextInput" class="w-full border border-gray-300 rounded-lg px-3 py-2 font-mono" placeholder="例：ZETT / CUSTOM / 野球" value="ZETT" />
                             <p class="text-xs text-gray-400 mt-1">入力されたテキストは <strong class="text-black">#000000（ソリッドブラック）</strong> でレンダリングされます</p>
                         </div>
-                        <div class="mt-1">
-                            <div id="logoPreview" class="logo-sample-box flex items-center justify-between px-4">
-                                <span class="text-xs text-gray-400">⬅ キャンバス左下</span>
-                                <span id="logoPreviewBadge" class="badge-preview">ZETT</span>
-                                <span class="text-xs text-gray-400">右下 ➡</span>
-                            </div>
-                        </div>
+                       
                     </div>
                 </div>
 
@@ -218,8 +209,7 @@
         const logoSel = document.getElementById('logoSel');
         const logoTextWrapper = document.getElementById('logoTextWrapper');
         const logoTextInput = document.getElementById('logoTextInput');
-        const logoPreviewBadge = document.getElementById('logoPreviewBadge');
-        const logoPreview = document.getElementById('logoPreview');
+       
 
         // ============================================================
         //  追加カラー入力の動的更新
@@ -316,26 +306,9 @@
                 logoTextWrapper.classList.add('hidden');
                 logoTextWrapper.classList.remove('visible');
             }
-            updateLogoPreview();
         }
 
-        function updateLogoPreview() {
-            const val = logoSel.value;
-            const text = logoTextInput.value.trim() || 'ZETT';
-            if (val === 'text') {
-                logoPreviewBadge.textContent = text || '(テキスト)';
-                logoPreviewBadge.style.background = '#000000';
-                logoPreviewBadge.style.color = '#ffffff';
-                logoPreview.classList.add('has-text');
-                logoPreview.style.borderColor = '#000';
-            } else {
-                logoPreviewBadge.textContent = '🖼️ LOGO';
-                logoPreviewBadge.style.background = '#DC2626';
-                logoPreviewBadge.style.color = '#ffffff';
-                logoPreview.classList.remove('has-text');
-                logoPreview.style.borderColor = '#ccc';
-            }
-        }
+      
 
         // ============================================================
         //  プロンプト生成（コアロジック）
@@ -504,7 +477,6 @@ function generateLayoutDesign() {
             updateOutput();
         });
         logoTextInput.addEventListener('input', () => {
-            updateLogoPreview();
             updateOutput();
         });
 
