@@ -221,7 +221,7 @@
                 <p class="text-sm text-slate-500 mt-0.5">コマーシャル商品広告 · 固定モデルポーズ</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="badge badge-accent">v2.4</span>
+                <span class="badge badge-accent">v2.6</span>
                 <span class="badge">⚡ 1:1 正方形</span>
             </div>
         </header>
@@ -295,6 +295,28 @@
                     </div>
                 </div>
 
+            </div>
+
+            <!-- 行: 背景ロケーション（新規追加） -->
+            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">背景ロケーション</span>
+                        <span class="badge badge-accent text-[10px]">動的</span>
+                    </div>
+                    <select id="backgroundLocation" class="field">
+                        <option value="minimalist concrete photography studio with soft diffused lighting">🏢 ミニマリストコンクリートスタジオ</option>
+                        <option value="bright modern art gallery with white walls and natural daylight">🖼️ 明るい現代アートギャラリー</option>
+                        <option value="clean white cyclorama photography studio">📸 ホワイトシクロラマスタジオ</option>
+                        <option value="luxury marble loft with floor-to-ceiling windows">✨ ラグジュアリーマーブルロフト</option>
+                        <option value="urban rooftop overlooking city skyline">🌆 アーバンルーフトップ</option>
+                        <option value="solid, flat, uniform pure hex color #FFFFFF white background with absolutely no shadows, no gradient, and no depth" selected>⬜ 純白（#FFFFFF）</option>
+                        <option value="pristine professional blue and green outdoor hard tennis court under bright sunny daylight with natural athletic environment shadows">🎾 屋外テニスコート（ハードコート）</option>
+                        <option value="high-end sandy turf outdoor Omni tennis court under natural overhead sunlight, showcasing detailed court textures">🌱 屋外テニスコート（オムニコート）</option>
+                        <option value="professional dynamic outdoor multi-sport field under crisp daylight with clean athletic field markings">🏃 スポーツフィールド</option>
+                    </select>
+                    <p class="hint mt-1.5">シーン背景を選択 — 商品・モデルの雰囲気を変更</p>
+                </div>
             </div>
 
             <!-- モデルタイプ（条件付き） -->
@@ -404,6 +426,7 @@
         const mainProductSelect = document.getElementById('mainProductSelect');
         const mainColorFields = document.getElementById('mainColorFields');
         const mainColorInput = document.getElementById('mainColorInput');
+        const backgroundLocation = document.getElementById('backgroundLocation');
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const positiveOutput = document.getElementById('positiveOutput');
@@ -429,7 +452,6 @@
             headerInput.disabled = !isManual;
             logoInput.disabled = !isManual;
 
-            // hidden select for compatibility
             document.getElementById('modeSelect')?.remove();
             const hidden = document.createElement('select');
             hidden.id = 'modeSelect';
@@ -446,7 +468,6 @@
 
         // ──────────────────────────────────────────────────────────────
         // Quantity: NO RESTRICTIONS — user types freely
-        // We only react to 'input' to trigger autoGenerate
         // ──────────────────────────────────────────────────────────────
         productQty.addEventListener('input', autoGenerate);
 
@@ -477,36 +498,39 @@
         modelPresence.addEventListener('change', toggleModelType);
 
         // ──────────────────────────────────────────────────────────────
-        // buildPrompt() – uses parseInt, falls back to 2 if invalid
-        // but NO clamping to a range – any number is allowed
+        // buildPrompt() – REFACTORED with dynamic background & conditional shadowless
         // ──────────────────────────────────────────────────────────────
-       function buildPrompt() {
+        function buildPrompt() {
             const mode = currentMode;
             const qty = parseInt(productQty.value, 10);
-            // If NaN, default to 2 (but we don't restrict beyond that)
             const validQty = isNaN(qty) ? 2 : qty;
             const hasModel = modelPresence.value === 'with';
             const hasMainProduct = mainProductSelect.value === 'with';
             const mainColor = mainColorInput.value.trim() || 'Red';
             const modelDescription = modelTypeSelect.value;
+            const backgroundDescription = backgroundLocation.value;
+
+            const isPureWhite = backgroundDescription.includes('pure hex color #FFFFFF');
 
             // ----- Technical & Cinematic Finishing -----
-        // ----- Technical & Cinematic Finishing -----
-const photographyTerms =
-    "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering of products, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
+            const photographyTerms =
+                "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering of products, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
 
-// ----- Part A: Base Setup & Model (conditional) -----
-let prompt =
-    `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pure hex color #FFFFFF white background with absolutely no shadows, no gradient, no lighting falloff, and no depth. `;
+            // ----- Part A: Base Setup & Background (UPDATED) -----
+            let prompt =
+                `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene features a clean background set in a ${backgroundDescription}. `;
+
+            // ----- Part A2: Model Framing (UPDATED with generic "background") -----
             if (hasModel) {
                 prompt +=
-                    `On the left side of the frame, there is a fixed ${modelDescription} wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. The model's anatomy, physical placement, and styling must remain fully anchored and unchanged. `;
+                    `On the left side of the frame, there is a fixed ${modelDescription} wearing the main apparel product, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. ` +
+                    `CAMERA FRAMING: Medium upper-body shot (waist-up portrait). The model MUST be cleanly cropped at the waist level. The bottom 20% of the left canvas area MUST remain clear empty background space. The model's shorts or lower attire must NOT touch or extend to the bottom edge of the image frame, maintaining a clean bottom margin buffer. `;
             } else {
                 prompt +=
                     `No human model is present. The entire canvas is dedicated to the product display, with the products centered and scaled to fill the available space elegantly. `;
             }
 
-            // ----- Part B: Header & Logo Overlays with 10px Margin Buffer (Conditional) -----
+            // ----- Part B: Header & Logo Overlays with 10px Margin Buffer -----
             if (mode === 'manual') {
                 const header = headerInput.value.trim() || 'MENS';
                 const logo = logoInput.value.trim() || 'FILA';
@@ -514,29 +538,40 @@ let prompt =
                     `Graphic UI Elements: A solid vibrant blue rectangular banner (Hex color code: #1A66FF) featuring crisp, perfectly rendered white text (Hex color code: #FFFFFF) reading "${header}" is cleanly generated near the top-left corner of the frame; it must be shifted slightly inward to maintain a clean, intentional 10-pixel proportional margin/padding buffer away from both the absolute top and left edges of the canvas. In the bottom-right area, the sharp brand logo text reading "${logo}" is seamlessly placed, also shifted slightly inward to maintain an exact 10-pixel proportional margin/padding buffer from both the absolute bottom and right edges of the canvas. Both graphic elements must perfectly mirror the font scaling and structural layout seen in the attached reference image but with this neat negative space padding to ensure no text or banner elements touch the extreme outer frame borders, keeping clear boundaries and no color bleeding. `;
             }
 
-            // ----- Part C: Multi-Product Dynamic Arrangement (adapt to model presence & main product) -----
+            // ----- Part C: Multi-Product Dynamic Arrangement -----
             if (hasMainProduct) {
-                // Hero product description
-                prompt +=
-                    `Composition Layout with a Hero Product: Among the ${validQty} variant products, one is designated as the main hero product. This hero product must be displayed significantly larger and more prominently than the others, acting as the focal point of the composition. The hero product is in the color "${mainColor}" and must be easily distinguishable. The remaining ${validQty - 1} products are arranged around or next to the hero product, scaled down and positioned neatly to complement the hero without overcrowding. `;
-
-                // Additional specific arrangement based on quantity
-                if (validQty === 2) {
+                if (validQty === 1) {
                     prompt +=
-                        `With 2 products, the hero product occupies the dominant position (e.g., front and center), while the auxiliary product is placed slightly behind or to the side, smaller in scale. `;
-                } else if (validQty >= 3 && validQty <= 5) {
-                    prompt +=
-                        `With ${validQty} products, the hero product takes the central or left-forward position, while the auxiliary products form a staggered grid around it, each scaled down to create a clear hierarchy. `;
-                } else if (validQty >= 6 && validQty <= 10) {
-                    prompt +=
-                        `With ${validQty} products, the hero product remains the largest and most central, while the others are arranged in a compact, organized grid around it, each reduced in size to ensure the hero remains the undeniable focus. `;
+                        `Composition Layout with a Single Hero Product: The only variant product is designated as the main hero product. This hero product is displayed as the undeniably largest and most prominent item, positioned centrally and acting as the dominant focal point of the composition. The hero product is in the color "${mainColor}" and must fill the space elegantly. `;
                 } else {
                     prompt +=
-                        `With ${validQty} products, the hero product is prominent, and the rest are arranged in a clean multi-row grid that adapts to the total count. `;
+                        `Composition Layout with a Hero Product: Among the ${validQty} variant products, one is designated as the main hero product. This hero product must be displayed significantly larger and more prominently than the others, acting as the focal point of the composition. The hero product is in the color "${mainColor}" and must be easily distinguishable. The remaining ${validQty - 1} products are arranged around or next to the hero product, scaled down and positioned neatly to complement the hero without overcrowding. `;
+
+                    if (validQty === 2) {
+                        prompt +=
+                            `With 2 products, the hero product occupies the dominant position (e.g., front and center), while the auxiliary product is placed slightly behind or to the side, smaller in scale. `;
+                    } else if (validQty >= 3 && validQty <= 5) {
+                        prompt +=
+                            `With ${validQty} products, the hero product takes the central or left-forward position, while the auxiliary products form a staggered grid around it, each scaled down to create a clear hierarchy. `;
+                    } else if (validQty >= 6 && validQty <= 10) {
+                        prompt +=
+                            `With ${validQty} products, the hero product remains the largest and most central, while the others are arranged in a compact, organized grid around it, each reduced in size to ensure the hero remains the undeniable focus. `;
+                    } else {
+                        prompt +=
+                            `With ${validQty} products, the hero product is prominent, and the rest are arranged in a clean multi-row grid that adapts to the total count. `;
+                    }
                 }
             } else {
-                // No main product: original symmetrical layout (equal sizes)
-                if (validQty === 2) {
+                // No main product
+                if (validQty === 1) {
+                    if (hasModel) {
+                        prompt +=
+                            `Composition Layout (Single Product): On the right side of the model, cleanly organize 1 variant product as the sole item. Its scale should be dynamically large compared to a single item in the attached reference image, perfectly filling the available negative whitespace on the right while maintaining a clear buffer away from the fixed model on the left. `;
+                    } else {
+                        prompt +=
+                            `Composition Layout (Single Product): Center the one variant product prominently in the middle of the canvas, making it the undeniable central focus. It should be scaled generously to fill the space without crowding, maintaining clean boundaries and zero interference with the text/logo elements if present. `;
+                    }
+                } else if (validQty === 2) {
                     if (hasModel) {
                         prompt +=
                             `Composition Layout (Exactly 2 Products): On the right side of the model, display exactly 2 variant floating products arranged in a clean, cascading diagonal line. One product is positioned in the front-center foreground (subtly overlapping the model's profile edge), while the second product is scaled slightly larger and placed directly behind it toward the top-right quadrant. This arrangement must capture a distinct layered flat effect, realistic overlapping perspective, and identical proportions to the layout in the attached reference image. `;
@@ -566,25 +601,39 @@ let prompt =
                             `Composition Layout (${validQty} Products - Compact Grid): Arrange the ${validQty} variant products in a dense, multi-row grid that fills the entire canvas uniformly. Each product is scaled appropriately to fit within the frame, with slight overlaps, ensuring a clean and professional product showcase. `;
                     }
                 } else {
-                    // fallback for any other number (including >10 or 1, 0, negative)
                     prompt +=
                         `Composition Layout (${validQty} Products): Display the ${validQty} variant products in a clean, organized layout that makes efficient use of the available space. `;
                 }
             }
 
-            // ----- Part D: Product Material & Fidelity Instructions -----
+            // ----- Product Safe-Zone Rule -----
+            if (validQty > 0 && hasModel) {
+                prompt +=
+                    `PRODUCT SAFE-ZONE RULE: All standalone product garments on the right side must be dynamically scaled down and strictly centered within the right quadrant workspace. They must remain vertically suspended in the middle space—strictly below the top header banner and strictly above the bottom-right logo area. Zero overlap with the logo or outer frame borders. `;
+            }
+
+            // ----- Part D: Product Material & Fidelity -----
             prompt +=
                 `Product Render Fidelity: Every standalone product layout must be rendered with absolute structural accuracy and individual color integrity. The apparel items must perfectly preserve their distinct original color profiles, embossed front-panel branding structures, clean hoodie drawstring finishes, fabric knit details, realistic tension folds, and sleeve cuff stitchings exactly like the reference garments in the attached reference image. All items must work together harmoniously as a unified product line display. `;
 
-            // ----- Part E: Final Cinematic Polish Assembly -----
-            prompt +=
-                `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, completely shadowless background, isolated product look, premium clothing campaign vibe, ${photographyTerms}`;
+            // ----- Part E: Final Cinematic Polish (CONDITIONAL shadowless) -----
+            let polishPart;
+            if (isPureWhite) {
+                polishPart = `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, completely shadowless background, isolated product look, premium clothing campaign vibe, ${photographyTerms}`;
+            } else {
+                polishPart = `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, seamless background integration, natural lighting consistency, premium clothing campaign vibe, ${photographyTerms}`;
+            }
+            prompt += polishPart;
 
-            // ----- Part F: Negative Prompt -----
-            const negativePrompt =
-                "shadows, drop shadows, ambient occlusion, background depth, gradient background, unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures.";
+            // ----- Part F: Negative Prompt (UPDATED with extra framing terms) -----
+            let negativeBase =
+                "shadows, drop shadows, ambient occlusion, background depth, gradient background, unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures";
 
-            return { positive: prompt.trim(), negative: negativePrompt };
+            // Additional negative terms for framing containment (always included for safety)
+            const framingTerms = "full body, thighs, legs extending to bottom edge, model touching bottom frame, product overlapping logo, bottom edge clipping, full standing pose, feet touching frame";
+            const negativePrompt = negativeBase + ", " + framingTerms;
+
+            return { positive: prompt.trim(), negative: negativePrompt.trim() };
         }
 
         // ──────────────────────────────────────────────────────────────
@@ -645,7 +694,6 @@ let prompt =
         // ──────────────────────────────────────────────────────────────
         // Init
         // ──────────────────────────────────────────────────────────────
-        // hidden select for compatibility
         const hiddenSelect = document.createElement('select');
         hiddenSelect.id = 'modeSelect';
         hiddenSelect.style.display = 'none';
@@ -653,18 +701,18 @@ let prompt =
         document.body.appendChild(hiddenSelect);
 
         setMode('manual');
-        toggleMainColor(); // set initial visibility
-        toggleModelType(); // set initial visibility
+        toggleMainColor();
+        toggleModelType();
         generateAndDisplay();
 
-        // Auto-generate on all input changes (except productQty already added)
+        // Auto-generate on all input changes
         modelPresence.addEventListener('change', autoGenerate);
         modelTypeSelect.addEventListener('change', autoGenerate);
         headerInput.addEventListener('input', autoGenerate);
         logoInput.addEventListener('input', autoGenerate);
         mainProductSelect.addEventListener('change', autoGenerate);
         mainColorInput.addEventListener('input', autoGenerate);
+        backgroundLocation.addEventListener('change', autoGenerate);
     </script>
-<script src="script.js"></script>
 </body>
 </html>
