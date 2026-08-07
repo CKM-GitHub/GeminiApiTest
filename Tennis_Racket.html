@@ -6,7 +6,7 @@
     <title>テニスラケット — プロンプトスタジオ</title>
     <script src="https://cdn.tailwindcss.com">
     </script>
-    <style>
+  <style>
         /* ── ミニマルライトテーマ ── */
         body {
             background: #f0f2f5;
@@ -250,8 +250,8 @@
                 <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-800">🎾 ラケットプロンプトスタジオ</h1>
                 <p class="text-sm text-slate-500 mt-0.5">テニスeコマース · 固定商品参照</p>
             </div>
-            <div class="flex items-center gap-3">
-                <span class="badge-pill accent">v1.1</span>
+            <div class="flex items-center gap-3 flex-wrap">
+                <span class="badge-pill accent">v1.2</span>
                 <span class="badge-pill">⚡ 1:1 正方形</span>
                 <span class="badge-pill">📷 image_bab467.png</span>
             </div>
@@ -263,19 +263,40 @@
             <!-- ─── 行1: レイアウト選択 ─── -->
             <div class="mb-6">
                 <label class="label-text block mb-1.5">📐 レイアウト</label>
-                <select id="layoutSelect" class="field">
+                <select id="layoutSelect" class="field max-w-md">
                     <option value="layout1">レイアウト1: 分割ディテールビュー</option>
-                    <option value="layout2">レイアウト2: マルチプロダクトラインナップ</option>
+                    <option value="layout2" selected>レイアウト2: マルチプロダクトラインナップ</option>
                 </select>
                 <p class="hint mt-1.5">
                     <span class="font-medium text-slate-600">分割ディテール</span> → 1本のラケットのマクロクロップ &nbsp;·&nbsp;
-                    <span class="font-medium text-slate-600">マルチプロダクト</span> → クロップヘッド ＋ 直立フルラケット
+                    <span class="font-medium text-slate-600">マルチプロダクト</span> → クロップヘッド ＋ 直立フルラケット（拡大表示）
                 </p>
             </div>
 
-            <hr class="divider my-6" />
+            <hr class="divider" />
 
-            <!-- ─── 行2: ヘッダー＆ロゴ制御 ─── -->
+            <!-- ─── 行2: ストリングス選択（新規） ─── -->
+            <div class="mb-6">
+                <div class="flex items-center gap-3 mb-1.5">
+                    <label class="label-text" for="stringSelect">🧵 ストリングス仕様</label>
+                    <span class="string-indicator" id="stringIndicator">
+                        <span class="dot unstrung" id="stringDot"></span>
+                        <span id="stringLabel">アンストリング</span>
+                    </span>
+                </div>
+                <select id="stringSelect" class="field max-w-sm">
+                    <option value="unstrung" selected>アンストリング（フレームのみ）</option>
+                    <option value="strung">ストリング（張り上げ済み）</option>
+                </select>
+                <p class="hint mt-1.5">
+                    <span class="font-medium text-slate-600">アンストリング</span> → フレーム内部は中空・透明 &nbsp;·&nbsp;
+                    <span class="font-medium text-slate-600">ストリング</span> → 白いクロスストリングパターン
+                </p>
+            </div>
+
+            <hr class="divider" />
+
+            <!-- ─── 行3: ヘッダー＆ロゴ制御 ─── -->
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-2">
                     <span class="label-text">🏷️ ヘッダー＆ロゴ</span>
@@ -289,7 +310,7 @@
                 </div>
 
                 <!-- 条件付き: 手動フィールド -->
-                <div id="manualFields" class="conditional-fields grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4" style="max-height: 280px; opacity: 1;">
+                <div id="manualFields" class="conditional-fields open grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
                     <div>
                         <label class="text-xs font-medium text-slate-600 block mb-1">ヘッダー メインテキスト</label>
                         <input type="text" id="headerMainInput" value="硬式テニス" placeholder="例: 硬式テニス" class="field" />
@@ -306,30 +327,33 @@
                 </div>
             </div>
 
-            <hr class="divider my-6" />
+            <hr class="divider" />
 
-            <!-- ─── 行3: バッジステッカーオーバーレイ ─── -->
+            <!-- ─── 行4: バッジステッカーオーバーレイ ─── -->
             <div class="mb-6">
                 <div class="flex items-center gap-3 mb-2">
                     <span class="label-text">⭕ バッジステッカー</span>
                     <span class="text-xs text-slate-400">—</span>
-                    <span class="text-xs text-slate-400">円形オーバーレイ</span>
+                    <span class="text-xs text-slate-400">形状はストリングス仕様に連動</span>
                 </div>
 
                 <select id="badgeSelect" class="field max-w-xs">
                     <option value="none">なし</option>
-                    <option value="enabled">バッジ有効</option>
+                    <option value="enabled" selected>バッジ有効</option>
                 </select>
 
                 <!-- 条件付き: バッジテキスト入力 -->
-                <div id="badgeFields" class="conditional-fields mt-3" style="max-height: 80px; opacity: 1;">
-                    <label class="text-xs font-medium text-slate-600 block mb-1">バッジテキスト</label>
-                    <input type="text" id="badgeInput" value="フレームのみ" placeholder="例: フレームのみ" class="field max-w-xs" />
-                    <p class="hint mt-1.5">チャコール円形バッジでレンダリング · 下部中央の空き領域</p>
+                <div id="badgeFields" class="conditional-fields open mt-3">
+                    <label class="text-xs font-medium text-slate-600 block mb-1">バッジテキスト（任意）</label>
+                    <input type="text" id="badgeInput" value="フレームのみ" placeholder="フレームのみ" class="field max-w-sm" />
+                    <div class="flex flex-wrap items-center gap-3 mt-1.5">
+                        <span class="hint">デフォルトはストリングス仕様に応じて自動切り替え</span>
+                        <span class="badge-pill green text-[10px]" id="badgeShapePreview">⬡ 円形</span>
+                    </div>
                 </div>
             </div>
 
-            <hr class="divider my-6" />
+            <hr class="divider" />
 
             <!-- ─── アクション ─── -->
             <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
@@ -374,14 +398,14 @@
                 <span class="w-px h-4 bg-slate-200"></span>
                 <span>85mm · f/4 · 8k · スタジオ照明</span>
                 <span class="w-px h-4 bg-slate-200"></span>
-                <span>#262626 · #1A66FF · YONEX</span>
+                <span>#262626 · バッジ連動</span>
             </div>
 
         </div>
 
         <!-- ─── フッター ─── -->
         <div class="text-center text-xs text-slate-400 font-medium tracking-wider mt-6 uppercase">
-            テニスeコマース向けに構築されたプロンプト · すべてのレイアウト参照は image_d5f6a8.png および image_d5f6ca.png に一致
+            テニスeコマース向けに構築されたプロンプト · 全レイアウト参照は image_d5f6a8.png および image_d5f6ca.png に一致
         </div>
     </div>
 
@@ -402,6 +426,10 @@
         const badgeSelect = document.getElementById('badgeSelect');
         const badgeFields = document.getElementById('badgeFields');
         const badgeInput = document.getElementById('badgeInput');
+        const stringSelect = document.getElementById('stringSelect');
+        const stringDot = document.getElementById('stringDot');
+        const stringLabel = document.getElementById('stringLabel');
+        const badgeShapePreview = document.getElementById('badgeShapePreview');
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const positiveOutput = document.getElementById('positiveOutput');
@@ -412,7 +440,58 @@
         let currentMode = 'manual';
 
         // ──────────────────────────────────────────────────────────────
-        // 1. Mode toggle (Manual / Reference)
+        // 1. String toggle → update UI indicator & badge defaults
+        // ──────────────────────────────────────────────────────────────
+        function updateStringUI() {
+            const isStrung = stringSelect.value === 'strung';
+            // Dot
+            stringDot.className = 'dot ' + (isStrung ? 'strung' : 'unstrung');
+            // Label
+            stringLabel.textContent = isStrung ? 'ストリング' : 'アンストリング';
+
+            // Update badge placeholder & shape preview
+            updateBadgeDefaults(isStrung);
+            updateBadgeShapePreview(isStrung);
+
+            // Auto-generate prompt
+            autoGenerate();
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 2. Badge defaults based on string selection
+        // ──────────────────────────────────────────────────────────────
+        function getBadgeDefault(isStrung) {
+            return isStrung ? 'ガット張上げ専用' : 'フレームのみ';
+        }
+
+        function getBadgeShape(isStrung) {
+            return isStrung ? '長方形' : '円形';
+        }
+
+        function getBadgeShapeEmoji(isStrung) {
+            return isStrung ? '▭' : '⬡';
+        }
+
+        function updateBadgeDefaults(isStrung) {
+            const defaultText = getBadgeDefault(isStrung);
+            // Only update the input value if it's empty or matches the previous default
+            const currentVal = badgeInput.value.trim();
+            const prevDefault = isStrung ? 'フレームのみ' : 'ガット張上げ専用';
+            if (currentVal === '' || currentVal === prevDefault || currentVal === 'フレームのみ' || currentVal === 'ガット張上げ専用') {
+                badgeInput.value = defaultText;
+            }
+            // Always update placeholder
+            badgeInput.placeholder = defaultText;
+        }
+
+        function updateBadgeShapePreview(isStrung) {
+            const shape = getBadgeShape(isStrung);
+            const emoji = getBadgeShapeEmoji(isStrung);
+            badgeShapePreview.textContent = `${emoji} ${shape}`;
+        }
+
+        // ──────────────────────────────────────────────────────────────
+        // 3. Mode toggle (Manual / Reference)
         // ──────────────────────────────────────────────────────────────
         function setMode(mode) {
             currentMode = mode;
@@ -421,10 +500,8 @@
             });
 
             const isManual = mode === 'manual';
-            manualFields.style.maxHeight = isManual ? '280px' : '0';
-            manualFields.style.opacity = isManual ? '1' : '0';
+            manualFields.classList.toggle('open', isManual);
             manualFields.style.pointerEvents = isManual ? 'auto' : 'none';
-            manualFields.style.marginTop = isManual ? '1rem' : '0';
             headerMainInput.disabled = !isManual;
             headerSubInput.disabled = !isManual;
             logoInput.disabled = !isManual;
@@ -437,12 +514,11 @@
         });
 
         // ──────────────────────────────────────────────────────────────
-        // 2. Badge toggle (Enable / None)
+        // 4. Badge toggle (Enable / None)
         // ──────────────────────────────────────────────────────────────
         function toggleBadge() {
             const enabled = badgeSelect.value === 'enabled';
-            badgeFields.style.maxHeight = enabled ? '120px' : '0';
-            badgeFields.style.opacity = enabled ? '1' : '0';
+            badgeFields.classList.toggle('open', enabled);
             badgeFields.style.pointerEvents = enabled ? 'auto' : 'none';
             badgeInput.disabled = !enabled;
             autoGenerate();
@@ -451,71 +527,94 @@
         badgeSelect.addEventListener('change', toggleBadge);
 
         // ──────────────────────────────────────────────────────────────
-        // 3. Logo input: only letters allowed
+        // 5. Logo input: only letters allowed
         // ──────────────────────────────────────────────────────────────
         logoInput.addEventListener('input', function() {
             this.value = this.value.replace(/[^A-Za-z]/g, '');
         });
 
         // ──────────────────────────────────────────────────────────────
-        // 4. buildPrompt() — updated with logo input
+        // 6. buildPrompt() — FULLY UPDATED per spec
         // ──────────────────────────────────────────────────────────────
-        function buildPrompt() {
+       function buildPrompt() {
     const layout = layoutSelect.value;
     const mode = currentMode;
     const badgeStatus = badgeSelect.value;
+    const isStrung = stringSelect.value === 'strung';
 
     const photographyTerms =
         "Shot on professional macro lens, f/4 aperture for total clarity across all text and product details, ultra-sharp focus on frame textures, 8k resolution, exact color matching.";
 
-    // Part A: Base Frame Setup (Unstrung / No Strings Focus & Pure Background Base)
+    // ----- Part A: Base Frame Setup (Reference Image Reference Rules) -----
     let prompt =
-        `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pristine pure white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. The rendering must maintain absolute fidelity to the attached reference image: preserving the dark metallic red frame color, the subtle teal accent inserts on the inner throat-joint, the crisp white grip wrap texture, and the precise oval geometry of the racket head. Crucially, the tennis rackets must be completely unstrung with no strings inside the frame hoop; the inner frame area must be totally empty, hollow, and transparent, showing only the flat plain white background through the open racket head. `;
+        `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pristine pure white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. `;
+    
+    // ★ အရောင် Hardcode များ အားလုံးကို ဖျက်ထားပြီး Reference Image အတိုင်း ၁၀၀% သာ ကူးဆွဲခိုင်းထားပါသည်
+    prompt += `COLOR & FIDELITY RULE: Strictly match and replicate the exact color scheme, frame patterns, graphics, logo details, and handle grip wrap texture directly from the attached reference image. Do NOT alter, shift, or introduce any unauthorized colors. `;
 
-    // Part B: Header & Logo Overlays (With Heavy Inset Margin/Padding Buffer to prevent edge-hugging)
+    // ----- Part A2: String Select Logic -----
+    if (isStrung) {
+        prompt += `STRING SPECIFICATION: The tennis rackets are fully strung with tight, ultra-crisp, realistic tennis racket strings arranged in a clean grid pattern inside the racket head hoop. `;
+    } else {
+        prompt += `STRING SPECIFICATION: Crucially, the tennis rackets must be completely unstrung with no strings inside the frame hoop; the inner frame area must be totally empty, hollow, and transparent, showing only the flat plain white background through the open racket head. `;
+    }
+
+    // ----- Part B: Header & Logo Overlays -----
     if (mode === 'manual') {
         const mainText = headerMainInput.value.trim() || '硬式テニス';
-        const subText = headerSubInput.value.trim() || 'Vコア95';
-        const logoText = logoInput.value.trim() || 'YONEX';
+        const subText = headerSubInput.value.trim() || 'ツアーオースリー100';
+        const logoText = logoInput.value.trim() || 'prince';
 
-        // Header Margin Adjustment
         prompt +=
             `Graphic UI Overlays with distinct inset margins: In the upper-left area, generate a solid dark charcoal banner (Hex color code: #262626) with crisp white text reading "${mainText}". Directly beneath this banner, render sharp, clean charcoal text (Hex color code: #262626) reading "${subText}". These top-left text and banner elements must NOT touch or be close to the outer borders; they must be pushed significantly inward away from the top and left edges, creating a generous, clear 10-pixel proportional negative space margin/buffer. `;
 
-        // Logo Margin Adjustment — now using the dynamic logo text
         prompt +=
-            `In the bottom-right area, position the iconic blue and green brand logo box containing the text "${logoText}". This logo must be strictly pushed inward, away from the extreme bottom and right edges of the canvas, enforcing a substantial 10-pixel proportional breathing room margin layout buffer to ensure no clipping or frame-hugging occurs. `;
+            `In the bottom-right area, position the brand logo text reading "${logoText}". This logo must be strictly pushed inward, away from the extreme bottom and right edges of the canvas, enforcing a substantial 10-pixel proportional breathing room margin layout buffer to ensure no clipping or frame-hugging occurs. `;
     }
 
-    // Part C: Layout Dynamic Rules (Precision Separation)
+    // ----- Part C: Layout Dynamic Rules (FIXED: Side Product Full Racket Scaling) -----
     if (layout === 'layout1') {
         prompt +=
-            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a massive cropped close-up of only the upper half of the unstrung racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint, gold branding text, and the full white handle grip wrap extending downward. The two close-up segments must stand vertically parallel to each other, balanced cleanly across the white canvas. `;
+            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a cropped close-up of only the upper half of the racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint and handle grip. The two close-up segments must stand vertically parallel to each other. `;
     } else {
+        // ★ ညာဘက်က Full Racket (Side Product) ရဲ့ Size ကို ပိုမိုကြီးမားထင်းလင်းစေရန် ရေးထားပါသည်
         prompt +=
-            `Composition Layout (Layout 2 - Cropped Frame and Full Racket Combo): The composition combines a macro detail and a full view. On the left side, feature a prominent, massive cropped close-up of only the upper unstrung racket head frame. On the right side, contrast this by displaying one complete, uncropped, full-length tennis racket standing perfectly upright from head to grip. This right-side full racket must be significantly downscaled and smaller in size, creating a spacious and neat double-product arrangement. `;
+            `Composition Layout (Layout 2 - Cropped Frame and Full Racket Combo): The composition combines a cropped detail view on the left and a full-length product on the right. On the left side, feature a cropped macro close-up view of the upper racket head frame. On the right side, display one complete, uncropped, full-length tennis racket standing upright from head to grip. DYNAMIC SIZING RULE: The full-length racket on the right side MUST be dynamically enlarged to occupy a dominant, large vertical scale (spanning prominently tall from top to bottom) on the right quadrant of the canvas, making it bold, clear, and prominent without touching the outer canvas borders. `;
     }
 
-    // Part D: Circle Badge Logic
+    // ----- Part D: Dynamic Badge Shape & Text Logic -----
     if (badgeStatus === 'enabled') {
-        const badgeText = badgeInput.value.trim() || 'フレームのみ';
-        prompt +=
-            `Sticker Badge Graphic: Positioned in the lower-central void between the product views, render a clean, solid dark charcoal circular badge (Hex color code: #262626) featuring crisp, perfectly centered white text reading "${badgeText}". The circle must have sharp, vector-quality borders with a distinct negative space margin around it so it does not touch or smudge into the rackets. `;
+        const badgeText = badgeInput.value.trim() || (isStrung ? 'ガット張上げ専用' : 'フレームのみ');
+
+        if (isStrung) {
+            // ★ STRUNG BADGE: Rectangle Shape + "ガット張上げ専用"
+            prompt +=
+                `Sticker Badge Graphic (Rectangular Badge): Positioned near the bottom-center or lower-right void, render a solid dark charcoal rectangular box badge (Hex color code: #262626) featuring crisp white Japanese text reading "${badgeText}" stacked neatly on two lines. `;
+        } else {
+            // ★ UNSTRUNG BADGE: Circle Shape + "フレームのみ"
+            prompt +=
+                `Sticker Badge Graphic (Circular Badge): Positioned near the bottom-center or lower-right void, render a solid dark charcoal circular badge (Hex color code: #262626) featuring crisp white Japanese text reading "${badgeText}". `;
+        }
     }
 
-    // Part E: Closing & Negative Assembly
+    // ----- Part E: Closing & Negative Assembly -----
     prompt +=
         `Final Polish: Premium athletic equipment campaign aesthetic, centered composition balance, completely shadowless background, isolated product cutout look, ${photographyTerms}`;
 
-    // Part F: Strong Negative Prompt (Strings Block, Margin Rules, and Strict Background Color Guardrails)
-    const negativePrompt =
-        "shadows, drop shadows, ambient occlusion, background depth, background lighting effects, racket strings, tennis strings, string pattern, netting, grid lines inside racket, strung racket, realistic string textures, off-white background, grey background, multi-tone background, background color bleeding, color gradients on background, shadows stretching across corners, dark backdrops, text touching image edges, text clipped at borders, cropped header banner, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, distorted circles, blurred badge borders, text overlapping product lines, smudging across white backgrounds, incorrect color hue, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, moving product placement, layout variation from reference.";
+    // ----- Part F: Dynamic Negative Prompt -----
+    let negativeBase =
+        "color shift, incorrect product color, color variation from reference, shadows, drop shadows, ambient occlusion, background depth, background lighting effects, off-white background, grey background, multi-tone background, background color bleeding, dark backdrops, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, blurred badge borders, text overlapping product lines, smudging across white backgrounds, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, layout variation from reference.";
 
-    return { positive: prompt.trim(), negative: negativePrompt };
+    if (isStrung) {
+        negativeBase += ", unstrung racket, empty racket head, missing strings, hollow frame hoop, circular badge when strung";
+    } else {
+        negativeBase += ", racket strings, tennis strings, string pattern, netting, grid lines inside racket, strung racket, realistic string textures, rectangular badge when unstrung";
+    }
+
+    return { positive: prompt.trim(), negative: negativeBase.trim() };
 }
-
         // ──────────────────────────────────────────────────────────────
-        // 5. Generate & display
+        // 7. Generate & display
         // ──────────────────────────────────────────────────────────────
         function generateAndDisplay() {
             const result = buildPrompt();
@@ -533,12 +632,12 @@
         generateBtn.addEventListener('click', generateAndDisplay);
 
         // ──────────────────────────────────────────────────────────────
-        // 6. Copy (both prompts)
+        // 8. Copy (both prompts)
         // ──────────────────────────────────────────────────────────────
         copyBtn.addEventListener('click', async function() {
             const pos = positiveOutput.textContent.trim();
             const neg = negativeOutput.textContent.trim();
-            if (!pos || pos === "Click Generate to build your prompt…") {
+            if (!pos || pos === "Click Generate to build your prompt…" || pos.startsWith('生成')) {
                 showToast('⚠️ 先にプロンプトを生成してください。');
                 return;
             }
@@ -558,7 +657,7 @@
         });
 
         // ──────────────────────────────────────────────────────────────
-        // 7. Toast
+        // 9. Toast
         // ──────────────────────────────────────────────────────────────
         let toastTimeout;
 
@@ -570,21 +669,23 @@
         }
 
         // ──────────────────────────────────────────────────────────────
-        // 8. Init
+        // 10. Init
         // ──────────────────────────────────────────────────────────────
         // Set initial states
         setMode('manual');
         toggleBadge();
-        generateAndDisplay();
+        updateStringUI();
 
         // Auto-generate on all input changes
         layoutSelect.addEventListener('change', autoGenerate);
+        stringSelect.addEventListener('change', updateStringUI);
         headerMainInput.addEventListener('input', autoGenerate);
         headerSubInput.addEventListener('input', autoGenerate);
         logoInput.addEventListener('input', autoGenerate);
         badgeInput.addEventListener('input', autoGenerate);
-    </script>
-    <script src="menu.js"></script>
 
+        // Initial generation
+        generateAndDisplay();
+    </script>
 </body>
 </html>
