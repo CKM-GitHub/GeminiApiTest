@@ -534,9 +534,9 @@
         });
 
         // ──────────────────────────────────────────────────────────────
-        // 6. buildPrompt() — FULLY UPDATED per spec
+        // 6. buildPrompt() — Yesterday Codes
         // ──────────────────────────────────────────────────────────────
-       function buildPrompt() {
+  function buildPrompt() {
     const layout = layoutSelect.value;
     const mode = currentMode;
     const badgeStatus = badgeSelect.value;
@@ -545,11 +545,13 @@
     const photographyTerms =
         "Shot on professional macro lens, f/4 aperture for total clarity across all text and product details, ultra-sharp focus on frame textures, 8k resolution, exact color matching.";
 
-    // ----- Part A: Base Frame Setup (Reference Image Reference Rules) -----
+    // ----- Part A: Base Frame Setup & Strict Position Anchor -----
     let prompt =
         `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pristine pure white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. `;
     
-    // ★ အရောင် Hardcode များ အားလုံးကို ဖျက်ထားပြီး Reference Image အတိုင်း ၁၀၀% သာ ကူးဆွဲခိုင်းထားပါသည်
+    // ★ ပြင်ဆင်ချက် ၁: Racket Position ငြိမ်အောင် အသေ ချုပ်ထားသည့် Rule
+    prompt += `STRICT POSITION LOCKING RULE: The placement, tilt angle, vertical alignment, and overall canvas coordinates of the tennis racket MUST remain strictly fixed, anchored, and locked, perfectly mirroring the exact position and framing from the attached reference image without shifting across generations. `;
+
     prompt += `COLOR & FIDELITY RULE: Strictly match and replicate the exact color scheme, frame patterns, graphics, logo details, and handle grip wrap texture directly from the attached reference image. Do NOT alter, shift, or introduce any unauthorized colors. `;
 
     // ----- Part A2: String Select Logic -----
@@ -559,27 +561,27 @@
         prompt += `STRING SPECIFICATION: Crucially, the tennis rackets must be completely unstrung with no strings inside the frame hoop; the inner frame area must be totally empty, hollow, and transparent, showing only the flat plain white background through the open racket head. `;
     }
 
-    // ----- Part B: Header & Logo Overlays -----
+    // ----- Part B: Header & Logo Overlays (Equal Font Size Rule) -----
     if (mode === 'manual') {
         const mainText = headerMainInput.value.trim() || '硬式テニス';
         const subText = headerSubInput.value.trim() || 'ツアーオースリー100';
         const logoText = logoInput.value.trim() || 'prince';
 
+        // ★ ပြင်ဆင်ချက် ၂: Header Main Text နှင့် Series Name (subText) Font Size အတူတူ ဖြစ်စေရန် Rule
         prompt +=
-            `Graphic UI Overlays with distinct inset margins: In the upper-left area, generate a solid dark charcoal banner (Hex color code: #262626) with crisp white text reading "${mainText}". Directly beneath this banner, render sharp, clean charcoal text (Hex color code: #262626) reading "${subText}". These top-left text and banner elements must NOT touch or be close to the outer borders; they must be pushed significantly inward away from the top and left edges, creating a generous, clear 10-pixel proportional negative space margin/buffer. `;
+            `Graphic UI Overlays with distinct inset margins: In the upper-left area, generate a solid dark charcoal banner (Hex color code: #262626) with crisp white text reading "${mainText}". Directly beneath this banner, render sharp, clean charcoal text (Hex color code: #262626) reading "${subText}". CRITICAL FONT SIZE EQUALITY RULE: The header main text "${mainText}" and the series name sub-text "${subText}" MUST be generated using the EXACT SAME FONT SIZE and scale, ensuring both lines of text appear visually identical in scale and character height. These top-left text and banner elements must be pushed 10 pixels inward away from the top and left edges, maintaining a neat negative space margin buffer. `;
 
         prompt +=
             `In the bottom-right area, position the brand logo text reading "${logoText}". This logo must be strictly pushed inward, away from the extreme bottom and right edges of the canvas, enforcing a substantial 10-pixel proportional breathing room margin layout buffer to ensure no clipping or frame-hugging occurs. `;
     }
 
-    // ----- Part C: Layout Dynamic Rules (FIXED: Side Product Full Racket Scaling) -----
+    // ----- Part C: Layout Dynamic Rules -----
     if (layout === 'layout1') {
         prompt +=
-            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a cropped close-up of only the upper half of the racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint and handle grip. The two close-up segments must stand vertically parallel to each other. `;
+            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a cropped close-up of only the upper half of the racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint and handle grip. The two close-up segments must stand vertically parallel to each other at fixed, locked coordinates. `;
     } else {
-        // ★ ညာဘက်က Full Racket (Side Product) ရဲ့ Size ကို ပိုမိုကြီးမားထင်းလင်းစေရန် ရေးထားပါသည်
         prompt +=
-            `Composition Layout (Layout 2 - Cropped Frame and Full Racket Combo): The composition combines a cropped detail view on the left and a full-length product on the right. On the left side, feature a cropped macro close-up view of the upper racket head frame. On the right side, display one complete, uncropped, full-length tennis racket standing upright from head to grip. DYNAMIC SIZING RULE: The full-length racket on the right side MUST be dynamically enlarged to occupy a dominant, large vertical scale (spanning prominently tall from top to bottom) on the right quadrant of the canvas, making it bold, clear, and prominent without touching the outer canvas borders. `;
+            `Composition Layout (Layout 2 - Cropped Frame and Full Racket Combo): The composition combines a cropped detail view on the left and a full-length product on the right. On the left side, feature a cropped macro close-up view of the upper racket head frame. On the right side, display one complete, uncropped, full-length tennis racket standing upright from head to grip. DYNAMIC SIZING & FIXED ANCHOR RULE: The full-length racket on the right side MUST be dynamically enlarged to occupy a dominant, large vertical scale (spanning prominently tall from top to bottom) on the right quadrant of the canvas at an absolute fixed position, making it bold, clear, and prominent without touching outer borders or shifting position. `;
     }
 
     // ----- Part D: Dynamic Badge Shape & Text Logic -----
@@ -587,11 +589,9 @@
         const badgeText = badgeInput.value.trim() || (isStrung ? 'ガット張上げ専用' : 'フレームのみ');
 
         if (isStrung) {
-            // ★ STRUNG BADGE: Rectangle Shape + "ガット張上げ専用"
             prompt +=
                 `Sticker Badge Graphic (Rectangular Badge): Positioned near the bottom-center or lower-right void, render a solid dark charcoal rectangular box badge (Hex color code: #262626) featuring crisp white Japanese text reading "${badgeText}" stacked neatly on two lines. `;
         } else {
-            // ★ UNSTRUNG BADGE: Circle Shape + "フレームのみ"
             prompt +=
                 `Sticker Badge Graphic (Circular Badge): Positioned near the bottom-center or lower-right void, render a solid dark charcoal circular badge (Hex color code: #262626) featuring crisp white Japanese text reading "${badgeText}". `;
         }
@@ -603,7 +603,7 @@
 
     // ----- Part F: Dynamic Negative Prompt -----
     let negativeBase =
-        "color shift, incorrect product color, color variation from reference, shadows, drop shadows, ambient occlusion, background depth, background lighting effects, off-white background, grey background, multi-tone background, background color bleeding, dark backdrops, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, blurred badge borders, text overlapping product lines, smudging across white backgrounds, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, layout variation from reference.";
+        "unequal font sizes between header and series name, mismatched text scaling, shifting racket position, moving product placement, altered coordinates, color shift, incorrect product color, color variation from reference, shadows, drop shadows, ambient occlusion, background depth, background lighting effects, off-white background, grey background, multi-tone background, background color bleeding, dark backdrops, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, blurred badge borders, text overlapping product lines, smudging across white backgrounds, jagged lines, low resolution, warped racket frame geometry, messy wrap textures, pixelated edges, out of focus layers, altered product design, layout variation from reference.";
 
     if (isStrung) {
         negativeBase += ", unstrung racket, empty racket head, missing strings, hollow frame hoop, circular badge when strung";
