@@ -549,9 +549,7 @@
     let prompt =
         `Ultra-realistic e-commerce catalog product photography of premium tennis rackets. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene is shot on a solid, flat, uniform pristine pure white background (#FFFFFF) with absolutely no shadows, no gradient, and no depth. `;
     
-    // STRICT POSITION & ANGLE LOCK
-    prompt += `STRICT COMPOSITION LOCKING RULE: The precise framing, angle, scale, and spatial coordinates of both rackets MUST strictly mirror the attached reference image layout without shifting position, rotating angle, or altering crop scale across generations. `;
-
+    // COLOR & FIDELITY RULE
     prompt += `COLOR & FIDELITY RULE: Strictly match and replicate the exact color scheme, frame patterns, graphics, logo details, and handle grip wrap texture directly from the attached reference image. Do NOT alter, shift, or introduce any unauthorized colors. `;
 
     // ----- Part A2: String Select Logic -----
@@ -574,16 +572,18 @@
             `In the bottom-right area, position the brand logo text reading "${logoText}". This logo must be strictly pushed inward, away from the extreme bottom and right edges of the canvas, enforcing a substantial 10-pixel proportional breathing room margin layout buffer to ensure no clipping or frame-hugging occurs. `;
     }
 
-    // ----- Part C: Layout Dynamic Rules (STRICT CROP: NO HANDLE ON LEFT) -----
-    if (layout === 'layout1') {
+    // ----- Part C: Layout Dynamic Rules (ADAPTIVE LEFT MAIN & FIXED RIGHT ELEMENT) -----
+   if (layout === 'layout1') {
+        // ★ FIXED: Layout 1 ရှိ Left Crop ကို V-shaped throat joint ပါရုံသာမက အောက်နားအထိ နည်းနည်းပိုပါစေရန် ပြင်ထားခြင်း
         prompt +=
-            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. On the left half, render a cropped close-up of only the upper half of the racket head frame. On the right half, display the lower half crop of the exact same racket, focusing closely on the throat-joint and handle grip. The two close-up segments must stand vertically parallel to each other at fixed, locked coordinates. `;
+            `Composition Layout (Layout 1 - Split Macro Detail View): Do NOT show any full or complete racket. The composition is a split-screen detail layout. ` +
+            `LEFT ELEMENT (MAIN PRODUCT ANGLE ADAPTATION): On the left half, render a prominent macro crop showing the upper oval racket head hoop extending slightly further down past the V-shaped throat joint into the upper shaft transition area, ending strictly right above where the handle grip tape begins (NO handle grip wrap visible). THIS LEFT MAIN PRODUCT MUST ADAPT ITS PERSPECTIVE ANGLE—strictly replicating the exact body rotation, tilt, and perspective (whether angled at a 3/4 view or facing directly front) as shown in the attached main reference image. ` +
+            `RIGHT ELEMENT (FIXED LOWER CROP): On the right half, display the lower half detail crop of the exact same racket, focusing closely on the throat-joint and handle grip base. The right crop segment must stand vertically parallel at fixed, locked coordinates. `;
     } else {
-        // ★ FIXED: ဘယ်ဘက် Racket တွင် လက်ကိုင် (Handle/Grip) လုံးဝ မပါစေဘဲ Throat အထိသာ ဖြတ်ရန် ချုပ်ထားပါသည်
         prompt +=
             `Composition Layout (Layout 2 - Racket Head & Throat Crop Combo): ` +
-            `LEFT ELEMENT CROP RULE: On the left half, render a prominent macro crop showing ONLY the complete upper oval racket head hoop and the V-shaped throat joint. STRICT BOUNDARY: The crop MUST end cleanly right at the throat joint area. Do NOT render any handle, handle grip wrap, or grip tape on the left side element. ` +
-            `RIGHT ELEMENT: On the right side, display one complete, fully upright full-length tennis racket extending vertically straight from top head down to the handle grip base, centered neatly in the right half with clean margin buffers. `;
+            `LEFT ELEMENT (MAIN PRODUCT ANGLE ADAPTATION): On the left side, render a prominent crop of the main product showing ONLY the complete upper oval racket head hoop and the V-shaped throat joint (STRICT BOUNDARY: ending cleanly right at the throat joint area with NO handle or grip tape). THIS LEFT MAIN PRODUCT MUST ADAPT ITS PERSPECTIVE ANGLE—strictly replicating the exact body rotation, tilt, and perspective (whether angled at a 3/4 view or facing directly front) as shown in the attached main reference image. ` +
+            `RIGHT ELEMENT (FIXED FULL RACKET): On the right side, display one complete full-length tennis racket standing upright from head down to handle base. This right-side full racket MUST remain strictly fixed, vertical, upright, and locked in position across all generations without shifting or rotating. `;
     }
 
     // ----- Part D: Dynamic Badge Shape & Text Logic -----
@@ -603,9 +603,9 @@
     prompt +=
         `Final Polish: Premium athletic equipment campaign aesthetic, centered composition balance, completely shadowless background, isolated product cutout look, ${photographyTerms}`;
 
-    // ----- Part F: Dynamic Negative Prompt (STRICT HANDLE PREVENTIONS) -----
+    // ----- Part F: Dynamic Negative Prompt -----
     let negativeBase =
-        "handle grip on left racket, visible grip wrap on left element, handle showing on left crop, full shaft on left side, over-cropped head frame without throat, shifting racket position, unequal font sizes between header and series name, mismatched text scaling, moving product placement, altered coordinates, color shift, incorrect product color, color variation from reference, shadows, drop shadows, ambient occlusion, background depth, background lighting effects, off-white background, grey background, multi-tone background, background color bleeding, dark backdrops, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, blurred badge borders, text overlapping product lines, smudging across white backgrounds, jagged lines, low resolution, warped racket frame geometry, pixelated edges, out of focus layers, altered product design.";
+        "handle grip on left racket, visible grip wrap on left element, handle showing on left crop, full shaft on left side, over-cropped head frame without throat, shifting right racket position, tilting right racket, unequal font sizes between header and series name, mismatched text scaling, moving product placement, altered coordinates, color shift, incorrect product color, color variation from reference, shadows, drop shadows, ambient occlusion, background depth, background lighting effects, off-white background, grey background, multi-tone background, background color bleeding, dark backdrops, text touching image edges, text clipped at borders, logo touching frame border, edge-hugging text, zero margin layout, unrealistic text rendering, broken fonts, blurred badge borders, text overlapping product lines, smudging across white backgrounds, jagged lines, low resolution, warped racket frame geometry, pixelated edges, out of focus layers, altered product design.";
 
     if (isStrung) {
         negativeBase += ", unstrung racket, empty racket head, missing strings, hollow frame hoop, circular badge when strung";
