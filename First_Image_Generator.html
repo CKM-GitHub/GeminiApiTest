@@ -132,6 +132,12 @@
             color: #6b21a8;
         }
 
+        .badge-green {
+            background: #dcfce7;
+            border-color: #bbf7d0;
+            color: #15803d;
+        }
+
         .mode-pill {
             display: inline-flex;
             background: #f1f5f9;
@@ -221,7 +227,7 @@
                 <p class="text-sm text-slate-500 mt-0.5">コマーシャル商品広告 · 固定モデルポーズ</p>
             </div>
             <div class="flex items-center gap-3">
-                <span class="badge badge-accent">v2.6</span>
+                <span class="badge badge-accent">v2.7</span>
                 <span class="badge">⚡ 1:1 正方形</span>
             </div>
         </header>
@@ -297,8 +303,9 @@
 
             </div>
 
-            <!-- 行: 背景ロケーション（新規追加） -->
-            <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mb-6">
+            <!-- 行: 背景ロケーション + 商品タイプ -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- 背景ロケーション -->
                 <div>
                     <div class="flex items-center gap-2 mb-2">
                         <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">背景ロケーション</span>
@@ -316,6 +323,23 @@
                         <option value="professional dynamic outdoor multi-sport field under crisp daylight with clean athletic field markings">🏃 スポーツフィールド</option>
                     </select>
                     <p class="hint mt-1.5">シーン背景を選択 — 商品・モデルの雰囲気を変更</p>
+                </div>
+
+                <!-- 商品タイプ（新規追加） -->
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">商品タイプ</span>
+                        <span class="badge badge-green text-[10px]">レイアウト固定</span>
+                    </div>
+                    <select id="productTypeSelect" class="field">
+                        <option value="general">デフォルト</option>
+                        <option value="bag">🎒 バッグ（ヒーロー + 3縦スタック）</option>
+                        <option value="hat">🧢 帽子（三角ピラミッド構成）</option>
+                    </select>
+                    <p class="hint mt-1.5">
+                        <span class="font-medium text-slate-600">バッグ</span> → 左ヒーロー、右に3縦並び &nbsp;·&nbsp;
+                        <span class="font-medium text-slate-600">帽子</span> → 頂点ヒーロー、底辺3つの三角配置
+                    </p>
                 </div>
             </div>
 
@@ -427,6 +451,7 @@
         const mainColorFields = document.getElementById('mainColorFields');
         const mainColorInput = document.getElementById('mainColorInput');
         const backgroundLocation = document.getElementById('backgroundLocation');
+        const productTypeSelect = document.getElementById('productTypeSelect');
         const generateBtn = document.getElementById('generateBtn');
         const copyBtn = document.getElementById('copyBtn');
         const positiveOutput = document.getElementById('positiveOutput');
@@ -498,39 +523,53 @@
         modelPresence.addEventListener('change', toggleModelType);
 
         // ──────────────────────────────────────────────────────────────
-        // buildPrompt() – REFACTORED with dynamic background & conditional shadowless
+        // Product Type change → auto-generate
         // ──────────────────────────────────────────────────────────────
-     function buildPrompt() {
+        productTypeSelect.addEventListener('change', autoGenerate);
+
+        // ──────────────────────────────────────────────────────────────
+        // buildPrompt() – FULLY MERGED with Bag & Hat Fixed Layouts
+        // ──────────────────────────────────────────────────────────────
+      function buildPrompt() {
     const mode = currentMode;
     const qty = parseInt(productQty.value, 10);
-    const validQty = isNaN(qty) ? 2 : qty;
+    const validQty = isNaN(qty) ? 3 : qty;
     const hasModel = modelPresence.value === 'with';
     const hasMainProduct = mainProductSelect.value === 'with';
     const mainColor = mainColorInput.value.trim() || 'Red';
     const modelDescription = modelTypeSelect.value;
     const backgroundDescription = backgroundLocation.value;
+    const productType = productTypeSelect.value;
 
     const isPureWhite = backgroundDescription.includes('pure hex color #FFFFFF');
 
     // ----- Technical & Cinematic Finishing -----
     const photographyTerms =
-        "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers. Sharp, high-fidelity focus on fabric textures, embossed details, and material finishes. Photorealistic rendering of products, ultra-detailed textile drape, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
+        "Shot on professional 85mm studio lens, f/2.8 aperture for crisp focus across all layers. Sharp, high-fidelity focus on fabric textures, mesh back panels, curved visor details, and 3D embroidered logos. Photorealistic rendering of products, 8k resolution, precise color accuracy, professional e-commerce catalog lookbook quality.";
 
-    // ----- Part A: Base Setup & Background -----
+    // ----- Part A: Base Canvas Setup & Strict Reference Alignment -----
     let prompt =
         `Ultra-realistic e-commerce fashion photography of an institutional ad template layout. Square format, 1:1 aspect ratio, exactly 600x600 pixels resolution. The scene features a clean background set in a ${backgroundDescription}. `;
 
+    // STRICT REFERENCE BOUNDARY RULE
+    prompt +=
+        `STRICT TEMPLATE ANCHOR: The visual frame structure, layout composition, and boundaries must strictly mirror the structural alignment of the attached reference template. `;
+
     // ----- Part A2: Model Framing -----
-    if (hasModel) {
+    if (hasModel && productType === 'general') {
         prompt +=
             `On the left side of the frame, there is a fixed ${modelDescription} wearing the main apparel product in '${mainColor}' color, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. ` +
             `CAMERA FRAMING: Medium upper-body shot (waist-up portrait). The model MUST be cleanly cropped at the waist level. The bottom 20% of the left canvas area MUST remain clear empty background space. The model's shorts or lower attire must NOT touch or extend to the bottom edge of the image frame, maintaining a clean bottom margin buffer. `;
+    } else if (hasModel && productType !== 'general') {
+        prompt +=
+            `On the left side of the frame, there is a fixed ${modelDescription} wearing a complementary outfit in '${mainColor}' color, maintaining the exact posture, framing, body angle, and relaxed pose as showcased in the attached reference image. ` +
+            `CAMERA FRAMING: Medium upper-body shot (waist-up portrait). The model MUST be cleanly cropped at the waist level. The bottom 20% of the left canvas area MUST remain clear empty background space. `;
     } else {
         prompt +=
-            `No human model is present. The entire canvas is dedicated to the product display, with the products centered and scaled to fill the available space elegantly. `;
+            `No human model is present. The entire canvas is dedicated strictly to clean product displays, centered and arranged proportionally. `;
     }
 
-    // ----- Part B: Header & Logo Overlays with 10px Margin Buffer -----
+    // ----- Part B: Header & Logo Overlays (Fixed 10px Margin Buffers) -----
     if (mode === 'manual') {
         const header = headerInput.value.trim() || 'MENS';
         const logo = logoInput.value.trim() || 'FILA';
@@ -538,85 +577,136 @@
             `Graphic UI Elements: A solid vibrant blue rectangular banner (Hex color code: #1A66FF) featuring crisp, perfectly rendered white text (Hex color code: #FFFFFF) reading "${header}" is cleanly generated near the top-left corner of the frame; it must be shifted slightly inward to maintain a clean, intentional 10-pixel proportional margin/padding buffer away from both the absolute top and left edges of the canvas. In the bottom-right area, the sharp brand logo text reading "${logo}" is seamlessly placed, also shifted slightly inward to maintain an exact 10-pixel proportional margin/padding buffer from both the absolute bottom and right edges of the canvas. Both graphic elements must perfectly mirror the font scaling and structural layout seen in the attached reference image but with this neat negative space padding to ensure no text or banner elements touch the extreme outer frame borders, keeping clear boundaries and no color bleeding. `;
     }
 
-    // ----- Part C: Multi-Product Dynamic Arrangement (FIXED LOGIC) -----
-    if (hasMainProduct) {
-        // ★ FIXED: `mainColor` instruction က model ပါသည်ဖြစ်စေ၊ မပါသည်ဖြစ်စေ hasMainProduct true ဆိုရင် အမြဲပါရမယ်။
+    // ----- Part C: DYNAMIC PRODUCT TYPE OVERRIDES (BAG / HAT LAYOUTS) -----
+    if (productType === 'bag') {
+        prompt += `COMPOSITION LAYOUT (BAG / BACKPACK SPECIFIC - DYNAMIC QUANTITY ARRANGEMENT): `;
         
-        if (hasModel) {
-            // Model ဝတ်ထားတဲ့ အခြေအနေ (ဒါက မှန်ပြီးသား)
-            prompt += `MAIN PRODUCT INTEGRATION: The main product in '${mainColor}' finish is worn strictly and exclusively by the human model on the left side of the frame. DO NOT display the main product separately as a standalone floating item on the right side. `;
-        
-            if (validQty === 1) {
-                prompt += `There is only 1 main product variant in '${mainColor}', which is seamlessly featured on the primary model. No other floating variant garments should be present on the right side. `;
-            } else {
-                const secondaryCount = validQty - 1;
-                prompt += `For the remaining ${secondaryCount} secondary variant products (excluding the main product worn by the model), arrange them cleanly on the right quadrant of the canvas. `;
-                
-                if (secondaryCount <= 4) {
-                    prompt += `LARGE SIZING RULE FOR SIDE PRODUCTS: Cleanly organize the ${secondaryCount} standalone products in a vertical stack on the right side. Each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale of the reference image. They must occupy the right-side whitespace with strong visual presence while maintaining clear separation between items. `;
-                } else {
-                    prompt += `With ${secondaryCount} secondary products, arrange them in a compact, structured grid system on the right side, scaled appropriately to fit seamlessly without overcrowding. `;
-                }
-            }
-        
+        if (hasMainProduct) {
+            prompt += `The primary hero bag in '${mainColor}' color is positioned as the dominant focal point on the left side of the composition. `;
         } else {
-            // Model မပါဘဲ Standalone Main Product ပြမယ့် အခြေအနေ (ဒီ block အသစ်ထည့်ထားတာပါ)
-            // Model မပါတဲ့အတွက် Main Product ကို ဘယ်ဘက်ခြမ်းမှာ ထားမှာလား၊ အလယ်မှာ ထားမှာလားဆိုတာ သတ်မှတ်ပေးရပါမယ်။
-            // ဥပမာ- ဘယ်ဘက်မှာ Main product ပြပြီး ညာဘက်မှာ variant တွေပြတဲ့ Reference image ပုံစံအတိုင်း logic ရေးပါမယ်။
+            prompt += `The primary hero bag is positioned as the dominant focal point on the left side of the composition. `;
+        }
 
-            if (validQty === 1) {
-                prompt += `Composition Layout (Single Main Product): The undeniable central focus is one single main hero product variants in '${mainColor}' color. Center this product prominently on the canvas, scaled generously to fill the space without crowding. Maintaining absolute structural accuracy from the reference image. `;
-            } else {
-                prompt += `Composition Layout (Hero & Variants Combo): Among the ${validQty} variant products, one is designated as the main hero product in '${mainColor}' finish. Place this hero product prominently on the left side of the composition, acts as the undeniably dominant focal point, much larger than others. `;
-                
-                const secondaryCount = validQty - 1;
-                prompt += `Arranged cleanly on the right quadrant of the canvas are the remaining ${secondaryCount} secondary variant products, scaled down neatly to complement the main hero. `;
+        const rightBagCount = validQty > 1 ? validQty - 1 : 1;
 
-                if (secondaryCount <= 4) {
-                     prompt += `LARGE SIZING RULE FOR SIDE PRODUCTS: Cleanly organize the ${secondaryCount} standalone products in a vertical stack on the right side. Each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale of the reference image. `;
-                } else {
-                     prompt += `With ${secondaryCount} secondary products, arrange them in a compact grid system on the right side, scaled appropriately. `;
-                }
-            }
+        prompt +=
+            `On the right side quadrant of the canvas, render EXACTLY ${rightBagCount} secondary bag variants stacked vertically in a clean column. ` +
+            `All ${rightBagCount} secondary bags MUST be generated at identical proportions, perfectly uniform in size, vertically aligned with equal spacing between each item. ` +
+            `The vertical column must fit comfortably within the right workspace, dynamically scaling down if the count increases to fit cleanly without crowding or overlapping, maintaining the 10px margin buffer from the header and logo. `;
+
+    } else if (productType === 'hat') {
+        // ★ DYNAMIC HAT LAYOUT WITH EXACT SCALE & DEPTH PERSPECTIVE
+        prompt += `COMPOSITION LAYOUT (HAT / CAP SPECIFIC - STRICT PERSPECTIVE & SCALE RATIOS): `;
+        
+        prompt += `The scene must feature EXACTLY ${validQty} hat/cap items in total, rendered with dramatic depth perspective matching the reference template: `;
+
+if (validQty === 3) {
+            // 3 Caps: Inverted Pyramid / Prominent Large Hero + Balanced Background Caps (Slightly Reduced Gap)
+            prompt +=
+                `For 3 hats (Inverted Pyramid Structure with Depth): ` +
+                `1. FOREGROUND HERO HAT (BOTTOM CENTER): Position 1 primary hero hat in '${mainColor}' color prominently in the lower-center foreground, tilted at a dynamic 3/4 angle. SCALE & DEPTH: This hero hat MUST be dramatically larger, bold, and massive (occupying approximately 55% to 60% of the total canvas space), acting as the central dominant focal point that projects strongly forward. ` +
+                `2. BACKGROUND SECONDARY HATS (TOP ROW - BALANCED TIGHTER SPACING): Position exactly 2 secondary hat variants in the upper background (one top-left, one top-right). SCALE & POSITIONING: These 2 background hats should be moderately sized (approx 60% to 65% scale relative to the massive foreground hero hat). Position them with a balanced, slightly reduced horizontal gap between them (drawn slightly closer toward the center axis, avoiding wide separation), placed neatly behind the top crown of the oversized foreground hero cap without overlapping each other. `;
+
+        }
+        
+        else if (validQty === 4) {
+            // 4 Caps: Apex Top + 3 Base Row Bottom
+            prompt +=
+                `For 4 hats (Pyramid Structure with Depth): ` +
+                `1. APEX HERO HAT (TOP CENTER): Position 1 primary hero hat in '${mainColor}' centered in the upper portion, rendered slightly larger as the apex focal point. ` +
+                `2. BASE ROW HATS (BOTTOM ROW): Arrange the remaining 3 secondary hat variants along the bottom row in a clean horizontal alignment with equal spacing and smaller, uniform scale, forming a stable 4-piece pyramid grid. `;
+
+        } else if (validQty <= 2) {
+            prompt +=
+                `For ${validQty} hat(s): Center them prominently on the canvas with dynamic 3/4 perspective angles, scaled generously to fill the frame with strong visual presence. `;
+
+        } else {
+            // 5+ Caps
+            prompt +=
+                `For ${validQty} hats: Arrange all ${validQty} hats in a multi-tiered structured pyramid grid system (1 prominent hero cap on top/front, followed by neatly scaled smaller rows behind). Dynamically scale down sizes evenly so all ${validQty} hats fit cleanly within the 1:1 canvas without overlapping borders. `;
         }
 
     } else {
-        // No main product selected (Variant products only, no input color specified in Part C)
-        // ဒီ block က မူရင်း code ထဲကအတိုင်းပါပဲ။
-        if (validQty === 1) {
+        // ----- STANDARD APPAREL / GENERAL LAYOUT -----
+        if (hasMainProduct) {
             if (hasModel) {
                 prompt +=
-                    `Composition Layout (Single Product): On the right side of the model, cleanly organize 1 variant product as the sole item. Its scale should be dynamically large, occupying a prominent portion of the right quadrant space while maintaining a clear buffer away from the model. `;
-            } else {
-                prompt +=
-                    `Composition Layout (Single Product): Center the one variant product prominently in the middle of the canvas, making it the undeniable central focus, scaled generously to fill the space without crowding. `;
-            }
-        } else if (validQty >= 2 && validQty <= 5) {
-            if (hasModel) {
-                prompt +=
-                    `Composition Layout (${validQty} Products): On the right side of the model, cleanly organize the ${validQty} variant products in a vertical stack. DYNAMIC SIZING RULE: Since there are only ${validQty} products, each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale seen in the reference image, maintaining strong visual presence. `;
-            } else {
-                prompt +=
-                    `Composition Layout (${validQty} Products): Arrange the ${validQty} variant products in a well-balanced grid centered on the canvas, with generous prominent sizing. `;
-            }
-        } else if (validQty >= 6 && validQty <= 10) {
-            if (hasModel) {
-                prompt +=
-                    `Composition Layout (${validQty} Products - Compact Grid): On the right side of the model, arrange the ${validQty} variant products in a highly organized compact grid, dynamically scaled down to fit seamlessly within the right workspace canvas. `;
-            } else {
-                prompt +=
-                    `Composition Layout (${validQty} Products - Compact Grid): Arrange the ${validQty} variant products in a dense grid that fills the canvas uniformly. `;
-            }
-        } else {
-            prompt +=
-                `Composition Layout (${validQty} Products): Display the ${validQty} variant products in a clean, organized layout. `;
-        }
-    }
+                    `MAIN PRODUCT INTEGRATION: The main product in '${mainColor}' finish is worn strictly and exclusively by the human model on the left side of the frame. DO NOT display the main product separately as a standalone floating item on the right side. `;
 
-    // ----- Product Safe-Zone Rule -----
-    if (validQty > 0 && hasModel) {
-        prompt +=
-            `PRODUCT SAFE-ZONE RULE: All standalone product garments on the right side must be strictly centered within the right quadrant workspace, vertically suspended strictly below the top header banner and strictly above the bottom-right logo area with zero overlap. `;
+                if (validQty === 1) {
+                    prompt +=
+                        `There is only 1 main product variant in '${mainColor}', which is seamlessly featured on the primary model. No other floating variant garments should be present on the right side. `;
+                } else {
+                    const secondaryCount = validQty - 1;
+                    prompt +=
+                        `For the remaining ${secondaryCount} secondary variant products (excluding the main product worn by the model), arrange them cleanly on the right quadrant of the canvas. `;
+
+                    if (secondaryCount <= 4) {
+                        prompt +=
+                            `LARGE SIZING RULE FOR SIDE PRODUCTS: Cleanly organize the ${secondaryCount} standalone products in a vertical stack on the right side. Each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale of the reference image. They must occupy the right-side whitespace with strong visual presence while maintaining clear separation between items. `;
+                    } else {
+                        prompt +=
+                            `With ${secondaryCount} secondary products, arrange them in a compact, structured grid system on the right side, scaled appropriately to fit seamlessly without overcrowding. `;
+                    }
+                }
+
+            } else {
+                if (validQty === 1) {
+                    prompt +=
+                        `Composition Layout (Single Main Product): The undeniable central focus is one single main hero product variant in '${mainColor}' color. Center this product prominently on the canvas, scaled generously to fill the space without crowding. Maintaining absolute structural accuracy from the reference image. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (Hero & Variants Combo): Among the ${validQty} variant products, one is designated as the main hero product in '${mainColor}' finish. Place this hero product prominently on the left side of the composition, acts as the undeniably dominant focal point, much larger than others. `;
+
+                    const secondaryCount = validQty - 1;
+                    prompt +=
+                        `Arranged cleanly on the right quadrant of the canvas are the remaining ${secondaryCount} secondary variant products, scaled down neatly to complement the main hero. `;
+
+                    if (secondaryCount <= 4) {
+                        prompt +=
+                            `LARGE SIZING RULE FOR SIDE PRODUCTS: Cleanly organize the ${secondaryCount} standalone products in a vertical stack on the right side. Each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale of the reference image. `;
+                    } else {
+                        prompt +=
+                            `With ${secondaryCount} secondary products, arrange them in a compact grid system on the right side, scaled appropriately. `;
+                    }
+                }
+            }
+
+        } else {
+            if (validQty === 1) {
+                if (hasModel) {
+                    prompt +=
+                        `Composition Layout (Single Product): On the right side of the model, cleanly organize 1 variant product as the sole item. Its scale should be dynamically large, occupying a prominent portion of the right quadrant space while maintaining a clear buffer away from the model. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (Single Product): Center the one variant product prominently in the middle of the canvas, making it the undeniable central focus, scaled generously to fill the space without crowding. `;
+                }
+            } else if (validQty >= 2 && validQty <= 5) {
+                if (hasModel) {
+                    prompt +=
+                        `Composition Layout (${validQty} Products): On the right side of the model, cleanly organize the ${validQty} variant products in a vertical stack. DYNAMIC SIZING RULE: Since there are only ${validQty} products, each product MUST be dynamically scaled up to be SIGNIFICANTLY LARGER, filling approximately 45% to 50% of the canvas width to match the prominent visual scale seen in the reference image, maintaining strong visual presence. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (${validQty} Products): Arrange the ${validQty} variant products in a well-balanced grid centered on the canvas, with generous prominent sizing. `;
+                }
+            } else if (validQty >= 6 && validQty <= 10) {
+                if (hasModel) {
+                    prompt +=
+                        `Composition Layout (${validQty} Products - Compact Grid): On the right side of the model, arrange the ${validQty} variant products in a highly organized compact grid, dynamically scaled down to fit seamlessly within the right workspace canvas. `;
+                } else {
+                    prompt +=
+                        `Composition Layout (${validQty} Products - Compact Grid): Arrange the ${validQty} variant products in a dense grid that fills the canvas uniformly. `;
+                }
+            } else {
+                prompt +=
+                    `Composition Layout (${validQty} Products): Display the ${validQty} variant products in a clean, organized layout. `;
+            }
+        }
+
+        if (validQty > 0 && hasModel) {
+            prompt +=
+                `PRODUCT SAFE-ZONE RULE: All standalone product garments on the right side must be strictly centered within the right quadrant workspace, vertically suspended strictly below the top header banner and strictly above the bottom-right logo area with zero overlap. `;
+        }
     }
 
     // ----- Part D: Product Material & Fidelity -----
@@ -626,9 +716,11 @@
     // ----- Part E: Final Cinematic Polish -----
     let polishPart;
     if (isPureWhite) {
-        polishPart = `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, completely shadowless background, isolated product look, premium clothing campaign vibe, ${photographyTerms}`;
+        polishPart =
+            `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, completely shadowless background, isolated product look, premium clothing campaign vibe, ${photographyTerms}`;
     } else {
-        polishPart = `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, seamless background integration, natural lighting consistency, premium clothing campaign vibe, ${photographyTerms}`;
+        polishPart =
+            `Final Polish: Centered composition balance, realistic fabric drape and weight, clean modern sportswear aesthetic, seamless background integration, natural lighting consistency, premium clothing campaign vibe, ${photographyTerms}`;
     }
     prompt += polishPart;
 
@@ -636,16 +728,26 @@
     let negativeBase =
         "shadows, drop shadows, ambient occlusion, background depth, gradient background, unrealistic text rendering, deformed text, blurry characters, gibberish lettering, incorrect color codes, color bleeding, color running across product edges, smudging, inaccurate color hue, jagged underlines, random lines under text, low resolution, distorted product silhouettes, mismatched scaling, merged garments, floating fabric fragments, poorly drawn hands, distorted model anatomy, double logos, pixelated edges, out of focus layers, overexposed lighting, muddy textures";
 
-    const framingTerms = "full body, thighs, legs extending to bottom edge, model touching bottom frame, product overlapping logo, bottom edge clipping, full standing pose, feet touching frame";
+    const framingTerms =
+        "full body, thighs, legs extending to bottom edge, model touching bottom frame, product overlapping logo, bottom edge clipping, full standing pose, feet touching frame";
     let negativePrompt = negativeBase + ", " + framingTerms;
 
-    // Main product ပါရင် ဘေးမှာ မထပ်စေဖို့ Negative Prompt ထဲပါ ထပ်မံ ပိတ်ပင်ခြင်း
-    if (hasMainProduct && hasModel) {
+    if (productType === 'bag') {
+        negativePrompt +=
+            ", asymmetrical stack, uneven bag sizes, misaligned vertical column, overlapping bags, bag touching bottom edge, bag touching top banner";
+    } else if (productType === 'hat') {
+        negativePrompt +=
+            ", equal sized hats, flat layout, no depth, overlapping caps, caps touching outer borders, cluttered composition, uneven scaling";
+    }
+
+    if (hasMainProduct && hasModel && productType === 'general') {
         negativePrompt += `, duplicate main product on right side, main product shown twice`;
     }
 
     return { positive: prompt.trim(), negative: negativePrompt.trim() };
-}    // ──────────────────────────────────────────────────────────────
+}
+
+        // ──────────────────────────────────────────────────────────────
         // Generate & display
         // ──────────────────────────────────────────────────────────────
         function generateAndDisplay() {
@@ -669,7 +771,7 @@
         copyBtn.addEventListener('click', async function() {
             const pos = positiveOutput.textContent.trim();
             const neg = negativeOutput.textContent.trim();
-            if (!pos || pos === "Click Generate to build your prompt…") {
+            if (!pos || pos === "Click Generate to build your prompt…" || pos === "生成 をクリックしてプロンプトを作成…") {
                 showToast('⚠️ 先にプロンプトを生成してください。');
                 return;
             }
@@ -722,7 +824,9 @@
         mainProductSelect.addEventListener('change', autoGenerate);
         mainColorInput.addEventListener('input', autoGenerate);
         backgroundLocation.addEventListener('change', autoGenerate);
+        productTypeSelect.addEventListener('change', autoGenerate);
     </script>
-    <script src="menu.js"></script>
+    <script src="menu.js">
+    </script>
 </body>
 </html>
