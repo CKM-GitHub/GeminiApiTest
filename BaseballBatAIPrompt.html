@@ -371,48 +371,84 @@ function generateLayoutDesign() {
     // ---------- フレーム別プロンプト ----------
     let prompt = '';
 
-    if (frame === 'Frame 1') {
+   if (frame === 'Frame 1') {
         // ---- Base Banner & Header Block ----
-        prompt += `Professional high-end e-commerce product catalog banner photography of an authentic Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-        prompt += `The layout features a multi-angle cohesive presentation on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no shadows, no gradient, and a minimalist corporate athletic aesthetic. `;
+  
+// ---- ★ Main Hero Diagonal Bat — HEADER-ALIGNED LEFT CROP ----
 
-        prompt += `On the top-left corner of the image, place a sharp stacked header badge block with a clear 20px outer margin from the top and left edges of the canvas. `;
-        prompt += `The upper header consists of a solid black background rectangular box (#2B2B2B) containing bold white Japanese text "${category}" centered in a heavy sans-serif Japanese font with slightly smaller point size for a refined catalog look. `;
+prompt += `The upper and central area of the 600x600 canvas features one large primary hero baseball bat in '${activeColor}' finish. `;
 
-        if (isJunior) {
-            prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
-            prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
-        }
+// ---- SHARED LEFT ALIGNMENT AXIS ----
 
-        // ---- Balance Icon ----
-        if (hasBalance) {
-            prompt += `Directly positioned underneath the stacked header boxes on the left side (also with 20px margin), place a single extracted balance element. From the attached reference image containing four horizontal balance icons, strictly isolate and crop ONLY ONE specific icon corresponding to the '${balance}' configuration. `;
-            if (balance === "Top") prompt += `Crop and extract only the 1st icon from the left (representing Top Balance). Do not include any part of the other three icons. `;
-            else if (balance === "Top Middle") prompt += `Crop and extract only the 2nd icon from the left (representing Top Middle Balance). Do not include any part of the other three icons. `;
-            else if (balance === "Middle") prompt += `Crop and extract only the 3rd icon from the left (representing Middle Balance). Do not include any part of the other three icons. `;
-            else if (balance === "Counter") prompt += `Crop and extract only the 4th icon from the left (representing Counter Balance). Do not include any part of the other three icons. `;
-            prompt += `Ensure exactly ONE single balance badge is displayed in the final layout, absolutely no more, no less. `;
-        }
+prompt += `CRITICAL LAYOUT RULE: The top-left header and the primary hero bat MUST share the exact same left alignment axis. `;
 
-        // ---- ★ Main Hero Diagonal Bat ----
-        prompt += `The upper and central parts of the canvas feature a dramatic, macro-zoomed close-up view of ONLY the upper barrel, head section, and model decals of the primary bat in '${activeColor}' finish. `;
-        prompt += `CROP & COMPOSITION RULE: The handle, grip tape, and handle knob of this hero bat are COMPLETELY CROP-OUT and pushed entirely outside the bottom-left canvas frame and are NOT visible. Only the thick barrel and transition area are shown, creating an aggressive, dynamic upward diagonal composition at 55 degrees from lower-left rising towards the top-right corner. `;
-        prompt += `This zoomed barrel showcases prominent, high-detail model branding graphics (e.g., SKYBEAT text), clear brand logo decals, glossy metallic finish, and authentic product specification stickers near the transition area, exactly matching a real commercial store item. `;
-        prompt += `Maintain consistent '${activeColor}' finish seamlessly across the visible barrel portion without discoloration. `;
+prompt += `The header begins at a fixed 25px inset from the left edge of the 600x600 canvas. The visible hero bat composition must begin at that exact same 25px vertical alignment. `;
 
-        // ---- ★ Secondary Bottom Horizontal Bats ----
+prompt += `Imagine a perfectly straight invisible vertical guide line positioned at x=25px. The left edge of the header and the leftmost visible starting point of the hero bat MUST both touch this same guide line. `;
+
+prompt += `The 0-25px area is a clean protected outer margin. The hero bat MUST NEVER enter this protected margin. `;
+
+prompt += `The physical canvas edge at x=0 MUST NOT be used as the starting point of the hero bat. `;
+
+// ---- HERO BAT ENTERS FROM THE SHARED ALIGNMENT AXIS ----
+
+prompt += `The oversized hero bat is partially outside the visible composition and is clipped at the shared 25px alignment axis. `;
+
+prompt += `At the exact x-position where the header begins, the lower-left portion of the hero bat is cleanly cut off, with the handle, grip, and knob extending beyond the visible composition. `;
+
+prompt += `The visible portion of the bat begins precisely at this same x=25px alignment position and continues diagonally upward toward the upper-right. `;
+
+prompt += `The bat itself follows a strong approximately 40-50 degree upward diagonal trajectory from the shared alignment point. `;
+
+prompt += `The leftmost visible point of the hero bat and the left edge of the header must be vertically aligned with zero horizontal offset. `;
+
+// ---- NO INDEPENDENT BAT MARGIN ----
+
+prompt += `Do not give the hero bat its own separate left margin. Do not shift the hero bat farther left or farther right than the header alignment axis. `;
+
+prompt += `Do not allow any portion of the hero bat to appear between the canvas edge and the header's left edge. `;
+
+prompt += `Do not create a second internal alignment line, floating crop line, or separate crop position. There is exactly ONE shared left alignment axis for both header and hero bat. `;
+
+// ---- HERO SCALE ----
+
+prompt += `The hero bat must remain very large and visually dominant, occupying most of the upper and central canvas area while preserving the exact 25px shared left alignment. `;
+
+prompt += `The enlarged barrel extends toward the upper-right portion of the canvas while remaining naturally contained within the frame. `;
+
+prompt += `Prominently preserve authentic product branding and technical markings such as 'EASTON', 'ZettPower', 'GODA-G9', or the exact branding visible on the supplied reference product. `;
+
+prompt += `Maintain a continuous uniform '${activeColor}' finish across the entire visible hero bat with authentic material texture, decals, metallic surfaces, and realistic proportions. `;
+
+// ---- FINAL SPATIAL VERIFICATION ----
+
+prompt += `FINAL SPATIAL CHECK: Header left edge = Hero bat leftmost visible edge = exact same x-coordinate. `;
+
+prompt += `The protected white outer margin from x=0 to x=25px remains completely empty. `;
+
+prompt += `The hero bat begins at x=25px, not x=0. `;
+
+prompt += `The header begins at x=25px, not x=0. `;
+
+prompt += `Both elements must form one perfectly aligned vertical left edge. `;
+
+
+
+  // ---- ★ Secondary Bottom Horizontal Bats ----
         const secondaryColors = otherColors;
         const secondaryCount = secondaryColors.length;
         const totalBats = 1 + secondaryCount;
 
-        prompt += `Positioned strictly at the absolute bottom margin of the 600x600 canvas, acting as a structural base and visual anchor, is the full-size bat view area. `;
+prompt += `Reserve a clearly separated bottom product zone beneath the hero bat. `;
+prompt += `The secondary horizontal bat(s) must remain entirely inside this bottom zone and must never alter, shift, resize, or reposition the primary hero bat. `;
+prompt += `The primary hero bat has layout priority over all secondary bats. `;
 
         if (secondaryCount === 0) {
-            prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish with authentic product details and grip tape, seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
+            prompt += `Resting completely horizontal on the bottom edge, there is a single secondary full-size, complete view of the entire bat in the '${activeColor}' finish with authentic product details, grip tape, and clearly rendered model decal typography (e.g., 'SKYBEAT' model name on the barrel), seamlessly rotated 90 degrees to lie flat, spanning perfectly across the lower width of the canvas. `;
         } else {
-            prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are ${secondaryCount} secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal. `;
+            prompt += `Resting flat and stacked in a tight, neat parallel alignment directly along the bottom boundary of the canvas, there are ${secondaryCount} secondary full-size, complete views of the entire bat, each seamlessly rotated 90 degrees to lie completely horizontal with model decals clearly displayed on their barrels. `;
             prompt += `These horizontal full-size bats showcase ONLY the alternative color finishes of ${secondaryColors.join(', ')} respectively, presenting the full product range with realistic graphics and grip tape details. They sit below the diagonal zoomed bat, completely separated and tidy. `;
-            prompt += `STRICT CONSTRAINT: Total bat count across the canvas MUST BE EXACTLY ${totalBats} (1 Hero Diagonal Zoomed Barrel-Only Bat in '${activeColor}' + ${secondaryCount} Horizontal Secondary Bats in ${secondaryColors.join(', ')}). DO NOT duplicate the primary hero color '${activeColor}' in the bottom horizontal stack. `;
+            prompt += `STRICT CONSTRAINT: Total bat count across the canvas MUST BE EXACTLY ${totalBats} (1 Hero Diagonal Zoomed Bat in '${activeColor}' + ${secondaryCount} Horizontal Secondary Bats in ${secondaryColors.join(', ')}). DO NOT duplicate the primary hero color '${activeColor}' in the bottom horizontal stack. `;
         }
 
         // ---- Logo Placement ----
@@ -421,8 +457,9 @@ function generateLayoutDesign() {
         // ---- Final Render Quality ----
         prompt += `Crisp studio lighting, ultra-clean presentation, soft subtle shadows directly beneath the flat product surfaces, sharp edge definition, premium Japanese sports store e-commerce lookbook quality, 8k resolution, photorealistic accuracy, professional color grading, ultra-sharp focus on glossy product textures, decals, and metallic surfaces. `;
         prompt += negativePrompt;
-
-    } else { // Frame 2
+    }
+    // Frame 2
+     else { 
         prompt += `Professional e-commerce product breakdown and specification banner photography strictly framed within a perfect square 600x600 pixels resolution canvas. `;
         prompt += `The banner layout is split into a strict three-piece structured design on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no depth and no shadows, presenting multiple detailed views of the product simultaneously. `;
         
