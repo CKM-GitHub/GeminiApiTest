@@ -479,16 +479,97 @@ prompt += `The primary hero bat has layout priority over all secondary bats. `;
         prompt += `CRITICAL FIX: The secondary bat image in Frame 2 must have a strict 90-degree, perfectly vertical alignment. Correct any slight rightward tilt. The bat must stand absolutely perpendicular to the bottom edge of the canvas, with zero deviation from true vertical. `;
 
         // --- SPECIFICATION CIRCLE BADGES ONLY ---
-        prompt += `On the upper-right side of the image, the technical specifications are presented in stacked high-contrast circular badges. `;
-        prompt += `The top badge is a solid black circular badge (#000000). Inside this black circle, large bold white Japanese-style typography displays the text centered on two separate lines: top line reads "${specLengthDisplay}", bottom line reads "${specWeightDisplay}". `;
+     
+// *---- ★ TECHNICAL SPECIFICATION PANEL — OVERLAPPING CIRCLES ★ ----*
 
-        if (specCount > 1) {
-            prompt += `Above the circular badge, a small rectangular badge is placed indicating the number of specifications: "${specCount} SPEC" in bold white text on a dark gray background. `;
-        }
+prompt += `On the upper-right side of the image, create a clean vertical technical specification panel closely matching the provided reference sample. `;
 
-        if (specList) {
-            prompt += `The complete list of specifications is: ${specList}. `;
-        }
+// *---- SPEC COUNT HEADER ----*
+
+prompt += `At the top of the specification panel, display the specification count in the reference sample style. `;
+
+prompt += `The number "${specCount}" must be extremely large, bold, and dark brown, positioned near the upper-right corner. `;
+
+prompt += `Immediately beside the large number, display the word "Spec" vertically from top to bottom. `;
+
+prompt += `The large "${specCount}" and vertical "Spec" must form one compact header composition. `;
+
+prompt += `Do NOT place the specification count inside a rectangular badge, box, pill, or horizontal label. `;
+
+// *---- SPECIFICATION CIRCLES ----*
+
+if (specList) {
+
+    prompt += `Below the specification header, display ALL ${specCount} specification options as a vertically stacked arrangement of large circular badges. `;
+
+    prompt += `CRITICAL LAYOUT: The specification circles should be vertically stacked with intentional slight overlap between adjacent circles, creating a compact layered catalog composition. `;
+
+    prompt += `Each circle should overlap the next circle slightly by approximately 8% to 15% of its diameter. `;
+
+    prompt += `The overlap must be controlled and consistent: every adjacent pair of circles should have a similar amount of overlap. `;
+
+    prompt += `Do NOT separate the circles with large gaps. The circles should visually feel tightly stacked together. `;
+
+    prompt += `The circles must remain in one straight vertical column with the same horizontal center axis. `;
+
+    prompt += `The circles must NOT be randomly scattered, diagonally arranged, or offset horizontally. `;
+
+    // *---- CIRCLE STYLE ----*
+
+    prompt += `Use alternating circle styles matching the reference: first circle WHITE with a thin black outline, second circle SOLID BLACK, third circle WHITE with a thin black outline, continuing the alternating pattern. `;
+
+    // *---- OVERLAP VISIBILITY ----*
+
+    prompt += `When two circles overlap, both circles must remain clearly recognizable as separate circular badges. `;
+
+    prompt += `The overlapping area should create a clean layered visual relationship rather than merging the circles into one shape. `;
+
+    prompt += `Do not allow one circle to completely cover another circle. Every specification circle must remain substantially visible. `;
+
+    prompt += `The black and white circles must remain visually distinguishable even where their edges overlap. `;
+
+    // *---- SPEC TEXT ----*
+
+    prompt += `Inside every circle, display exactly one specification option using two centered lines: length on the first line and weight on the second line. `;
+
+    prompt += `Use large bold high-contrast typography. `;
+
+    prompt += `White circles use bold black text. Black circles use bold white text. `;
+
+    prompt += `Keep all specification text completely inside its own circle even when the circles overlap. `;
+
+    prompt += `Do not allow specification text from one circle to enter another circle. `;
+
+    prompt += `Do not combine multiple specifications into one circle. `;
+
+    prompt += `Do not omit or duplicate any specification. `;
+
+    prompt += `The exact complete specification list is: ${specList}. `;
+
+    prompt += `Preserve every specification value and unit exactly as provided. `;
+
+    // *---- VERTICAL COMPOSITION ----*
+
+    prompt += `The circles should form a compact vertical stack occupying the right-side specification area. `;
+
+    prompt += `Use a consistent circle size and consistent overlap amount throughout the entire stack. `;
+
+    prompt += `The first circle begins directly below the "Spec" header with a small controlled gap. `;
+
+    prompt += `Each following circle slightly overlaps the previous circle, producing a continuous stacked visual rhythm. `;
+
+    prompt += `The final circle must remain completely inside the bottom boundary of the 600x600 canvas. `;
+}
+
+// *---- FINAL VISUAL STYLE ----*
+
+prompt += `The specification panel must visually resemble the reference sample: oversized brown specification count at the top, vertical "Spec" label, followed by tightly stacked alternating black-and-white circular specification badges. `;
+
+prompt += `Clean Japanese sports equipment catalog aesthetic, precise geometric alignment, controlled circular overlap, high contrast typography, white background, premium commercial product photography, ultra-clean professional layout, ultra-detailed 8k resolution. `;
+
+prompt += negativePrompt;
+
+
 
         prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture, decals, and glossy metallic barrel paint, clean aesthetic, soft diffuse studio lighting, rich realistic textures, commercial photography standards, ultra-detailed 8k resolution. `;
         prompt += negativePrompt;
