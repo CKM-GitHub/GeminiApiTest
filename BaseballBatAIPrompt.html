@@ -477,115 +477,94 @@ prompt += `The primary hero bat has layout priority over all secondary bats. `;
        prompt += negativePrompt;
     }
     // Frame 2
-     else { 
-        prompt += `Professional e-commerce product breakdown and specification banner photography strictly framed within a perfect square 600x600 pixels resolution canvas. `;
-        prompt += `The banner layout is split into a strict three-piece structured design on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no depth and no shadows, presenting multiple detailed views of the product simultaneously. `;
-        
-        // FIXED: Category Header Badge, Balance Display, and Manufacturer Logos are explicitly excluded for Frame 2
-        prompt += `EXCLUSION CONSTRAINT: DO NOT include any category header badges, DO NOT include balance type text/icons, and DO NOT include any manufacturer brand logos or text on this Frame 2 layout. Keep the layout solely focused on product shots and specification circles. `;
+     // Frame 2
+else { 
+    // Frame 2 သီးသန့် Negative Prompt (ZETT Logo ကို Negative ထဲမှ ဖယ်ထုတ်ထားသည်)
+    const frame2NegativePrompt = "low quality, distorted layout, blurry textures, deformed shapes, incorrect proportions, messy composition, poor lighting, oversaturated colors, unrealistic materials, fake looking, CGI look, low resolution, pixelated, harsh shadows, drop shadows, cast shadows, contact shadows, ambient occlusion, watermark, text artifacts, duplicate elements, floating objects, background logo overlays, category header badges.";
 
-        prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
+    prompt += `Professional e-commerce product breakdown and specification banner photography strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+    prompt += `The banner layout is split into a strict three-piece structured design on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no depth and no shadows, presenting multiple detailed views of the product simultaneously. `;
+    
+    // FIXED EXCLUSION CONSTRAINT: Only block canvas overlays, explicitly PRESERVE bat body decals
+    prompt += `EXCLUSION CONSTRAINT: DO NOT include external category header badges or separate logo image overlays on the background canvas. HOWEVER, ALWAYS PRESERVE and accurately display all authentic product decals, model typography, brand logos (e.g., 'ZETT', 'ZettPower', 'S.B.'), and metallic surface details directly printed on the baseball bat body itself, exactly matching the reference product. `;
 
-        if (totalColors === 1) {
-            prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
-        } else {
-            prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
-        }
-        prompt += `Image C displays a vertical close-up focus on the upper part, barrel, and head area covering exactly 50% to 55% of the bat's length. `;
+    prompt += `The composition contains three distinct, sharp image segments aligned vertically: Image A displays a complete vertical full-size view of the entire bat; `;
 
-        // ★ Alignment Fix
-        prompt += `CRITICAL FIX: The secondary bat image in Frame 2 must have a strict 90-degree, perfectly vertical alignment. Correct any slight rightward tilt. The bat must stand absolutely perpendicular to the bottom edge of the canvas, with zero deviation from true vertical. `;
+    if (totalColors === 1) {
+        prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length; `;
+    } else {
+        prompt += `Image B displays a vertical close-up macro view of the handle and grip area covering exactly 50% to 55% of the bat's length, shifted slightly upward with a crisp text label '${activeColor}' placed directly underneath it; `;
+    }
+    prompt += `Image C displays a vertical close-up focus on the upper part, barrel, and head area covering exactly 50% to 55% of the bat's length, clearly displaying the product model decals and branding typography. `;
 
-        // --- SPECIFICATION CIRCLE BADGES ONLY ---
-     
-// *---- ★ TECHNICAL SPECIFICATION PANEL — OVERLAPPING CIRCLES ★ ----*
+    // ★ Alignment Fix
+    prompt += `CRITICAL FIX: The secondary bat image in Frame 2 must have a strict 90-degree, perfectly vertical alignment. Correct any slight rightward tilt. The bat must stand absolutely perpendicular to the bottom edge of the canvas, with zero deviation from true vertical. `;
 
-prompt += `On the upper-right side of the image, create a clean vertical technical specification panel closely matching the provided reference sample. `;
+    // *---- ★ TECHNICAL SPECIFICATION PANEL — OVERLAPPING CIRCLES ★ ----*
+    prompt += `On the upper-right side of the image, create a clean vertical technical specification panel closely matching the provided reference sample. `;
 
-// *---- SPEC COUNT HEADER ----*
+    // *---- SPEC COUNT HEADER ----*
+    prompt += `At the top of the specification panel, display the specification count in the reference sample style. `;
+    prompt += `The number "${specCount}" must be extremely large, bold, and dark brown, positioned near the upper-right corner. `;
+    prompt += `Immediately beside the large number, display the word "Spec" vertically from top to bottom. `;
+    prompt += `The large "${specCount}" and vertical "Spec" must form one compact header composition. `;
+    prompt += `Do NOT place the specification count inside a rectangular badge, box, pill, or horizontal label. `;
 
-prompt += `At the top of the specification panel, display the specification count in the reference sample style. `;
+    // *---- SPECIFICATION CIRCLES ----*
+    if (specList) {
+        prompt += `Below the specification header, display ALL ${specCount} specification options as a vertically stacked arrangement of large circular badges. `;
+        prompt += `CRITICAL LAYOUT: The specification circles should be vertically stacked with intentional slight overlap between adjacent circles, creating a compact layered catalog composition. `;
+        prompt += `Each circle should overlap the next circle slightly by approximately 8% to 15% of its diameter. `;
+        prompt += `The overlap must be controlled and consistent: every adjacent pair of circles should have a similar amount of overlap. `;
+        prompt += `Do NOT separate the circles with large gaps. The circles should visually feel tightly stacked together. `;
+        prompt += `The circles must remain in one straight vertical column with the same horizontal center axis. `;
+        prompt += `The circles must NOT be randomly scattered, diagonally arranged, or offset horizontally. `;
 
-prompt += `The number "${specCount}" must be extremely large, bold, and dark brown, positioned near the upper-right corner. `;
+        // *---- CIRCLE STYLE ----*
+        prompt += `Use alternating circle styles matching the reference: first circle WHITE with a thin black outline, second circle SOLID BLACK, third circle WHITE with a thin black outline, continuing the alternating pattern. `;
 
-prompt += `Immediately beside the large number, display the word "Spec" vertically from top to bottom. `;
+        // *---- OVERLAP VISIBILITY ----*
+        prompt += `When two circles overlap, both circles must remain clearly recognizable as separate circular badges. `;
+        prompt += `The overlapping area should create a clean layered visual relationship rather than merging the circles into one shape. `;
+        prompt += `Do not allow one circle to completely cover another circle. Every specification circle must remain substantially visible. `;
+        prompt += `The black and white circles must remain visually distinguishable even where their edges overlap. `;
 
-prompt += `The large "${specCount}" and vertical "Spec" must form one compact header composition. `;
+        // *---- SPEC TEXT ----*
+        prompt += `Inside every circle, display exactly one specification option using two centered lines: length on the first line and weight on the second line. `;
+        prompt += `Use large bold high-contrast typography. `;
+        prompt += `White circles use bold black text. Black circles use bold white text. `;
+        prompt += `Keep all specification text completely inside its own circle even when the circles overlap. `;
+        prompt += `Do not allow specification text from one circle to enter another circle. `;
+        prompt += `Do not combine multiple specifications into one circle. `;
+        prompt += `Do not omit or duplicate any specification. `;
+        prompt += `The exact complete specification list is: ${specList}. `;
+        prompt += `Preserve every specification value and unit exactly as provided. `;
 
-prompt += `Do NOT place the specification count inside a rectangular badge, box, pill, or horizontal label. `;
+        // *---- VERTICAL COMPOSITION ----*
+        prompt += `The circles should form a compact vertical stack occupying the right-side specification area. `;
+        prompt += `Use a consistent circle size and consistent overlap amount throughout the entire stack. `;
+        prompt += `The first circle begins directly below the "Spec" header with a small controlled gap. `;
+        prompt += `Each following circle slightly overlaps the previous circle, producing a continuous stacked visual rhythm. `;
+        prompt += `The final circle must remain completely inside the bottom boundary of the 600x600 canvas. `;
+    }
 
-// *---- SPECIFICATION CIRCLES ----*
+    // *---- ★ BALANCE BADGE CIRCLE (ADDED AT BOTTOM OF STACK) ★ ----*
+    prompt += `Directly stacked below the last specification circle (slightly overlapping or closely fitted underneath it), display one distinct white circular badge with a thin black outer border. `;
+    prompt += `Inside this circular badge, large bold black Japanese typography displays the balance type centered on two separate lines: top line reads "ミドル", bottom line reads "バランス". `;
+    prompt += `This balance circle badge must match the same diameter and horizontal axis alignment as the specification circles directly above it. `;
+    
+    // *---- FINAL VISUAL STYLE ----*
+    prompt += `High contrast, immaculate geometric layout, professional Japanese sports catalog quality, razor-sharp focus on grip tape texture, authentic barrel decals, and glossy metallic barrel paint, clean aesthetic, FLAT UNIFORM SHADOWLESS STUDIO LIGHTING — absolutely no shadows, no cast shadows, no drop shadows, no contact shadows, no ambient occlusion, no depth, no gradients — rich realistic textures without any shading, commercial photography standards, ultra-detailed 8k resolution. `; 
 
-if (specList) {
+    prompt += frame2NegativePrompt;
 
-    prompt += `Below the specification header, display ALL ${specCount} specification options as a vertically stacked arrangement of large circular badges. `;
-
-    prompt += `CRITICAL LAYOUT: The specification circles should be vertically stacked with intentional slight overlap between adjacent circles, creating a compact layered catalog composition. `;
-
-    prompt += `Each circle should overlap the next circle slightly by approximately 8% to 15% of its diameter. `;
-
-    prompt += `The overlap must be controlled and consistent: every adjacent pair of circles should have a similar amount of overlap. `;
-
-    prompt += `Do NOT separate the circles with large gaps. The circles should visually feel tightly stacked together. `;
-
-    prompt += `The circles must remain in one straight vertical column with the same horizontal center axis. `;
-
-    prompt += `The circles must NOT be randomly scattered, diagonally arranged, or offset horizontally. `;
-
-    // *---- CIRCLE STYLE ----*
-
-    prompt += `Use alternating circle styles matching the reference: first circle WHITE with a thin black outline, second circle SOLID BLACK, third circle WHITE with a thin black outline, continuing the alternating pattern. `;
-
-    // *---- OVERLAP VISIBILITY ----*
-
-    prompt += `When two circles overlap, both circles must remain clearly recognizable as separate circular badges. `;
-
-    prompt += `The overlapping area should create a clean layered visual relationship rather than merging the circles into one shape. `;
-
-    prompt += `Do not allow one circle to completely cover another circle. Every specification circle must remain substantially visible. `;
-
-    prompt += `The black and white circles must remain visually distinguishable even where their edges overlap. `;
-
-    // *---- SPEC TEXT ----*
-
-    prompt += `Inside every circle, display exactly one specification option using two centered lines: length on the first line and weight on the second line. `;
-
-    prompt += `Use large bold high-contrast typography. `;
-
-    prompt += `White circles use bold black text. Black circles use bold white text. `;
-
-    prompt += `Keep all specification text completely inside its own circle even when the circles overlap. `;
-
-    prompt += `Do not allow specification text from one circle to enter another circle. `;
-
-    prompt += `Do not combine multiple specifications into one circle. `;
-
-    prompt += `Do not omit or duplicate any specification. `;
-
-    prompt += `The exact complete specification list is: ${specList}. `;
-
-    prompt += `Preserve every specification value and unit exactly as provided. `;
-
-    // *---- VERTICAL COMPOSITION ----*
-
-    prompt += `The circles should form a compact vertical stack occupying the right-side specification area. `;
-
-    prompt += `Use a consistent circle size and consistent overlap amount throughout the entire stack. `;
-
-    prompt += `The first circle begins directly below the "Spec" header with a small controlled gap. `;
-
-    prompt += `Each following circle slightly overlaps the previous circle, producing a continuous stacked visual rhythm. `;
-
-    prompt += `The final circle must remain completely inside the bottom boundary of the 600x600 canvas. `;
-}
 
 // *---- FINAL VISUAL STYLE ----*
 
-prompt += `The specification panel must visually resemble the reference sample: oversized brown specification count at the top, vertical "Spec" label, followed by tightly stacked alternating black-and-white circular specification badges. `;
+    prompt += `The specification panel must visually resemble the reference sample: oversized brown specification count at the top, vertical "Spec" label, followed by tightly stacked alternating black-and-white circular specification badges. `;
 
-prompt += `Clean Japanese sports equipment catalog aesthetic, precise geometric alignment, controlled circular overlap, high contrast typography, white background, premium commercial product photography, ultra-clean professional layout, ultra-detailed 8k resolution. `;
-
-prompt += negativePrompt;
+    prompt += `Clean Japanese sports equipment catalog aesthetic, precise geometric alignment, controlled circular overlap, high contrast typography, white background, premium commercial product photography, ultra-clean professional layout, ultra-detailed 8k resolution. `;
+    prompt += negativePrompt;
 
 
 
