@@ -370,16 +370,16 @@ const negativePrompt =
     let prompt = '';
 
    if (frame === 'Frame 1') {
-        // ---- Base Banner & Header Block ----
-     prompt += `Professional high-end e-commerce product catalog banner photography of an authentic Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
+                // ---- Base Banner & Header Block ----
+        prompt += `Professional high-end e-commerce product catalog banner photography of an authentic Japanese baseball bat for ${category}, strictly framed within a perfect square 600x600 pixels resolution canvas. `;
         prompt += `The layout features a multi-angle cohesive presentation on a solid, flat, uniform pure white background (#FFFFFF) with absolutely no shadows, no gradient, and a minimalist corporate athletic aesthetic. `;
 
         prompt += `On the top-left corner of the image, place a sharp stacked header badge block with a clear 20px outer margin from the top and left edges of the canvas. `;
-        prompt += `The upper header consists of a solid black background rectangular box (#2B2B2B) containing bold white Japanese text "${category}" centered in a heavy sans-serif Japanese font with slightly smaller point size for a refined catalog look. `;
+        prompt += `The upper header consists of a solid dark charcoal rectangular box (#2B2B2B) containing bold white Japanese text "${category}" perfectly centered vertically and horizontally. The text size is refined with generous padding above, below, left, and right, keeping the black rectangle compact in height. `;
 
         if (isJunior) {
-            prompt += `Directly stacked underneath it, the lower header features a solid vibrant orange background rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered in a heavy, highly prominent sans-serif Japanese font. `;
-            prompt += `Both header blocks display a flat graphic appearance with completely clean catalog design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp vector typography in a professional Japanese sporting goods branding style. `;
+            prompt += `Directly stacked underneath it with EXACTLY THE SAME WIDTH, perfect left/right edge alignment, no gap, and no overlap, the lower header features a solid vibrant orange rectangular box (#F59A1B) containing bold white Japanese text "ジュニア" centered and slightly more prominent than the upper section. `;
+            prompt += `Both header blocks form a clean, unified two-level catalog badge with flat graphic design, sharp geometric edges, flat colors, no gradients, no shadows, and crisp typography. `;
         }
 
         // ---- Balance Icon ----
